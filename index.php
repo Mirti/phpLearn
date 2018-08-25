@@ -1,17 +1,12 @@
 <?php
 declare(strict_types=1);
 
-use Learn\Model\User;
-
 /** Run auto-loading */
 require dirname(__DIR__) . '/learn/vendor/autoload.php';
 
-$user     = new User('Artur', 'Nykiel');
-$fullName = $user->getFirstName() . ' ' . $user->getLastName();
-$test = [
-    'name' => 'asd',
-    'b'    => 'a'
-];
+use Learn\Database\PdoConnection;
 
-$a     = 4;
-$asdsa = 5;
+
+$db = PdoConnection::getInstance();
+$db->getConnection();
+
