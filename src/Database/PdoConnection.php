@@ -4,7 +4,9 @@ declare (strict_types=1);
 
 namespace Learn\Database;
 
+
 use PDO;
+use Exception;
 
 final class PdoConnection
 {
@@ -38,6 +40,7 @@ final class PdoConnection
 
     private function __wakeup()
     {
+
     }
 
 
@@ -49,7 +52,8 @@ final class PdoConnection
         return self::$instance;
     }
 
-    public function getConnection(){
+    public function getConnection()
+    {
         return $this->conn;
     }
 }
