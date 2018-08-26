@@ -1,32 +1,27 @@
 <?php
-
 declare (strict_types=1);
 
 namespace Learn\Database;
 
+require $_SERVER['DOCUMENT_ROOT'] . '/config/local.php';
 
-use PDO;
-use Exception;
+use \PDO;
+use \Exception;
 
 final class PdoConnection
 {
-
+    /** @var PdoConnection */
     protected static $instance = null;
+    /** @var PDO */
     private $conn;
 
-    private $host = "localhost:3306";
-    private $user = "dev";
-    private $password = "dev";
-    private $databaseName = "learn";
-
     /**
-     * Pdo constructor.
+     * PdoConnection constructor.
      */
     protected function __construct()
     {
         try {
-            $this->conn = new PDO('mysql:host=' . $this->host . '; dbname=' . $this->databaseName, $this->user, $this->password);
-            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'");
+            $this->conn = new \PDO('mysql:host=' . $host . '; dbname=' . $databaseName, $user, $password);
         } catch (Exception $exception) {
             echo "Connection error";
             die();
@@ -44,7 +39,7 @@ final class PdoConnection
     }
 
 
-    public static function getInstance()
+    public static function getInstance(): PdoConnection
     {
         if (self::$instance == null) {
             self::$instance = new PdoConnection();
@@ -52,7 +47,7 @@ final class PdoConnection
         return self::$instance;
     }
 
-    public function getConnection()
+    public function getConnection(): PDO
     {
         return $this->conn;
     }
