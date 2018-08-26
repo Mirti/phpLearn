@@ -1,13 +1,12 @@
 <?php
 
-/** @var string  */
-$host = "localhost:3306";
+/** Return app config */
+ return[
+     'database'=> [
+         'host' => 'localhost:3306',
+         'user' => 'dev',
+         'password' => 'ddev',
+         'dbName' => 'learn'
+     ],
 
-/** @var string  */
-$user = "dev";
-
-/** @var string  */
-$password = "dev";
-
-/** @var string  */
-$databaseName = "learn";
+ ];
