@@ -17,6 +17,8 @@ class UserController{
                 break;
 
             case "POST":
+                echo "POST";
+               // self::addUser();
                 break;
 
             case "PUT":
@@ -29,6 +31,10 @@ class UserController{
 
     public static function getUsers(){
         return UserService::getUsers();
+    }
+
+    public static function addUser(){
+        return UserService::addUser();
     }
 }
 

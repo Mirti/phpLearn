@@ -6,7 +6,12 @@ require dirname(__DIR__) . '/learn/vendor/autoload.php';
 
 use Learn\Route\Route;
 
+
 echo "REST API działające już: <br />
-/user  GET";
+/user  GET <br />
+/user  POST";
+
+echo Route::route($_SERVER['REQUEST_URI']);
+
 
 

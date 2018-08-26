@@ -9,7 +9,7 @@ use Learn\Database\PdoConnection;
 
 class UserService
 {
-    public static function createUser(User $user)
+    public static function addUser(User $user)
     {
         $pdo = PdoConnection::getInstance()->getConnection();
 
