@@ -4,9 +4,9 @@ declare(strict_types=1);
 /** Run auto-loading */
 require dirname(__DIR__) . '/learn/vendor/autoload.php';
 
-use Learn\Model\User;
-use Learn\Service\UserService;
+use Learn\Route\Route;
 
-$user = new User("Krzysztof", "Ibisz");
-UserService::getUsers();
+echo "REST API działające już: <br />
+/user  GET";
+
 
