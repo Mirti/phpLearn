@@ -9,9 +9,9 @@ use Learn\Route\Route;
 
 echo "REST API działające już: <br />
 /user  GET <br />
-/user  POST";
+/user  POST <br /> <br />";
 
-echo Route::route($_SERVER['REQUEST_URI']);
+Route::route($_SERVER['REQUEST_URI']);
 
 
 

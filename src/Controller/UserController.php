@@ -4,6 +4,7 @@ declare (strict_types=1);
 namespace Learn\Controller;
 
 use Learn\Service\UserService;
+use Learn\Model\User;
 
 class UserController{
 
@@ -17,8 +18,7 @@ class UserController{
                 break;
 
             case "POST":
-                echo "POST";
-               // self::addUser();
+                self::addUser();
                 break;
 
             case "PUT":
@@ -34,7 +34,9 @@ class UserController{
     }
 
     public static function addUser(){
-        return UserService::addUser();
+       $data = json_decode(file_get_contents('php://input'),true);
+       $user = new User($data["firstName"], $data['lastName']);
+       return UserService::addUser($user);
     }
 }
 
