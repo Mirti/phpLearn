@@ -40,6 +40,8 @@ class Route
         header('HTTP/1.1 200 OK');
         return "REST API działające już: <br />
              /user  GET <br />
-             /user  POST <br /> <br />";
+             /user  POST <br /> <br />
+             {\"firstName\" : \"Imie\", <br />
+              \"lastName\" : \"Nazwisko\"}";
     }
 }
