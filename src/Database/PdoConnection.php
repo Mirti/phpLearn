@@ -5,9 +5,7 @@ namespace Learn\Database;
 
 
 use \PDO;
-use \Exception;
-
-include($_SERVER['DOCUMENT_ROOT'] . '/src/Exception/HttpStatusHandler.php');
+use \Throwable;
 
 final class PdoConnection
 {
@@ -29,13 +27,13 @@ final class PdoConnection
                 $database['user'], $database['password']);
             $this->conn->exec("set names utf8");
 
-        } catch (Exception $exception) {
-            serviceUnavailable();
+        } catch (Throwable $ex) {
+            connectionError();
         }
     }
 
     /**
-     *@inheritdoc
+     * @inheritdoc
      */
     private function __clone()
     {
@@ -43,14 +41,11 @@ final class PdoConnection
     }
 
     /**
-     * @inheritdoc
+     * @return PdoConnection
+     *
+     * Singleton method for creating or get exist class instance
      */
-    private function __wakeup()
-    {
-
-    }
-
-    public static function getInstance()
+    public static function getInstance(): PdoConnection
     {
         if (self::$instance == null) {
             self::$instance = new PdoConnection();
@@ -58,7 +53,12 @@ final class PdoConnection
         return self::$instance;
     }
 
-    public function getConnection()
+    /**
+     * @return PDO
+     *
+     * Method for getting PDO connection
+     */
+    public function getConnection(): PDO
     {
         return $this->conn;
     }

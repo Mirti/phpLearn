@@ -3,16 +3,21 @@ declare (strict_types=1);
 
 namespace Learn\Controller;
 
+
 use Learn\Service\UserService;
 use Learn\Model\User;
 
-class UserController{
+class UserController
+{
 
-    public static function checkHttpMethod(){
+    /**
+     * Method for checking request method and choose proper method
+     */
+    public static function checkHttpMethod(): void
+    {
         $method = $_SERVER['REQUEST_METHOD'];
 
-        switch ($method){
-
+        switch ($method) {
             case "GET":
                 self::getUsers();
                 break;
@@ -29,14 +34,27 @@ class UserController{
         }
     }
 
-    public static function getUsers(){
-        return UserService::getUsers();
+    /**
+     * Controller method to get all users
+     */
+    public static function getUsers(): void
+    {
+
+        if (UserService::getUsers()) {
+            header('HTTP/1.1 200 OK');
+        }
     }
 
-    public static function addUser(){
-       $data = json_decode(file_get_contents('php://input'),true);
-       $user = new User($data["firstName"], $data['lastName']);
-       return UserService::addUser($user);
+    /**
+     * Controller method to add new user
+     */
+    public static function addUser(): void
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $user = new User($data["firstName"], $data['lastName']);
+        if (UserService::addUser($user)) {
+            header('HTTP/1.1 201 Created');
+        }
     }
 }
 
