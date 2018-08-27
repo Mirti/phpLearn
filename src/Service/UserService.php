@@ -58,7 +58,7 @@ class UserService
      *
      * Method for getting single user from database
      */
-    public static function getUser($id): bool
+    public static function getUser($id)
     {
         $pdo = PdoConnection::getInstance()->getConnection();
 
@@ -71,8 +71,8 @@ class UserService
             } else {
                 notFoundError();
             }
-            return false;
         }
+        return false;
     }
 
     /**
@@ -92,8 +92,32 @@ class UserService
             } else {
                 notFoundError();
             }
-            return false;
         }
+        return false;
+    }
+
+    /**
+     * @param      $id
+     * @param User $user
+     * @return bool
+     *
+     * Method for updating user
+     */
+    public static function updateUser($id, User $user): bool
+    {
+        if (!empty($pdo)) {
+            if (self::isInDb($id)) {
+            }
+            $firstName = $user->getFirstName();
+            $lastName  = $user->getLastName();
+
+            $sql = "UPDATE users SET firstName=?, lastName=? WHERE id = $id";
+            $pdo->prepare($sql)->execute([$firstName, $lastName]);
+            return true;
+        } else {
+            notFoundError();
+        }
+        return false;
     }
 
     /**
@@ -102,7 +126,7 @@ class UserService
      *
      * Method for checking is User in database
      */
-    private static function isInDb($id)
+    private static function isInDb($id): bool
     {
         $pdo = PdoConnection::getInstance()->getConnection();
         if (!empty($pdo)) {

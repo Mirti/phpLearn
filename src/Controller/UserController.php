@@ -33,6 +33,7 @@ class UserController
                 break;
 
             case "PUT":
+                self::updateUser();
                 break;
 
             case "DELETE":
@@ -90,6 +91,26 @@ class UserController
     {
         if (UserService::deleteUser($id)) {
             header('HTTP/1.1 200 OK');
+        }
+    }
+
+    /**
+     * @param $id
+     *
+     * Controller method for updating user
+     */
+    public static function updateUser($id): void
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        try {
+            $user = new User($data["firstName"], $data['lastName']);
+        } catch (Throwable $ex) {
+            badRequestError();
+        }
+
+        if (UserService::updateUser($id, $user)) {
+            header('HTTP/1.1 201 Created');
         }
     }
 }
