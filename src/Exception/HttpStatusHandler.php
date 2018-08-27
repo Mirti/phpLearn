@@ -17,3 +17,11 @@ function notFoundError()
     header('HTTP/1.1 404 Not Found');
     echo("404 Not Found");
 }
+
+/**
+ * Function for response bad request error (400)
+ */
+function badRequestError(){
+    header('HTTP/1.1 400 Bad Request');
+    echo("400 Bad Request");
+}

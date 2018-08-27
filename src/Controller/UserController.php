@@ -6,6 +6,7 @@ namespace Learn\Controller;
 
 use Learn\Service\UserService;
 use Learn\Model\User;
+use \Throwable;
 
 class UserController
 {
@@ -51,7 +52,13 @@ class UserController
     public static function addUser(): void
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        $user = new User($data["firstName"], $data['lastName']);
+
+        try {
+            $user = new User($data["firstName"], $data['lastName']);
+        } catch (Throwable $ex) {
+            badRequestError();
+        }
+
         if (UserService::addUser($user)) {
             header('HTTP/1.1 201 Created');
         }
