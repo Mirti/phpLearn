@@ -25,6 +25,10 @@ class Route
                 UserController::checkHttpMethod();
                 break;
 
+            case "/user/".trim($path,"/user"):
+                UserController::checkHttpMethod(trim($path,"/user"));
+                break;
+
             default:
                 notFoundError();
         }

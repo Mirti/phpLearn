@@ -10,17 +10,22 @@ use \Throwable;
 
 class UserController
 {
-
     /**
+     * @param null $id
      * Method for checking request method and choose proper method
      */
-    public static function checkHttpMethod(): void
+    public static function checkHttpMethod($id = null): void
     {
         $method = $_SERVER['REQUEST_METHOD'];
 
         switch ($method) {
             case "GET":
-                self::getUsers();
+                if ($id == null) {
+                    self::getUsers();
+                } else {
+                    self::getUser($id);
+                }
+
                 break;
 
             case "POST":
@@ -31,6 +36,7 @@ class UserController
                 break;
 
             case "DELETE":
+                self::deleteUser($id);
                 break;
         }
     }
@@ -40,8 +46,19 @@ class UserController
      */
     public static function getUsers(): void
     {
-
         if (UserService::getUsers()) {
+            header('HTTP/1.1 200 OK');
+        }
+    }
+
+    /**
+     * @param $id
+     *
+     * Controller method to get one user
+     */
+    public static function getUser($id): void
+    {
+        if (UserService::getUser($id)) {
             header('HTTP/1.1 200 OK');
         }
     }
@@ -61,6 +78,18 @@ class UserController
 
         if (UserService::addUser($user)) {
             header('HTTP/1.1 201 Created');
+        }
+    }
+
+    /**
+     * @param $id
+     *
+     * Controller method for deleting user
+     */
+    public static function deleteUser($id): void
+    {
+        if (UserService::deleteUser($id)) {
+            header('HTTP/1.1 200 OK');
         }
     }
 }

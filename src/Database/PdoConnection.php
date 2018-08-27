@@ -45,7 +45,7 @@ final class PdoConnection
      *
      * Singleton method for creating or get exist class instance
      */
-    public static function getInstance(): PdoConnection
+    public static function getInstance()
     {
         if (self::$instance == null) {
             self::$instance = new PdoConnection();
@@ -58,7 +58,7 @@ final class PdoConnection
      *
      * Method for getting PDO connection
      */
-    public function getConnection(): PDO
+    public function getConnection()
     {
         return $this->conn;
     }
