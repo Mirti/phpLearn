@@ -15,12 +15,4 @@ class UserRequest extends RequestImpl
         parent::__construct();
     }
 
-    /**
-     * Method for getting all Users
-     */
-    public function getAllUsers()
-    {
-        User\GetAllUsersRequestHandler::getAllUsers();
-    }
-
 }
