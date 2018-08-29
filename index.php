@@ -6,7 +6,13 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Learn\Routing\Router;
 
-Router::match($_SERVER['REQUEST_URI']);
+try {
+    Router::match($_SERVER['REQUEST_URI']);
+} catch (PDOException $ex) {
+    echo "PDO Exception Response";
+} catch (Exception $ex) {
+    echo "Invalid Arguments Response";
+}
 
 
 

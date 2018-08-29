@@ -3,6 +3,7 @@ declare (strict_types=1);
 
 namespace Learn\Routing;
 
+use Learn\Http\Server\User\AddUserRequestHandler;
 use Learn\Http\Server\User\GetAllUsersRequestHandler;
 use Learn\Http\UserRequest;
 
@@ -16,7 +17,8 @@ class Router
     {
         return [
             '/users' => ['type' => new UserRequest(),
-                         'GET'  => GetAllUsersRequestHandler::class
+                         'GET'  => GetAllUsersRequestHandler::class,
+                         'POST' => AddUserRequestHandler::class,
             ]
         ];
     }

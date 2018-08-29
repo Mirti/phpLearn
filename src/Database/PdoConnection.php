@@ -16,6 +16,7 @@ final class PdoConnection
 
     /**
      * PdoConnection constructor.
+     * @throws Throwable
      */
     protected function __construct()
     {
@@ -28,7 +29,7 @@ final class PdoConnection
             $this->conn->exec("set names utf8");
 
         } catch (Throwable $ex) {
-            connectionError();
+            throw $ex;
         }
     }
 
@@ -45,7 +46,7 @@ final class PdoConnection
      *
      * Singleton method for creating or get exist class instance
      */
-    public static function getInstance()
+    public static function getInstance(): PdoConnection
     {
         if (self::$instance == null) {
             self::$instance = new PdoConnection();
@@ -58,7 +59,7 @@ final class PdoConnection
      *
      * Method for getting PDO connection
      */
-    public function getConnection()
+    public function getConnection(): PDO
     {
         return $this->conn;
     }
