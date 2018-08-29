@@ -14,5 +14,4 @@ class UserRequest extends RequestImpl
     {
         parent::__construct();
     }
-
 }
