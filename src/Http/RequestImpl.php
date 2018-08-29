@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+namespace Learn\Http;
+
+
 class RequestImpl implements RequestInterface
 {
     /** @var */
@@ -33,7 +36,7 @@ class RequestImpl implements RequestInterface
      */
     public function getRequestMethod(): string
     {
-        return $this->getRequestMethod();
+        return $this->requestMethod;
     }
 
     /**

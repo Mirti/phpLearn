@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace \Learn\Http;
+namespace Learn\Http;
 
 interface RequestInterface{
 
