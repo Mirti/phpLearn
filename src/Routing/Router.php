@@ -3,6 +3,7 @@ declare (strict_types=1);
 
 namespace Learn\Routing;
 
+
 use Learn\Http\UserRequest;
 
 class Router
@@ -14,10 +15,9 @@ class Router
     private static function routeConfig(): array
     {
         return [
-            '/users' => new UserRequest(),
-            [
-                'GET'  => "test",
-            ],
+            '/users' => ['type' => new UserRequest(),
+                         'GET'     => "Test",
+            ]
         ];
     }
 
@@ -28,10 +28,10 @@ class Router
      */
     public static function match($path)
     {
-        $request = self::routeConfig()[$path];
+        $request    = self::routeConfig()[$path]['type'];
         $httpMethod = $request->getRequestMethod();
 
-        var_dump(self::routeConfig()[$path][$httpMethod]);
+        $request->self::routeConfig()[$path][$httpMethod];
     }
 
 }
