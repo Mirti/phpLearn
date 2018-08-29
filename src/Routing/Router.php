@@ -4,6 +4,7 @@ declare (strict_types=1);
 namespace Learn\Routing;
 
 
+use Learn\Http\Handler\User\GetAllUsersRequestHandler;
 use Learn\Http\UserRequest;
 
 class Router
@@ -16,7 +17,8 @@ class Router
     {
         return [
             '/users' => ['type' => new UserRequest(),
-                         'GET'     => "Test",
+                         //'GET'  => getAllUsers(), Da się coś takiego zrobić?
+                         'GET'  => GetAllUsersRequestHandler::getAllUsers()
             ]
         ];
     }
@@ -31,7 +33,8 @@ class Router
         $request    = self::routeConfig()[$path]['type'];
         $httpMethod = $request->getRequestMethod();
 
-        $request->self::routeConfig()[$path][$httpMethod];
-    }
+        // $request->self::routeConfig()[$path][$httpMethod];  Da się coś takiego zrobić?
 
+        self::routeConfig()[$path][$httpMethod];
+    }
 }
