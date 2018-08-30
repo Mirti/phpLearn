@@ -24,7 +24,9 @@ class AddUserRequestHandler implements RequestHandlerInterface
         $firstName = $data['firstName'];
         $lastName  = $data['lastName'];
 
-        $pdo = PdoConnection::getInstance()->getConnection();
+        $config = include($_SERVER['DOCUMENT_ROOT'] . "/config/local.php");
+
+        $pdo = PdoConnection::getInstance($config['database'])->getConnection();
 
         $sql = "INSERT INTO users (firstName, lastName) VALUES (?, ?)";
         $pdo->prepare($sql)->execute([$firstName, $lastName]);

@@ -13,13 +13,15 @@ final class PdoConnection
 
     /**
      * PdoConnection constructor.
+     * @param array $config
      */
-    protected function __construct()
+    protected function __construct(array $config)
     {
-        $config     = include($_SERVER['DOCUMENT_ROOT'] . '/config/local.php');
-        $database   = $config['database'];
-        $this->conn = new \PDO('mysql:host=' . $database['host'] . '; dbname=' . $database['dbName'],
-            $database['user'], $database['password']);
+        $dsn = $config['driver'] . ":";
+        foreach ($config['dsn'] as $key => $value) {
+            $dsn = $dsn . "$key=$value;";
+        }
+        $this->conn = new \PDO($dsn, "dev", 'dev');
         $this->conn->exec("set names utf8");
     }
 
@@ -32,14 +34,15 @@ final class PdoConnection
     }
 
     /**
-     * @return PdoConnection
-     *
      * Singleton method for creating or get exist class instance
+     *
+     * @param array $config
+     * @return PdoConnection
      */
-    public static function getInstance(): PdoConnection
+    public static function getInstance(array $config): PdoConnection
     {
         if (self::$instance == null) {
-            self::$instance = new PdoConnection();
+            self::$instance = new PdoConnection($config);
         }
         return self::$instance;
     }

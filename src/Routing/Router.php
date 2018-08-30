@@ -5,43 +5,31 @@ namespace Learn\Routing;
 
 
 use Learn\Http\RequestInterface;
-use Learn\Http\Server\RequestHandlerInterface;
-use Learn\Http\Server\User\AddUserRequestHandler;
-use Learn\Http\Server\User\GetAllUsersRequestHandler;
-use Learn\Http\UserRequest;
 
 class Router
 {
+    /** @var array */
+    private $config;
 
-    /**
-     * @return array
-     */
-    private static function routeConfig(): array
+    public function __construct(array $config)
     {
-        return [
-            '/users' => ['type' => new UserRequest(),
-                         'GET'  => GetAllUsersRequestHandler::class,
-                         'POST' => AddUserRequestHandler::class,
-            ]
-        ];
+        $this->config = $config['routes'];
     }
 
     /**
-     * Method for matching request to proper handler
+     * Method for matching request to proper class
      *
      * @param $path
+     * @return string
      */
-    public static function match($path)
+    public function match($path)
     {
         /** @var RequestInterface $request */
-        $request = self::routeConfig()[$path]['type'];
+        $request = $this->config[$path]['type'];
 
         $httpMethod = $request->getRequestMethod();
-        $class      = "\\" . self::routeConfig()[$path][$httpMethod];
+        $class      = "\\" . $this->config[$path][$httpMethod];
 
-        /** @var RequestHandlerInterface $handler */
-        $handler = new $class;
-
-        $handler->handle($request);
+        return $class;
     }
 }

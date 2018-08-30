@@ -10,12 +10,12 @@ use Learn\Http\Server\RequestHandlerInterface;
 
 class GetAllUsersRequestHandler implements RequestHandlerInterface
 {
-    /**
-     * @param RequestInterface $request
-     */
+
     public function handle(RequestInterface $request)
     {
-        $pdo = PdoConnection::getInstance()->getConnection();
+        $config = include($_SERVER['DOCUMENT_ROOT'] . "/config/local.php");
+
+        $pdo = PdoConnection::getInstance($config['database'])->getConnection();
 
         $jsonArray = array();
 
