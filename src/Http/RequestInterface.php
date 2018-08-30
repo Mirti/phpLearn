@@ -3,20 +3,22 @@ declare(strict_types=1);
 
 namespace Learn\Http;
 
-interface RequestInterface{
+
+interface RequestInterface
+{
 
     /**
      * @return string
      */
-    public function getRequestTarget() :string;
+    public function getRequestTarget(): string;
 
     /**
      * @return string
      */
-    public function getRequestMethod() :string;
+    public function getRequestMethod(): string;
 
     /**
      * @return string
      */
-    public function getRequestBody() :string;
+    public function getRequestBody(): string;
 }

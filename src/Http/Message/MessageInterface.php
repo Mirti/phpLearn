@@ -1,9 +1,11 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Learn\Http\Message;
 
-interface MessageInterface{
+
+interface MessageInterface
+{
 
     /**
      * @return mixed

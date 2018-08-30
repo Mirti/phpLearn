@@ -4,33 +4,23 @@ declare (strict_types=1);
 namespace Learn\Database;
 
 
-use \PDO;
-use \Throwable;
-
 final class PdoConnection
 {
     /** @var PdoConnection */
     protected static $instance = null;
-    /** @var PDO */
+    /** @var \PDO */
     private $conn;
 
     /**
      * PdoConnection constructor.
-     * @throws Throwable
      */
     protected function __construct()
     {
-        $config   = include($_SERVER['DOCUMENT_ROOT'] . '/config/local.php');
-        $database = $config['database'];
-
-        try {
-            $this->conn = new \PDO('mysql:host=' . $database['host'] . '; dbname=' . $database['dbName'],
-                $database['user'], $database['password']);
-            $this->conn->exec("set names utf8");
-
-        } catch (Throwable $ex) {
-            throw $ex;
-        }
+        $config     = include($_SERVER['DOCUMENT_ROOT'] . '/config/local.php');
+        $database   = $config['database'];
+        $this->conn = new \PDO('mysql:host=' . $database['host'] . '; dbname=' . $database['dbName'],
+            $database['user'], $database['password']);
+        $this->conn->exec("set names utf8");
     }
 
     /**
@@ -55,11 +45,10 @@ final class PdoConnection
     }
 
     /**
-     * @return PDO
      *
      * Method for getting PDO connection
      */
-    public function getConnection(): PDO
+    public function getConnection()
     {
         return $this->conn;
     }

@@ -8,10 +8,12 @@ use Learn\Routing\Router;
 
 try {
     Router::match($_SERVER['REQUEST_URI']);
-} catch (PDOException $ex) {
+} catch (\PDOException $ex) {
     echo "PDO Exception Response";
-} catch (Exception $ex) {
-    echo "Invalid Arguments Response";
+} catch (\InvalidArgumentException $ex) {
+    echo "Invalid Argument Response";
+} catch (\Throwable $ex) {
+    echo "Other error: " . $ex->getMessage();
 }
 
 

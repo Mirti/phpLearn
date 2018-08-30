@@ -1,15 +1,15 @@
 {
-    "name": "mirti/learn",
-    "authors": [
-        {
-            "name": "Mirti",
-            "email": "avalith@o2.pl"
-        }
-    ],
-    "require": {},
-    "autoload": {
-        "psr-4": {
-            "Learn\\":  "src"
-        }
+  "name": "mirti/learn",
+  "authors": [
+    {
+      "name": "Mirti",
+      "email": "avalith@o2.pl"
     }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Learn\\": "src"
+    }
+  }
 }

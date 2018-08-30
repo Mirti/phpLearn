@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Learn\Http;
 
-use Learn\Http\Handler\User;
 
 class UserRequest extends RequestImpl
 {

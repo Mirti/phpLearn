@@ -4,11 +4,9 @@ declare(strict_types=1);
 namespace Learn\Http\Server\User;
 
 
-use http\Exception\InvalidArgumentException;
 use Learn\Database\PdoConnection;
 use Learn\Http\RequestInterface;
 use Learn\Http\Server\RequestHandlerInterface;
-use Throwable;
 
 class AddUserRequestHandler implements RequestHandlerInterface
 {
@@ -19,13 +17,12 @@ class AddUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request)
     {
-        try {
-            $data      = json_decode($request->getRequestBody(), true);
-            $firstName = $data['firstName'];
-            $lastName  = $data['lastName'];
-        } catch (Throwable $ex) {
-            throw $ex;
+        $data = json_decode($request->getRequestBody(), true);
+        if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
+            throw new \InvalidArgumentException();
         }
+        $firstName = $data['firstName'];
+        $lastName  = $data['lastName'];
 
         $pdo = PdoConnection::getInstance()->getConnection();
 
