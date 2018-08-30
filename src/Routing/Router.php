@@ -22,10 +22,8 @@ class Router
      * @param $path
      * @return string
      */
-    public function match($path)
+    public function match($path, $request)
     {
-        /** @var RequestInterface $request */
-        $request = $this->config[$path]['type'];
 
         $httpMethod = $request->getRequestMethod();
         $class      = "\\" . $this->config[$path][$httpMethod];

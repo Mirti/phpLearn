@@ -11,10 +11,11 @@ try {
 
     $path = $_SERVER['REQUEST_URI'];
 
-    $router       = new Router($config);
-    $matchedClass = $router->match($path);
-
     $request = $config['routes'][$path]['type'];
+
+    $router       = new Router($config);
+    $matchedClass = $router->match($path,$request);
+
 
     /** @var \Learn\Http\Server\RequestHandlerInterface $testObject */
     $testObject = new $matchedClass;
