@@ -19,14 +19,16 @@ class Router
     /**
      * Method for matching request to proper class
      *
-     * @param $path
+     * @param RequestInterface $request
      * @return string
      */
-    public function match($path, $request)
+    public function match($request)
     {
 
         $httpMethod = $request->getRequestMethod();
-        $class      = "\\" . $this->config[$path][$httpMethod];
+        $target     = $request->getRequestTarget();
+
+        $class      = "\\" . $this->config[$target][$httpMethod];
 
         return $class;
     }

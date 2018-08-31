@@ -1,5 +1,8 @@
 <?php
 
+use Learn\Http\Message\Handler\AddUserRequestHandler;
+use Learn\Http\Message\Handler\GetAllUsersRequestHandler;
+
 /** Return app config */
 return [
     'database' => [
@@ -15,9 +18,9 @@ return [
         ]
     ],
     'routes'   => [
-        '/users' => ['type' => new \Learn\Http\UserRequest(),
-                     'GET'  => \Learn\Http\Server\User\GetAllUsersRequestHandler::class,
-                     'POST' => \Learn\Http\Server\User\AddUserRequestHandler::class,
+        '/users' => [
+            'GET'  => GetAllUsersRequestHandler::class,
+            'POST' => AddUserRequestHandler::class,
         ]
 
     ]

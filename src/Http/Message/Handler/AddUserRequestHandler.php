@@ -1,12 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Learn\Http\Server\User;
+namespace Learn\Http\Message\Handler;
 
 
 use Learn\Database\PdoConnection;
 use Learn\Http\RequestInterface;
-use Learn\Http\Server\RequestHandlerInterface;
 
 class AddUserRequestHandler implements RequestHandlerInterface
 {

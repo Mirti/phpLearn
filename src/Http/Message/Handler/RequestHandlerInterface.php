@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Learn\Http\Server;
+namespace Learn\Http\Message\Handler;
 
 
 use Learn\Http\RequestInterface;

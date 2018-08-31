@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Learn\Http;
 
 
-class RequestImpl implements RequestInterface
+class HttpRequest implements RequestInterface
 {
     /** @var */
     private $requestTarget;
@@ -14,7 +14,7 @@ class RequestImpl implements RequestInterface
     private $requestBody;
 
     /**
-     * RequestImpl constructor.
+     * HttpRequest constructor.
      */
     public function __construct()
     {
