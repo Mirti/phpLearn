@@ -13,7 +13,7 @@ class Router
 
     public function __construct(array $config)
     {
-        $this->config = $config['routes'];
+        $this->config = $config;
     }
 
     /**
@@ -25,8 +25,8 @@ class Router
     public function match($request)
     {
 
-        $httpMethod = $request->getRequestMethod();
-        $target     = $request->getRequestTarget();
+        $httpMethod = $request->getMethod();
+        $target     = $request->getTarget();
 
         $class      = "\\" . $this->config[$target][$httpMethod];
 

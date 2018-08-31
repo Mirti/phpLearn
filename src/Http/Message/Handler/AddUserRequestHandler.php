@@ -16,7 +16,7 @@ class AddUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request)
     {
-        $data = json_decode($request->getRequestBody(), true);
+        $data = json_decode($request->getBody(), true);
         if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
             throw new \InvalidArgumentException();
         }

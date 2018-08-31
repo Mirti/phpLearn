@@ -14,7 +14,7 @@ try {
 
     $request = new HttpRequest();
 
-    $router       = new Router($config);
+    $router       = new Router($config['routes']);
     $matchedClass = $router->match($request);
 
     /** @var \Learn\Http\Message\Handler\RequestHandlerInterface $testObject */

@@ -4,21 +4,23 @@ declare(strict_types=1);
 namespace Learn\Http;
 
 
-interface RequestInterface
+use Learn\Http\Message\MessageInterface;
+
+interface RequestInterface extends MessageInterface
 {
 
     /**
      * @return string
      */
-    public function getRequestTarget(): string;
+    public function getTarget(): string;
 
     /**
      * @return string
      */
-    public function getRequestMethod(): string;
+    public function getMethod(): string;
 
     /**
      * @return string
      */
-    public function getRequestBody(): string;
+    public function getBody(): string;
 }

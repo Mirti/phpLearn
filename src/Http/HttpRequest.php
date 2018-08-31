@@ -4,46 +4,88 @@ declare(strict_types=1);
 namespace Learn\Http;
 
 
+use http\Exception\BadHeaderException;
+
 class HttpRequest implements RequestInterface
 {
     /** @var */
-    private $requestTarget;
+    private $target;
     /** @var */
-    private $requestMethod;
+    private $method;
     /** @var */
-    private $requestBody;
+    private $body;
+    /** @var */
+    private $protocolVersion;
 
     /**
      * HttpRequest constructor.
      */
     public function __construct()
     {
-        $this->requestTarget = $_SERVER['REQUEST_URI'];
-        $this->requestMethod = $_SERVER['REQUEST_METHOD'];
-        $this->requestBody   = file_get_contents('php://input');
+        $this->target          = $_SERVER['REQUEST_URI'];
+        $this->method          = $_SERVER['REQUEST_METHOD'];
+        $this->body            = file_get_contents('php://input');
+        $this->protocolVersion = $_SERVER['SERVER_PROTOCOL'];
     }
 
     /**
      * @return string
      */
-    public function getRequestTarget(): string
+    public function getTarget(): string
     {
-        return $this->requestTarget;
+        return $this->target;
     }
 
     /**
      * @return string
      */
-    public function getRequestMethod(): string
+    public function getMethod(): string
     {
-        return $this->requestMethod;
+        return $this->method;
     }
 
     /**
      * @return string
      */
-    public function getRequestBody(): string
+    public function getBody(): string
     {
-        return $this->requestBody;
+        return $this->body;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getProtocolVersion()
+    {
+        return $this->protocolVersion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHeaders()
+    {
+        $headers = array();
+
+        foreach ($_SERVER as $name => $value) {
+            $headers[$name] = $value;
+        }
+
+        return $headers;
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function getHeader($name)
+    {
+        $header = $_SERVER[$name];
+        if (!isset($header)) {
+            //TODO
+            throw new \Exception();
+        }
+        return $header;
+    }
+
 }
