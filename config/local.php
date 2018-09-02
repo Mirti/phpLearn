@@ -1,6 +1,7 @@
 <?php
 
 use Learn\Http\Message\Handler\AddUserRequestHandler;
+use Learn\Http\Message\Handler\DefaultHandler;
 use Learn\Http\Message\Handler\GetAllUsersRequestHandler;
 
 /** Return app config */
@@ -18,6 +19,9 @@ return [
         ]
     ],
     'routes'   => [
+        '/'      => [
+            'GET' => DefaultHandler::class
+        ],
         '/users' => [
             'GET'  => GetAllUsersRequestHandler::class,
             'POST' => AddUserRequestHandler::class,
