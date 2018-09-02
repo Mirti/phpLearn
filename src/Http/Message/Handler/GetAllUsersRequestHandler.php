@@ -5,6 +5,7 @@ namespace Learn\Http\Message\Handler;
 
 
 use Learn\Database\PdoConnection;
+use Learn\Http\HttpResponse;
 use Learn\Http\RequestInterface;
 
 class GetAllUsersRequestHandler implements RequestHandlerInterface
@@ -23,6 +24,9 @@ class GetAllUsersRequestHandler implements RequestHandlerInterface
         while ($row = $stmt->fetch()) {
             array_push($jsonArray, $row);
         }
-        echo json_encode($jsonArray);
+
+       // $response = new HttpResponse(201, "Ok", "1.1", null, json_encode($jsonArray));
+
+        return new HttpResponse(200,json_encode($jsonArray));
     }
 }

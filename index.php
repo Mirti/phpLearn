@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Learn\Http\HttpRequest;
 use Learn\Routing\Router;
+use Learn\Http\HttpResponse;
 
 /** Run auto-loading */
 require __DIR__ . '/vendor/autoload.php';
@@ -19,18 +20,21 @@ try {
 
     /** @var \Learn\Http\Message\Handler\RequestHandlerInterface $testObject */
     $testObject = new $matchedClass;
-    $testObject->handle($request);
+
+    /** @var \Learn\Http\HttpResponse $response */
+    $response = $testObject->handle($request);
+    $response->makeResponse();
 
 
 } catch (\PDOException $ex) {
-    echo "PDO Exception Response";
-    echo $ex;
+    $response = new HttpResponse(503, $ex);
+    $response->makeResponse();
 } catch (\InvalidArgumentException $ex) {
-    echo "Invalid Argument Response";
-    echo $ex;
+    $response = new HttpResponse(400, $ex);
+    $response->makeResponse();
 } catch (\Throwable $ex) {
-    echo "Other error: " . $ex->getMessage();
-    echo $ex;
+    $response = new HttpResponse(500, $ex);
+    $response->makeResponse();
 }
 
 

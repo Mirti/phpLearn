@@ -6,52 +6,64 @@ namespace Learn\Http;
 
 class HttpResponse implements ResponseInterface
 {
-    /** @var int  */
+    /** @var int */
     private $statusCode;
-    /** @var String  */
+    /** @var String */
     private $reasonPhrase;
+    /** @var */
+    private $protocolVersion;
+    /** @var array */
+    private $headers;
+    /** @var */
+    private $body;
 
     /**
      * HttpResponse constructor.
      * @param int    $statusCode
-     * @param String $reasonPhrase
+     * @param string $body
+     * @param string $reasonPhrase
+     * @param string $protocolVersion
+     * @param array  $headers
      */
-    public function __construct(int $statusCode, String $reasonPhrase)
+    public function __construct(int $statusCode, $body = "", string $reasonPhrase = "", string $protocolVersion = "1.1", $headers = [])
     {
-        $this->statusCode   = $statusCode;
-        $this->reasonPhrase = $reasonPhrase;
+        $this->statusCode      = $statusCode;
+        $this->reasonPhrase    = $reasonPhrase;
+        $this->protocolVersion = $protocolVersion;
+        $this->headers         = $headers;
+        $this->body            = $body;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
-        // TODO: Implement getStatusCode() method.
+        return $this->statusCode;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getReasonPhrase()
+    public function getReasonPhrase(): string
     {
-        // TODO: Implement getReasonPhrase() method.
+        return $this->reasonPhrase;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getProtocolVersion()
+    public function getProtocolVersion(): string
     {
-        // TODO: Implement getProtocolVersion() method.
+        return $this->protocolVersion;
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
-        // TODO: Implement getHeaders() method.
+        return $this->headers;
     }
 
     /**
@@ -60,7 +72,11 @@ class HttpResponse implements ResponseInterface
      */
     public function getHeader($name)
     {
-        // TODO: Implement getHeader() method.
+        if (!in_array($name, $this->headers)) {
+            return "";
+        } else {
+            return $this->headers[$name];
+        }
     }
 
     /**
@@ -68,6 +84,35 @@ class HttpResponse implements ResponseInterface
      */
     public function getBody()
     {
-        // TODO: Implement getBody() method.
+        return $this->body;
+    }
+
+    /**
+     * @param string $header
+     * @param string $value
+     * @return mixed
+     */
+    public function withHeader(string $header, string $value)
+    {
+        $this->headers[$header] = $value;
+    }
+
+    /**
+     * Method for creating HTTP response from this object
+     */
+    public function makeResponse()
+    {
+        if (empty($this->reasonPhrase)) {
+            http_response_code($this->statusCode);
+        } else {
+            header("HTTP/$this->protocolVersion  $this->statusCode  $this->reasonPhrase");
+        }
+
+        if (isset($this->headers)) {
+            foreach ($this->headers as $header => $value) {
+                header("$header:$value");
+            }
+        }
+        echo $this->body;
     }
 }

@@ -28,4 +28,11 @@ interface MessageInterface
      */
     public function getBody();
 
+    /**
+     * @param string $header
+     * @param string $value
+     * @return mixed
+     */
+    public function withHeader(string $header, string $value);
+
 }

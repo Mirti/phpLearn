@@ -5,6 +5,7 @@ namespace Learn\Http\Message\Handler;
 
 
 use Learn\Database\PdoConnection;
+use Learn\Http\HttpResponse;
 use Learn\Http\RequestInterface;
 
 class AddUserRequestHandler implements RequestHandlerInterface
@@ -29,5 +30,6 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
         $sql = "INSERT INTO users (firstName, lastName) VALUES (?, ?)";
         $pdo->prepare($sql)->execute([$firstName, $lastName]);
+        return new HttpResponse(201);
     }
 }

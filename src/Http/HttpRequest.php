@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace Learn\Http;
 
 
-use http\Exception\BadHeaderException;
-
 class HttpRequest implements RequestInterface
 {
     /** @var */
@@ -82,10 +80,18 @@ class HttpRequest implements RequestInterface
     {
         $header = $_SERVER[$name];
         if (!isset($header)) {
-            //TODO
-            throw new \Exception();
+            throw new \HttpHeaderException();
         }
         return $header;
     }
 
+    /**
+     * @param string $header
+     * @param string $value
+     * @return mixed|void
+     */
+    public function withHeader($header, $value)
+    {
+        $_SERVER[$header]=$value;
+    }
 }
