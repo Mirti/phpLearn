@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Learn\Http\Message\Handler;
 
+
 use Learn\Http\HttpResponse;
 use Learn\Http\RequestInterface;
 
-class DefaultHandler implements RequestHandlerInterface{
+class DefaultHandler implements RequestHandlerInterface
+{
 
     /**
      * @param RequestInterface $request
@@ -21,6 +23,6 @@ class DefaultHandler implements RequestHandlerInterface{
         {\"firstName\" : \"imie\", <br />
         \"lastName\" : \"nazwisko\"}";
 
-        return new HttpResponse(200,$info);
+        return new HttpResponse(200, $info);
     }
 }
