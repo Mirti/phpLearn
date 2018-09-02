@@ -10,7 +10,10 @@ use Learn\Http\RequestInterface;
 
 class GetAllUsersRequestHandler implements RequestHandlerInterface
 {
-
+    /**
+     * @param RequestInterface $request
+     * @return HttpResponse|mixed
+     */
     public function handle(RequestInterface $request)
     {
         $config = include($_SERVER['DOCUMENT_ROOT'] . "/config/local.php");

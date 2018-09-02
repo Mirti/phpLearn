@@ -11,9 +11,8 @@ use Learn\Http\RequestInterface;
 class AddUserRequestHandler implements RequestHandlerInterface
 {
     /**
-     * Method for handling response
-     *
      * @param RequestInterface $request
+     * @return HttpResponse|mixed
      */
     public function handle(RequestInterface $request)
     {
@@ -28,8 +27,13 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
         $pdo = PdoConnection::getInstance($config['database'])->getConnection();
 
-        $sql = "INSERT INTO users (firstName, lastName) VALUES (?, ?)";
-        $pdo->prepare($sql)->execute([$firstName, $lastName]);
-        return new HttpResponse(201);
+        $sql     = "INSERT INTO users (firstName, lastName) VALUES (?, ?)";
+        $isAdded = $pdo->prepare($sql)->execute([$firstName, $lastName]);
+
+        if ($isAdded) {
+            return new HttpResponse(201);
+        } else {
+            throw new \Exception("Can not add user");
+        }
     }
 }
