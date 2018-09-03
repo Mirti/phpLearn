@@ -13,6 +13,19 @@ use Learn\Repository\UserRepository;
 
 class AddUserRequestHandler implements RequestHandlerInterface
 {
+    /** @var UserRepositoryInterface */
+    private $repository;
+
+    /**
+     * AddUserRequestHandler constructor.
+     *
+     * @param UserRepositoryInterface $repository
+     */
+    public function __construct(UserRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * @inheritdoc
      */
