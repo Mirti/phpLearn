@@ -4,13 +4,19 @@ declare (strict_types=1);
 namespace Learn\Routing;
 
 
-use Learn\Http\RequestInterface;
+use Learn\Http\Message\Request\Handler\RequestHandlerInterface;
+use Learn\Http\Message\Request\RequestInterface;
 
 class Router
 {
     /** @var array */
     private $config;
 
+    /**
+     * Router constructor.
+     *
+     * @param array $config
+     */
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -20,16 +26,25 @@ class Router
      * Method for matching request to proper class
      *
      * @param RequestInterface $request
-     * @return string
+     *
+     * @return RequestHandlerInterface
      */
-    public function match($request)
+    public function match($request): RequestHandlerInterface
     {
+        $method = $request->getMethod();
+        $target = $request->getTarget();
 
-        $httpMethod = $request->getMethod();
-        $target     = $request->getTarget();
+        if (!isset($this->config[$target][$method])) {
+            throw new \InvalidArgumentException("Missing handler for $method $target");
+        }
 
-        $class      = "\\" . $this->config[$target][$httpMethod];
+        $handlerClass = $this->config[$target][$method];
+        $handler      = new $handlerClass;
 
-        return $class;
+        if (!$handler instanceof RequestHandlerInterface) {
+            throw new \InvalidArgumentException('Class must implement ' . RequestHandlerInterface::class);
+        }
+
+        return $handler;
     }
 }

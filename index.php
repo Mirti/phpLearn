@@ -1,41 +1,39 @@
 <?php
 declare(strict_types=1);
 
-use Learn\Http\HttpRequest;
+namespace Learn;
+
+
+use Learn\Http\Message\Request\HttpRequest;
+use Learn\Http\Message\Response\HttpResponse;
+use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Routing\Router;
-use Learn\Http\HttpResponse;
+use function http_response_code;
 
 /** Run auto-loading */
 require __DIR__ . '/vendor/autoload.php';
 
+$config = include(__DIR__ . '/config/local.php');
+
+$path   = $_SERVER['REQUEST_URI'];
+$method = $_SERVER['REQUEST_METHOD'];
+$body   = json_decode(file_get_contents('php://input'), true) ?? [];
+
+$request = new HttpRequest($path, $method, $body);
+
+$router = new Router($config['routes']);
+
 try {
-    $config = include(__DIR__ . '/config/local.php');
+    $requestHandler = $router->match($request);
 
-    $path = $_SERVER['REQUEST_URI'];
-
-    $request = new HttpRequest();
-
-    $router       = new Router($config['routes']);
-    $matchedClass = $router->match($request);
-
-    /** @var \Learn\Http\Message\Handler\RequestHandlerInterface $testObject */
-    $testObject = new $matchedClass;
-
-    /** @var \Learn\Http\HttpResponse $response */
-    $response = $testObject->handle($request);
-    $response->makeResponse();
-
-
-} catch (\PDOException $ex) {
-    $response = new HttpResponse(503, $ex);
-    $response->makeResponse();
+    /** @var ResponseInterface $response */
+    $response = $requestHandler->handle($request);
 } catch (\InvalidArgumentException $ex) {
-    $response = new HttpResponse(400, $ex);
-    $response->makeResponse();
-} catch (\Throwable $ex) {
-    $response = new HttpResponse(500, $ex);
-    $response->makeResponse();
+    $response = new HttpResponse(400, [$ex->getMessage()]);
 }
 
+header('Content-Type: application/json');
+http_response_code($response->getCode());
 
+echo $response;
 

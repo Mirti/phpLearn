@@ -1,20 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Learn\Http\Message\Handler;
+namespace Learn\Http\Message\Request\Handler;
 
 
-use Learn\Http\HttpResponse;
-use Learn\Http\RequestInterface;
+use Learn\Http\Message\Request\RequestInterface;
+use Learn\Http\Message\Response\HttpResponse;
+use Learn\Http\Message\Response\ResponseInterface;
 
 class DefaultHandler implements RequestHandlerInterface
 {
-
     /**
-     * @param RequestInterface $request
-     * @return mixed
+     * @inheritdoc
      */
-    public function handle(RequestInterface $request)
+    public function handle(RequestInterface $request): ResponseInterface
     {
         $info = "Zrobione: <br /><br/>
         /users <br />
@@ -23,6 +22,6 @@ class DefaultHandler implements RequestHandlerInterface
         {\"firstName\" : \"imie\", <br />
         \"lastName\" : \"nazwisko\"}";
 
-        return new HttpResponse(200, $info);
+        return new HttpResponse(200, [$info]);
     }
 }

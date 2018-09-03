@@ -1,20 +1,21 @@
 <?php
+declare(strict_types=1);
 
-use Learn\Http\Message\Handler\AddUserRequestHandler;
-use Learn\Http\Message\Handler\DefaultHandler;
-use Learn\Http\Message\Handler\GetAllUsersRequestHandler;
+use Learn\Http\Message\Request\Handler\AddUserRequestHandler;
+use Learn\Http\Message\Request\Handler\DefaultHandler;
+use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
 
-/** Return app config */
 return [
     'database' => [
-        'driver'      => "mysql",
+        'driver'      => 'mysql',
         'dsn'         => [
-            'host'   => '127.0.0.1',
-            'port'   => 3306,
-            'dbname' => 'learn'
+            'host'    => '127.0.0.1',
+            'port'    => 3306,
+            'dbname'  => 'learn',
+            'charset' => 'utf8'
         ],
         'credentials' => [
-            'user'     => 'dev',
+            'username' => 'dev',
             'password' => 'dev',
         ]
     ],
@@ -26,6 +27,5 @@ return [
             'GET'  => GetAllUsersRequestHandler::class,
             'POST' => AddUserRequestHandler::class,
         ]
-
     ]
 ];
