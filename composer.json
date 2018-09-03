@@ -6,7 +6,9 @@
       "email": "avalith@o2.pl"
     }
   ],
-  "require": {},
+  "require": {
+    "phpunit/phpunit": "^7.3"
+  },
   "autoload": {
     "psr-4": {
       "Learn\\": "src"
