@@ -34,11 +34,11 @@ class AddUserRequestHandler implements RequestHandlerInterface
     {
         $data = $request->getBody();
 
-        if (!array_key_exists('first_name', $data) || !array_key_exists('last_name', $data)) {
+        if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
             throw new \InvalidArgumentException('Missing one of required field.');
         }
 
-        $user = new User($data['first_name'], $data['last_name']);
+        $user = new User($data['firstName'], $data['lastName']);
 
         $this->repository->add($user);
 

@@ -26,7 +26,7 @@ class UserRepository implements RepositoryInterface
      */
     public function add(User $user): void
     {
-        $sql = "INSERT INTO users (first_name, last_name) VALUES (?, ?)";
+        $sql = "INSERT INTO users (firstName, lastName) VALUES (?, ?)";
 
         $isAdded = $this->connection->prepare($sql)->execute([
             $user->getFirstName(),
