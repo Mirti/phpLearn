@@ -9,20 +9,20 @@ use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Model\User;
-use Learn\Repository\UserRepository;
-use Learn\Repository\UserRepositoryInterface;
+use Learn\Repository\Repository;
+use Learn\Repository\RepositoryInterface;
 
 class AddUserRequestHandler implements RequestHandlerInterface
 {
-    /** @var UserRepositoryInterface */
+    /** @var RepositoryInterface */
     private $repository;
 
     /**
      * AddUserRequestHandler constructor.
      *
-     * @param UserRepositoryInterface $repository
+     * @param RepositoryInterface $repository
      */
-    public function __construct(UserRepositoryInterface $repository)
+    public function __construct($repository)
     {
         $this->repository = $repository;
     }

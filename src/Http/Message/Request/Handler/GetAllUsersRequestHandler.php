@@ -8,19 +8,31 @@ use Learn\Database\Factory\PdoConnectionFactory;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Repository\UserRepository;
+use Learn\Repository\Repository;
+use Learn\Repository\RepositoryInterface;
 
 class GetAllUsersRequestHandler implements RequestHandlerInterface
 {
+
+    /** @var RepositoryInterface */
+    private $repository;
+
+    /**
+     * GetAllUserRequestHandler constructor.
+     *
+     * @param RepositoryInterface $repository
+     */
+    public function __construct($repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * @inheritdoc
      */
     public function handle(RequestInterface $request): ResponseInterface
-    {
-        $pdo = PdoConnectionFactory::create();
-
-        $repository = new UserRepository($pdo);
-        $users      = $repository->getAll();
+    {;
+        $users      = $this->repository->getAll();
 
         return new HttpResponse(200, $users ?? []);
     }

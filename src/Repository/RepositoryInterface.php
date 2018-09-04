@@ -6,7 +6,7 @@ namespace Learn\Repository;
 
 use Learn\Model\User;
 
-interface UserRepositoryInterface
+interface RepositoryInterface
 {
     /**
      * @param User $user

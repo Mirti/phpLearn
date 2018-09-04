@@ -5,9 +5,9 @@ namespace Test\Unit\Repository;
 
 
 use Learn\Model\User;
-use Learn\Repository\UserRepositoryInterface;
+use Learn\Repository\RepositoryInterface;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository implements RepositoryInterface
 {
 
     protected $users =[];

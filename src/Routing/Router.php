@@ -6,6 +6,7 @@ namespace Learn\Routing;
 
 use Learn\Http\Message\Request\Handler\RequestHandlerInterface;
 use Learn\Http\Message\Request\RequestInterface;
+use Learn\Repository\RepositoryFactory;
 
 class Router
 {
@@ -39,7 +40,8 @@ class Router
         }
 
         $handlerClass = $this->config[$target][$method];
-        $handler      = new $handlerClass();
+        $repository = RepositoryFactory::makeRepository($target);
+        $handler      = new $handlerClass($repository);
 
         if (!$handler instanceof RequestHandlerInterface) {
             throw new \InvalidArgumentException('Class must implement ' . RequestHandlerInterface::class);

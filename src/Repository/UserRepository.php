@@ -6,13 +6,13 @@ namespace Learn\Repository;
 
 use Learn\Model\User;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository implements RepositoryInterface
 {
     /** @var \PDO */
     private $connection;
 
     /**
-     * UserRepository constructor.
+     * Repository constructor.
      *
      * @param \PDO $connection
      */
