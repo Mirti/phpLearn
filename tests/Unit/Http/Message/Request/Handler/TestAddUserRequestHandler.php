@@ -1,6 +1,14 @@
 <?php
+declare(strict_types=1);
 
-class TestAddUserRequestHandler extends PHPUnit\Framework\TestCase
+namespace Test\Unit\Http\Message\Request\Handler;
+
+
+use Learn\Http\Message\Request\Handler\AddUserRequestHandler;
+use Learn\Model\User;
+use Test\Unit\Repository\UserRepository;
+
+class TestAddUserRequestHandler extends \PHPUnit\Framework\TestCase
 {
     protected $request;
     protected $userRepository;
@@ -8,27 +16,24 @@ class TestAddUserRequestHandler extends PHPUnit\Framework\TestCase
     public function setUp()
     {
         $body          = [
-            "firstName" => "userFirstName",
-            "lastName"  => "userLastName"
+            "first_name" => "userFirstName",
+            "last_name"  => "userLastName"
         ];
         $this->request = new \Learn\Http\Message\Request\HttpRequest("/users", "POST", $body);
 
-        $mockUserRepository = $this->getMockBuilder(\Learn\Repository\UserRepository::class)
-            ->disableOriginalConstructor()
-            ->setMethods(["add"])
-            ->getMock();
-
-        $this->userRepository = $mockUserRepository;
+        $this->userRepository = new UserRepository();
     }
 
     /** @test */
     public function handleAddNewUserReturnResponseCreated()
     {
-        $addUserHandler = new \Learn\Http\Message\Request\Handler\AddUserRequestHandler($this->userRepository);
+        $handler  = new AddUserRequestHandler($this->userRepository);
+        $response = $handler->handle($this->request);
 
-        $response = $addUserHandler->handle($this->request);
+        $user = new User('userFirstName', 'userLastName');
 
-        assertEquals(201, $response->getCode());
+        self::assertEquals($user, $this->userRepository->fetchAll()[0]);
+        self::assertEquals(201, $response->getCode());
     }
 
 }

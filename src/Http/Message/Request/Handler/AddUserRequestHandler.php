@@ -10,6 +10,7 @@ use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Model\User;
 use Learn\Repository\UserRepository;
+use Learn\Repository\UserRepositoryInterface;
 
 class AddUserRequestHandler implements RequestHandlerInterface
 {
@@ -39,10 +40,7 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
         $user = new User($data['first_name'], $data['last_name']);
 
-        $pdo        = PdoConnectionFactory::create();
-        $repository = new UserRepository($pdo);
-
-        $repository->add($user);
+        $this->repository->add($user);
 
         return new HttpResponse(201);
     }

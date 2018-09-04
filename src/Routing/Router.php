@@ -39,7 +39,7 @@ class Router
         }
 
         $handlerClass = $this->config[$target][$method];
-        $handler      = new $handlerClass;
+        $handler      = new $handlerClass();
 
         if (!$handler instanceof RequestHandlerInterface) {
             throw new \InvalidArgumentException('Class must implement ' . RequestHandlerInterface::class);
