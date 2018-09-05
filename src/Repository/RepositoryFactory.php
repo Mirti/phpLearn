@@ -12,11 +12,12 @@ class RepositoryFactory
      * @param $target
      * @return RepositoryInterface
      */
-    public static function makeRepository($target): RepositoryInterface
+    public static function makeRepository($target)
     {
         switch ($target) {
             case "/users":
                 return new UserRepository(PdoConnectionFactory::create());
+                break;
         }
     }
 }

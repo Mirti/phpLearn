@@ -16,8 +16,8 @@ class TestAddUserRequestHandler extends \PHPUnit\Framework\TestCase
     public function setUp()
     {
         $body          = [
-            "first_name" => "userFirstName",
-            "last_name"  => "userLastName"
+            "firstName" => "userFirstName",
+            "lastName"  => "userLastName"
         ];
         $this->request = new \Learn\Http\Message\Request\HttpRequest("/users", "POST", $body);
 
