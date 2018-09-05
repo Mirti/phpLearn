@@ -10,7 +10,8 @@ use Learn\Repository\RepositoryInterface;
 class UserRepository implements RepositoryInterface
 {
 
-    protected $users =[];
+    protected $users = [];
+
     /**
      * @param User $user
      */
@@ -30,7 +31,8 @@ class UserRepository implements RepositoryInterface
     /**
      * @return array
      */
-    public function fetchAll(){
+    public function fetchAll()
+    {
         return $this->users;
     }
 }
