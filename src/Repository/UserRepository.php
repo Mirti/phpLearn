@@ -22,9 +22,11 @@ class UserRepository implements RepositoryInterface
     }
 
     /**
-     * @inheritdoc
+     * @param User $user
+     * @return false|string
+     * @throws \Exception
      */
-    public function add(User $user): void
+    public function add(User $user): array
     {
         $sql = "INSERT INTO users (firstName, lastName) VALUES (?, ?)";
 
@@ -36,6 +38,11 @@ class UserRepository implements RepositoryInterface
         if (!$isAdded) {
             throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());
         }
+
+        $insertedUser = ["id"        => $this->connection->lastInsertId(),
+                         "firstName" => $user->getFirstName(),
+                         "lastName"  => $user->getLastName()];
+        return $insertedUser ?? [];
     }
 
     /**

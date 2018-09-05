@@ -10,8 +10,9 @@ interface RepositoryInterface
 {
     /**
      * @param User $user
+     * @return array
      */
-    public function add(User $user): void;
+    public function add(User $user): array;
 
     /**
      * @return array

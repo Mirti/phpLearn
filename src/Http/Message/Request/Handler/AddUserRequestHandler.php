@@ -39,8 +39,8 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
         $user = new User($data['firstName'], $data['lastName']);
 
-        $this->repository->add($user);
+        $insertedUser = $this->repository->add($user);
 
-        return new HttpResponse(201);
+        return new HttpResponse(201, $insertedUser);
     }
 }
