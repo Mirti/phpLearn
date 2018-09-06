@@ -5,6 +5,7 @@ namespace Learn\Repository;
 
 
 use Learn\Model\User;
+use Rhumsaa\Uuid\Uuid;
 
 class UserRepository implements RepositoryInterface
 {
@@ -28,9 +29,11 @@ class UserRepository implements RepositoryInterface
      */
     public function add(User $user): array
     {
-        $sql = "INSERT INTO users (firstName, lastName) VALUES (?, ?)";
+        $uuid = Uuid::uuid4();
+        $sql = "INSERT INTO users (id, firstName, lastName) VALUES (?, ?, ?)";
 
         $isAdded = $this->connection->prepare($sql)->execute([
+            $uuid,
             $user->getFirstName(),
             $user->getLastName()
         ]);
@@ -39,7 +42,7 @@ class UserRepository implements RepositoryInterface
             throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());
         }
 
-        $insertedUser = ["id"        => $this->connection->lastInsertId(),
+        $insertedUser = ["id"        => $uuid->toString(),
                          "firstName" => $user->getFirstName(),
                          "lastName"  => $user->getLastName()];
         return $insertedUser ?? [];

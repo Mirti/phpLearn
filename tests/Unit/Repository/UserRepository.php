@@ -14,10 +14,13 @@ class UserRepository implements RepositoryInterface
 
     /**
      * @param User $user
+     * @return array
      */
-    public function add(User $user): void
+    public function add(User $user): array
     {
         $this->users[] = $user;
+        return [$user->getFirstName(),
+                $user->getLastName()];
     }
 
     /**

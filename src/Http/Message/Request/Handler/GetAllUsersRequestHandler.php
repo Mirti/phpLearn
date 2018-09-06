@@ -7,7 +7,6 @@ namespace Learn\Http\Message\Request\Handler;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Repository\Repository;
 use Learn\Repository\RepositoryInterface;
 
 class GetAllUsersRequestHandler implements RequestHandlerInterface
