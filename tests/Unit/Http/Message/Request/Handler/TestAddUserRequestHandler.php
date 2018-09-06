@@ -10,9 +10,18 @@ use Test\Unit\Repository\UserRepository;
 
 class TestAddUserRequestHandler extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var
+     */
     protected $request;
+    /**
+     * @var
+     */
     protected $userRepository;
 
+    /**
+     * Setup test class
+     */
     public function setUp()
     {
         $body          = [
@@ -30,9 +39,8 @@ class TestAddUserRequestHandler extends \PHPUnit\Framework\TestCase
         $handler  = new AddUserRequestHandler($this->userRepository);
         $response = $handler->handle($this->request);
 
-        $user = new User('userFirstName', 'userLastName');
-
-        self::assertEquals($user, $this->userRepository->fetchAll()[0]);
+        self::assertEquals("userFirstName", $response->getBody()["firstName"]);
+        self::assertEquals('userLastName', $response->getBody()['lastName']);
         self::assertEquals(201, $response->getCode());
     }
 

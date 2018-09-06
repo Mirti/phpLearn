@@ -10,6 +10,7 @@ use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Model\User;
 use Learn\Repository\Repository;
 use Learn\Repository\RepositoryInterface;
+use Rhumsaa\Uuid\Uuid;
 
 class AddUserRequestHandler implements RequestHandlerInterface
 {
@@ -39,7 +40,11 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
         $user = new User($data['firstName'], $data['lastName']);
 
-        $insertedUser = $this->repository->add($user);
+        $uuid = Uuid::uuid4();
+
+        $this->repository->add($user, $uuid);
+
+        $insertedUser = $this->repository->find($uuid);
 
         return new HttpResponse(201, $insertedUser);
     }

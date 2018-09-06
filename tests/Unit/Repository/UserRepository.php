@@ -6,6 +6,7 @@ namespace Test\Unit\Repository;
 
 use Learn\Model\User;
 use Learn\Repository\RepositoryInterface;
+use Rhumsaa\Uuid\Uuid;
 
 class UserRepository implements RepositoryInterface
 {
@@ -14,28 +15,30 @@ class UserRepository implements RepositoryInterface
 
     /**
      * @param User $user
-     * @return array
+     * @param Uuid $uuid
+     * @return array|void
      */
-    public function add(User $user): array
+    public function add(User $user, $uuid)
     {
-        $this->users[] = $user;
-        return [$user->getFirstName(),
-                $user->getLastName()];
+        $this->users[] = ["firstName" => $user->getFirstName(),
+                          "lastName"  => $user->getLastName(),
+                          "id"        => $uuid];
     }
 
     /**
      * @return array
      */
-    public function getAll(): array
-    {
-        // TODO: Implement getAll() method.
-    }
-
-    /**
-     * @return array
-     */
-    public function fetchAll()
+    public function fetchAll(): array
     {
         return $this->users;
+    }
+
+    /**
+     * @param Uuid $uuid
+     * @return array
+     */
+    public function find(Uuid $uuid): array
+    {
+        return $this->users[0];  //To muszę poprawić, znaleźć sposób, żeby szukało tego, w ktorym się uuid zgadza
     }
 }
