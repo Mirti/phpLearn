@@ -11,12 +11,12 @@ use Learn\Repository\RepositoryInterface;
 
 class FindUserRequestHandler implements RequestHandlerInterface
 {
-
     /** @var RepositoryInterface */
     private $repository;
 
     /**
      * FindUsersRequestHandler constructor.
+     *
      * @param $repository
      */
     public function __construct($repository)
@@ -25,8 +25,7 @@ class FindUserRequestHandler implements RequestHandlerInterface
     }
 
     /**
-     * @param RequestInterface $request
-     * @return ResponseInterface
+     * @inheritdoc
      */
     public function handle(RequestInterface $request): ResponseInterface
     {

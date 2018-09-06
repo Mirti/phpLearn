@@ -11,7 +11,6 @@ use Learn\Repository\RepositoryInterface;
 
 class GetAllUsersRequestHandler implements RequestHandlerInterface
 {
-
     /** @var RepositoryInterface */
     private $repository;
 

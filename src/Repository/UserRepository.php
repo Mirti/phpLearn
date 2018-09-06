@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Learn\Repository;
 
 
-use Learn\Http\Message\Response\Exception\UserNotFoundException;
+use Learn\Repository\Exception\UserNotFoundException;
 use Learn\Model\User;
 
 class UserRepository implements RepositoryInterface
@@ -71,7 +71,7 @@ class UserRepository implements RepositoryInterface
         $user = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         if(empty($user)){
-            throw new UserNotFoundException();
+            throw UserNotFoundException::byId($id);
         }
         return $user;
     }

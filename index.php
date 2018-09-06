@@ -5,7 +5,7 @@ namespace Learn;
 
 
 use Learn\Http\Message\Request\HttpRequest;
-use Learn\Http\Message\Response\Exception\UserNotFoundException;
+use Learn\Repository\Exception\UserNotFoundException;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Routing\Router;

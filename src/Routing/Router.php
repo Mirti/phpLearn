@@ -4,7 +4,7 @@ declare (strict_types=1);
 namespace Learn\Routing;
 
 
-use Learn\Http\Message\Request\Handler\HandlerFactory;
+use Learn\Http\Message\Request\Handler\Factory\HandlerFactory;
 use Learn\Http\Message\Request\Handler\RequestHandlerInterface;
 use Learn\Http\Message\Request\RequestInterface;
 
