@@ -8,7 +8,6 @@ use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Model\User;
-use Learn\Repository\Repository;
 use Learn\Repository\RepositoryInterface;
 use Rhumsaa\Uuid\Uuid;
 
@@ -38,13 +37,14 @@ class AddUserRequestHandler implements RequestHandlerInterface
             throw new \InvalidArgumentException('Missing one of required field.');
         }
 
-        $user = new User($data['firstName'], $data['lastName']);
+        $id = Uuid::uuid4();
 
-        $uuid = Uuid::uuid4();
+        $user = new User($data['firstName'], $data['lastName'], $id->toString());
 
-        $this->repository->add($user, $uuid);
 
-        $insertedUser = $this->repository->find($uuid);
+        $this->repository->add($user);
+
+        $insertedUser = $this->repository->find($id->toString());
 
         return new HttpResponse(201, $insertedUser);
     }

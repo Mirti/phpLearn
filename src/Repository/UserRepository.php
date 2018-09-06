@@ -24,16 +24,14 @@ class UserRepository implements RepositoryInterface
 
     /**
      * @param User $user
-     * @param      $uuid
-     * @return array
      * @throws \Exception
      */
-    public function add(User $user, $uuid)
+    public function add(User $user)
     {
         $sql = "INSERT INTO users (id, firstName, lastName) VALUES (?, ?, ?)";
 
         $isAdded = $this->connection->prepare($sql)->execute([
-            $uuid,
+            $user->getId(),
             $user->getFirstName(),
             $user->getLastName()
         ]);
@@ -58,12 +56,12 @@ class UserRepository implements RepositoryInterface
     }
 
     /**
-     * @param Uuid $uuid
+     * @param string id
      * @return array
      */
-    public function find(Uuid $uuid): array
+    public function find(string $id): array
     {
-        $stmt = $this->connection->query("SELECT * FROM users WHERE id =\"$uuid\"");
+        $stmt = $this->connection->query("SELECT * FROM users WHERE id =\"$id\"");
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 }

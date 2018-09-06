@@ -14,7 +14,7 @@ interface RepositoryInterface
      * @param Uuid $uuid
      * @return array
      */
-    public function add(User $user, $uuid);
+    public function add(User $user);
 
     /**
      * @return array
@@ -22,8 +22,8 @@ interface RepositoryInterface
     public function fetchAll(): array;
 
     /**
-     * @param Uuid $uuid
+     * @param string $id
      * @return array
      */
-    public function find(Uuid $uuid): array;
+    public function find(string $id): array;
 }
