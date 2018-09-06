@@ -20,11 +20,11 @@ class User
      * @param string $lastName
      * @param string $id
      */
-    public function __construct(string $firstName, string $lastName, string $id)
+    public function __construct(string $id,string $firstName, string $lastName)
     {
+        $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName  = $lastName;
-        $this->id = $id;
     }
 
     /**

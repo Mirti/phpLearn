@@ -25,6 +25,9 @@ class HandlerFactory
                 return new AddUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
                 break;
 
+            case FindUserRequestHandler::class:
+                return new FindUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
+
             default:
                 return new DefaultHandler();
                 break;

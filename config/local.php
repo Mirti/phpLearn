@@ -4,6 +4,7 @@ declare(strict_types=1);
 use Learn\Http\Message\Request\Handler\AddUserRequestHandler;
 use Learn\Http\Message\Request\Handler\DefaultHandler;
 use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
+use Learn\Http\Message\Request\Handler\FindUserRequestHandler;
 
 return [
     'database' => [
@@ -26,6 +27,9 @@ return [
         '/users' => [
             'GET'  => GetAllUsersRequestHandler::class,
             'POST' => AddUserRequestHandler::class,
+        ],
+        '/users/dupa' => [
+            'GET' => FindUserRequestHandler::class
         ]
     ]
 ];

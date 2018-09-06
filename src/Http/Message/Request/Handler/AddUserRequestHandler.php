@@ -27,7 +27,8 @@ class AddUserRequestHandler implements RequestHandlerInterface
     }
 
     /**
-     * @inheritdoc
+     * @param RequestInterface $request
+     * @return ResponseInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
@@ -37,14 +38,13 @@ class AddUserRequestHandler implements RequestHandlerInterface
             throw new \InvalidArgumentException('Missing one of required field.');
         }
 
-        $id = Uuid::uuid4();
+        $id = Uuid::uuid4()->toString();
 
-        $user = new User($data['firstName'], $data['lastName'], $id->toString());
-
+        $user = new User($id, $data['firstName'], $data['lastName']);
 
         $this->repository->add($user);
 
-        $insertedUser = $this->repository->find($id->toString());
+        $insertedUser = $this->repository->find($id);
 
         return new HttpResponse(201, $insertedUser);
     }

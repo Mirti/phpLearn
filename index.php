@@ -5,6 +5,7 @@ namespace Learn;
 
 
 use Learn\Http\Message\Request\HttpRequest;
+use Learn\Http\Message\Response\Exception\UserNotFoundException;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Routing\Router;
@@ -30,6 +31,8 @@ try {
     $response = $requestHandler->handle($request);
 } catch (\InvalidArgumentException $ex) {
     $response = new HttpResponse(400, [$ex->getMessage()]);
+} catch (UserNotFoundException $ex){
+    $response = new HttpResponse(404, [$ex->getMessage()]);
 }
 
 header('Content-Type: application/json');

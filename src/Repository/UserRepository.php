@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Learn\Repository;
 
 
+use Learn\Http\Message\Response\Exception\UserNotFoundException;
 use Learn\Model\User;
-use Rhumsaa\Uuid\Uuid;
 
 class UserRepository implements RepositoryInterface
 {
@@ -62,6 +62,17 @@ class UserRepository implements RepositoryInterface
     public function find(string $id): array
     {
         $stmt = $this->connection->query("SELECT * FROM users WHERE id =\"$id\"");
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if(!$stmt)
+        {
+            throw new \Exception("Can not find user. Database failure: " . $this->connection->errorInfo());
+        }
+
+        $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if(empty($user)){
+            throw new UserNotFoundException();
+        }
+        return $user;
     }
 }
