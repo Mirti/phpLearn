@@ -19,8 +19,9 @@ $config = include(__DIR__ . '/config/local.php');
 $path   = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 $body   = json_decode(file_get_contents('php://input'), true) ?? [];
+$id = explode("/", $path)[2];
 
-$request = new HttpRequest($path, $method, $body);
+$request = new HttpRequest($path, $method, $body,$id);
 
 $router = new Router($config['routes']);
 

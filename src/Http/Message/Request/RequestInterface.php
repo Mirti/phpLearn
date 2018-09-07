@@ -17,4 +17,9 @@ interface RequestInterface extends MessageInterface
      * @return string
      */
     public function getMethod(): string;
+
+    /**
+     * @return string
+     */
+    public function getId(): string;
 }

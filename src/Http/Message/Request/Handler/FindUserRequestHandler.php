@@ -14,18 +14,13 @@ class FindUserRequestHandler implements RequestHandlerInterface
     /** @var RepositoryInterface */
     private $repository;
 
-    /** @var  */
-    private $id;
-
     /**
      * FindUserRequestHandler constructor.
      * @param $repository
-     * @param $id
      */
-    public function __construct($repository, $id)
+    public function __construct($repository)
     {
         $this->repository = $repository;
-        $this->id = $id;
     }
 
     /**
@@ -33,7 +28,7 @@ class FindUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $user = $this->repository->find($this->id);
+        $user = $this->repository->find($request->getId());
 
         return new HttpResponse(200, $user->toArray() ?? []);
     }

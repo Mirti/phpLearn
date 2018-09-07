@@ -33,26 +33,15 @@ class Router
     public function match($request): RequestHandlerInterface
     {
         $method = $request->getMethod();
-        /**
-         * [0] - ""
-         * [1] - handler name
-         * [2] - parameter
-         */
-        $target = explode("/", $request->getTarget());
+        $target = $request->getTarget();
 
-        $targetName = $target[1];
-        @$targetId = $target[2];
-
-        if (!isset($this->config[$targetName][$method])) {
-            throw new \InvalidArgumentException("Missing handler for $method $targetName");
+        if (!isset($this->config[$target][$method])) {
+            throw new \InvalidArgumentException("Missing handler for $method $target");
         }
 
-        if (!empty($targetId)) {
-            $targetName .= "/";
-        }
-
-        $handlerClass = $this->config[$targetName][$method];
-        $handler      = HandlerFactory::create($handlerClass, $targetId);
+        var_dump($test = $this->toRoute($this->config, $request->getTarget()));
+        $handlerClass = $this->config[$target][$method];
+        $handler      = HandlerFactory::create($handlerClass);
 
         if (!$handler instanceof RequestHandlerInterface) {
             throw new \InvalidArgumentException('Class must implement ' . RequestHandlerInterface::class);
@@ -60,4 +49,23 @@ class Router
 
         return $handler;
     }
+
+    public function toRoute(array $routes, string $url): string
+    {
+        $routeParts = $routes;
+
+        $urlParts = explode('/', $url);
+
+        foreach ($routes as $route => $methods){
+            foreach ($routeParts as $i => $part){
+                if(!($part === $urlParts[$i]) && !(strpos($part,':')===0)){
+                    continue;
+                }
+            }
+        }
+
+        return $route ?? '';
+    }
+
+
 }

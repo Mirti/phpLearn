@@ -11,19 +11,20 @@ class HttpRequest implements RequestInterface
     /** @var */
     private $method;
 
+    /** @var  */
+    private $id;
+
     /** @var */
     private $body;
 
     /**
      * HttpRequest constructor.
-     *
      * @param string $target
      * @param string $method
-     *
      * @param array  $body
-     *
+     * @param string $id
      */
-    public function __construct(string $target, string $method, array $body)
+    public function __construct(string $target, string $method, array $body, string $id ="")
     {
         $this->target = $target;
         $this->method = $method;
@@ -45,6 +46,14 @@ class HttpRequest implements RequestInterface
     public function getMethod(): string
     {
         return $this->method;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     /**
