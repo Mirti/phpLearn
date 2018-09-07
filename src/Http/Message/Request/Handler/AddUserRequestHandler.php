@@ -8,18 +8,18 @@ use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Model\User;
-use Learn\Repository\RepositoryInterface;
+use Learn\Repository\UserRepositoryInterface;
 use Rhumsaa\Uuid\Uuid;
 
 class AddUserRequestHandler implements RequestHandlerInterface
 {
-    /** @var RepositoryInterface */
+    /** @var UserRepositoryInterface */
     private $repository;
 
     /**
      * AddUserRequestHandler constructor.
      *
-     * @param RepositoryInterface $repository
+     * @param UserRepositoryInterface $repository
      */
     public function __construct($repository)
     {
@@ -37,14 +37,12 @@ class AddUserRequestHandler implements RequestHandlerInterface
             throw new \InvalidArgumentException('Missing one of required field.');
         }
 
-        $id = Uuid::uuid4()->toString();
+        $id   = Uuid::uuid4()->toString();
+        $user = new User($id, $data['firstName'], $data['lastName']);
+        $this->repository->add($user);
 
-        $newUser = new User($id, $data['firstName'], $data['lastName']);
+        $createdUser = $this->repository->find($id);
 
-        $this->repository->add($newUser);
-
-        $insertedUser = $this->repository->find($id);
-
-        return new HttpResponse(201, $insertedUser->toArray());
+        return new HttpResponse(201, $createdUser->toArray());
     }
 }

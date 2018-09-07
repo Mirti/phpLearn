@@ -7,17 +7,17 @@ namespace Learn\Http\Message\Request\Handler;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Repository\RepositoryInterface;
+use Learn\Repository\UserRepositoryInterface;
 
 class GetAllUsersRequestHandler implements RequestHandlerInterface
 {
-    /** @var RepositoryInterface */
+    /** @var UserRepositoryInterface */
     private $repository;
 
     /**
      * GetAllUserRequestHandler constructor.
      *
-     * @param RepositoryInterface $repository
+     * @param UserRepositoryInterface $repository
      */
     public function __construct($repository)
     {

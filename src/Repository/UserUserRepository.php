@@ -7,7 +7,7 @@ namespace Learn\Repository;
 use Learn\Repository\Exception\UserNotFoundException;
 use Learn\Model\User;
 
-class UserRepository implements RepositoryInterface
+class UserUserRepository implements UserRepositoryInterface
 {
     /** @var \PDO */
     private $connection;
@@ -23,10 +23,9 @@ class UserRepository implements RepositoryInterface
     }
 
     /**
-     * @param User $user
-     * @throws \Exception
+     * @inheritdoc
      */
-    public function add(User $user)
+    public function add(User $user): void
     {
         $sql = "INSERT INTO users (id, firstName, lastName) VALUES (?, ?, ?)";
 
@@ -56,8 +55,7 @@ class UserRepository implements RepositoryInterface
     }
 
     /**
-     * @param string id
-     * @return User
+     * @inheritdoc
      */
     public function find(string $id): User
     {

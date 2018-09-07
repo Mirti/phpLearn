@@ -5,8 +5,7 @@ namespace Test\Unit\Http\Message\Request\Handler;
 
 
 use Learn\Http\Message\Request\Handler\AddUserRequestHandler;
-use Learn\Model\User;
-use Test\Unit\Repository\UserRepository;
+use Test\Unit\Repository\UserUserRepository;
 
 class TestAddUserRequestHandler extends \PHPUnit\Framework\TestCase
 {
@@ -30,7 +29,7 @@ class TestAddUserRequestHandler extends \PHPUnit\Framework\TestCase
         ];
         $this->request = new \Learn\Http\Message\Request\HttpRequest("/users", "POST", $body);
 
-        $this->userRepository = new UserRepository();
+        $this->userRepository = new UserUserRepository();
     }
 
     /** @test */

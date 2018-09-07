@@ -5,23 +5,22 @@ namespace Learn\Repository;
 
 
 use Learn\Model\User;
-use Rhumsaa\Uuid\Uuid;
 
-interface RepositoryInterface
+interface UserRepositoryInterface
 {
     /**
      * @param User $user
-     * @return array
      */
-    public function add(User $user);
+    public function add(User $user): void;
 
     /**
-     * @return array
+     * @return User[]
      */
     public function fetchAll(): array;
 
     /**
      * @param string $id
+     *
      * @return User
      */
     public function find(string $id): User;

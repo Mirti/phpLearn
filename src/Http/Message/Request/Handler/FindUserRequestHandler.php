@@ -7,18 +7,19 @@ namespace Learn\Http\Message\Request\Handler;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Repository\RepositoryInterface;
+use Learn\Repository\UserRepositoryInterface;
 
 class FindUserRequestHandler implements RequestHandlerInterface
 {
-    /** @var RepositoryInterface */
+    /** @var UserRepositoryInterface */
     private $repository;
 
     /**
      * FindUserRequestHandler constructor.
+     *
      * @param $repository
      */
-    public function __construct($repository)
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
@@ -28,8 +29,9 @@ class FindUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $user = $this->repository->find($request->getId());
+        $id   = $request->getRouteParams()[':id'];
+        $user = $this->repository->find($id);
 
-        return new HttpResponse(200, $user->toArray() ?? []);
+        return new HttpResponse(200, $user->toArray());
     }
 }

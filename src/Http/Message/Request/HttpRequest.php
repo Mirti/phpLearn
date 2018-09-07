@@ -7,37 +7,44 @@ namespace Learn\Http\Message\Request;
 class HttpRequest implements RequestInterface
 {
     /** @var string */
-    private $target;
-    /** @var */
     private $method;
-
-    /** @var  */
-    private $id;
-
-    /** @var */
+    /** @var string */
+    private $url;
+    /** @var string */
+    private $route;
+    /** @var array */
+    private $routeParams;
+    /** @var array */
     private $body;
+
 
     /**
      * HttpRequest constructor.
-     * @param string $target
+     *
      * @param string $method
+     *
+     * @param string $url
+     * @param string $route
+     *
+     * @param array  $routeParams
      * @param array  $body
-     * @param string $id
      */
-    public function __construct(string $target, string $method, array $body, string $id ="")
-    {
-        $this->target = $target;
+    public function __construct(
+        string $method,
+
+        string $url,
+        string $route,
+
+        array $routeParams,
+        array $body
+    ) {
         $this->method = $method;
 
-        $this->body = $body;
-    }
+        $this->url   = $url;
+        $this->route = $route;
 
-    /**
-     * @inheritdoc
-     */
-    public function getTarget(): string
-    {
-        return $this->target;
+        $this->routeParams = $routeParams;
+        $this->body        = $body;
     }
 
     /**
@@ -51,9 +58,25 @@ class HttpRequest implements RequestInterface
     /**
      * @inheritdoc
      */
-    public function getId(): string
+    public function getUrl(): string
     {
-        return $this->id;
+        return $this->url;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRoute(): string
+    {
+        return $this->route;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRouteParams(): array
+    {
+        return $this->routeParams;
     }
 
     /**

@@ -5,24 +5,26 @@ namespace Test\Unit\Repository;
 
 
 use Learn\Model\User;
-use Learn\Repository\RepositoryInterface;
+use Learn\Repository\UserRepositoryInterface;
 use Rhumsaa\Uuid\Uuid;
 
-class UserRepository implements RepositoryInterface
+class UserUserRepository implements UserRepositoryInterface
 {
 
     protected $users = [];
 
     /**
      * @param User $user
-     * @param Uuid $uuid
      * @return array|void
      */
-    public function add(User $user, $uuid)
+    public function add(User $user): void
     {
-        $this->users[] = ["firstName" => $user->getFirstName(),
-                          "lastName"  => $user->getLastName(),
-                          "id"        => $uuid];
+        $this->users[] = [
+            "id" => $user->getId(),
+
+            "firstName" => $user->getFirstName(),
+            "lastName"  => $user->getLastName(),
+        ];
     }
 
     /**

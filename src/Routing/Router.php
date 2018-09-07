@@ -33,14 +33,13 @@ class Router
     public function match($request): RequestHandlerInterface
     {
         $method = $request->getMethod();
-        $target = $request->getTarget();
+        $route = $request->getRoute();
 
-        if (!isset($this->config[$target][$method])) {
-            throw new \InvalidArgumentException("Missing handler for $method $target");
+        if (!isset($this->config[$route][$method])) {
+            throw new \InvalidArgumentException("Missing handler for $method $route");
         }
 
-        var_dump($test = $this->toRoute($this->config, $request->getTarget()));
-        $handlerClass = $this->config[$target][$method];
+        $handlerClass = $this->config[$route][$method];
         $handler      = HandlerFactory::create($handlerClass);
 
         if (!$handler instanceof RequestHandlerInterface) {
@@ -49,23 +48,4 @@ class Router
 
         return $handler;
     }
-
-    public function toRoute(array $routes, string $url): string
-    {
-        $routeParts = $routes;
-
-        $urlParts = explode('/', $url);
-
-        foreach ($routes as $route => $methods){
-            foreach ($routeParts as $i => $part){
-                if(!($part === $urlParts[$i]) && !(strpos($part,':')===0)){
-                    continue;
-                }
-            }
-        }
-
-        return $route ?? '';
-    }
-
-
 }
