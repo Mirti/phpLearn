@@ -21,14 +21,14 @@ return [
         ]
     ],
     'routes'   => [
-        '/'      => [
+        ''      => [
             'GET' => DefaultHandler::class
         ],
-        '/users' => [
+        'users' => [
             'GET'  => GetAllUsersRequestHandler::class,
             'POST' => AddUserRequestHandler::class,
         ],
-        '/users/dupa' => [
+        'users/' => [
             'GET' => FindUserRequestHandler::class
         ]
     ]

@@ -57,9 +57,9 @@ class UserRepository implements RepositoryInterface
 
     /**
      * @param string id
-     * @return array
+     * @return User
      */
-    public function find(string $id): array
+    public function find(string $id): User
     {
         $stmt = $this->connection->query("SELECT * FROM users WHERE id =\"$id\"");
 
@@ -68,11 +68,14 @@ class UserRepository implements RepositoryInterface
             throw new \Exception("Can not find user. Database failure: " . $this->connection->errorInfo());
         }
 
-        $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $userData = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        if(empty($user)){
+        if(empty($userData)){
             throw UserNotFoundException::byId($id);
         }
+
+        $user = new User($id, $userData['firstName'], $userData['lastName']);
+
         return $user;
     }
 }

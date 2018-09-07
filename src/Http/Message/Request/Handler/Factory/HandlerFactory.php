@@ -16,10 +16,10 @@ class HandlerFactory
 {
     /**
      * @param string $class
-     *
+     * @param string $id
      * @return RequestHandlerInterface
      */
-    public static function create(string $class): RequestHandlerInterface
+    public static function create(string $class, string $id = null): RequestHandlerInterface
     {
         switch ($class) {
 
@@ -32,7 +32,7 @@ class HandlerFactory
                 break;
 
             case FindUserRequestHandler::class:
-                return new FindUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
+                return new FindUserRequestHandler(new UserRepository(PdoConnectionFactory::create()), $id);
 
             default:
                 return new DefaultHandler();

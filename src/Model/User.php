@@ -7,10 +7,10 @@ namespace Learn\Model;
 class User
 {
     /** @var string */
-    protected  $firstName;
+    protected $firstName;
     /** @var string */
     protected $lastName;
-    /** @var string  */
+    /** @var string */
     protected $id;
 
     /**
@@ -20,9 +20,9 @@ class User
      * @param string $lastName
      * @param string $id
      */
-    public function __construct(string $id,string $firstName, string $lastName)
+    public function __construct(string $id, string $firstName, string $lastName)
     {
-        $this->id = $id;
+        $this->id        = $id;
         $this->firstName = $firstName;
         $this->lastName  = $lastName;
     }
@@ -49,5 +49,12 @@ class User
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function toArray(): array
+    {
+        return ["id"        => $this->id,
+                "firstName" => $this->firstName,
+                "lastName"  => $this->lastName];
     }
 }

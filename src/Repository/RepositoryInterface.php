@@ -11,7 +11,6 @@ interface RepositoryInterface
 {
     /**
      * @param User $user
-     * @param Uuid $uuid
      * @return array
      */
     public function add(User $user);
@@ -23,7 +22,7 @@ interface RepositoryInterface
 
     /**
      * @param string $id
-     * @return array
+     * @return User
      */
-    public function find(string $id): array;
+    public function find(string $id): User;
 }

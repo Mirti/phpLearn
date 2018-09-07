@@ -39,12 +39,12 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
         $id = Uuid::uuid4()->toString();
 
-        $user = new User($id, $data['firstName'], $data['lastName']);
+        $newUser = new User($id, $data['firstName'], $data['lastName']);
 
-        $this->repository->add($user);
+        $this->repository->add($newUser);
 
         $insertedUser = $this->repository->find($id);
 
-        return new HttpResponse(201, $insertedUser);
+        return new HttpResponse(201, $insertedUser->toArray());
     }
 }
