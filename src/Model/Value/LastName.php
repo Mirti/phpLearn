@@ -16,6 +16,10 @@ class LastName implements ValueInterface
      */
     public function __construct(string $lastName)
     {
+        if (strlen($lastName) < 2 || strlen($lastName) > 32) {
+            throw new \InvalidArgumentException("Wrong User Last Name");
+        }
+
         $this->lastName = $lastName;
     }
 

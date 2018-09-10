@@ -16,6 +16,9 @@ class FirstName implements ValueInterface
      */
     public function __construct(string $firstName)
     {
+        if (strlen($firstName) < 2 || strlen($firstName) > 32) {
+            throw new \InvalidArgumentException("Wrong User First Name");
+        }
         $this->firstName = $firstName;
     }
 

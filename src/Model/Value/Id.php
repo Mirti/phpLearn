@@ -16,7 +16,10 @@ class Id implements ValueInterface
      */
     public function __construct(string $id)
     {
-        $this->id = $id;
+        if (strlen($id) != 36){
+            throw new \InvalidArgumentException("Wrong ID");
+        }
+            $this->id = $id;
     }
 
     /**
