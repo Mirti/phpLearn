@@ -27,13 +27,13 @@ class UserRepository implements UserRepositoryInterface
      */
     public function add(User $user): void
     {
-        $sql = "INSERT INTO users (id, firstName, lastName) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO users (id, firstName, lastName) VALUES (:id, :firstName, :lastName)";
 
-        $isAdded = $this->connection->prepare($sql)->execute([
-            $user->getId(),
-            $user->getFirstName(),
-            $user->getLastName()
-        ]);
+        $isAdded = $this->connection->prepare($sql)->execute(array(
+            ':id'        => $user->getId(),
+            ':firstName' => $user->getFirstName(),
+            ':lastName'  => $user->getLastName()
+        ));
 
         if (!$isAdded) {
             throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());
@@ -59,7 +59,13 @@ class UserRepository implements UserRepositoryInterface
      */
     public function find(string $id): User
     {
-        $stmt = $this->connection->query("SELECT * FROM users WHERE id =\"$id\" AND deleted_at IS NULL");
+        $sql = "SELECT * FROM users WHERE id =:id AND deleted_at IS NULL";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->execute(array(
+            ':id' => $id
+        ));
 
         if (!$stmt) {
             throw new \Exception("Can not find user. Database failure: " . $this->connection->errorInfo());
@@ -81,13 +87,15 @@ class UserRepository implements UserRepositoryInterface
      */
     public function update(User $user)
     {
-        $sql = "UPDATE users SET firstName = ?, lastName = ? WHERE id = ?";
+        $sql = "UPDATE users SET firstName = :firstName, lastName = :lastName WHERE id = :id";
 
-        $isUpdated = $this->connection->prepare($sql)->execute([
-            $user->getFirstName(),
-            $user->getLastName(),
-            $user->getId()
-        ]);
+        $isUpdated = $this->connection->prepare($sql)->execute(array(
+                ':id'        => $user->getId(),
+                ':firstName' => $user->getFirstName(),
+                ':lastName'  => $user->getLastName()
+            )
+
+        );
 
         if (!$isUpdated) {
             throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());
@@ -101,12 +109,12 @@ class UserRepository implements UserRepositoryInterface
     {
         $currentDate = date("Y-m-d H:i:s");
 
-        $sql = "UPDATE users SET deleted_at = ? WHERE id = ?";
+        $sql = "UPDATE users SET deleted_at = :currentDate WHERE id = :id";
 
-        $isDeleted = $this->connection->prepare($sql)->execute([
-            $currentDate,
-            $user->getId()
-            ]);
+        $isDeleted = $this->connection->prepare($sql)->execute(array(
+            ':id'          => $user->getId(),
+            ':currentDate' => $currentDate
+        ));
 
         if (!$isDeleted) {
             throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());

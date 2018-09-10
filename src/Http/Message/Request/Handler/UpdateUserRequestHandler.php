@@ -8,7 +8,6 @@ use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Repository\UserRepositoryInterface;
-use Learn\Model\User;
 
 class UpdateUserRequestHandler implements RequestHandlerInterface
 {

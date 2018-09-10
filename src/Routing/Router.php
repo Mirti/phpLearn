@@ -30,7 +30,7 @@ class Router
      *
      * @return RequestHandlerInterface
      */
-    public function match($request): RequestHandlerInterface
+    public function match(RequestInterface $request): RequestHandlerInterface
     {
         $method = $request->getMethod();
         $route = $request->getRoute();

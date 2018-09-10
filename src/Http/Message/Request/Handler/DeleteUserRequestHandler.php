@@ -33,6 +33,6 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
 
         $this->repository->delete($user);
 
-        return new HttpResponse(200);
+        return new HttpResponse(204);
     }
 }
