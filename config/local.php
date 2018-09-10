@@ -6,6 +6,7 @@ use Learn\Http\Message\Request\Handler\DefaultHandler;
 use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
 use Learn\Http\Message\Request\Handler\FindUserRequestHandler;
 use Learn\Http\Message\Request\Handler\UpdateUserRequestHandler;
+use Learn\Http\Message\Request\Handler\DeleteUserRequestHandler;
 
 return [
     'database' => [
@@ -31,7 +32,8 @@ return [
         ],
         '/users/:id' => [
             'GET' => FindUserRequestHandler::class,
-            'PUT' => UpdateUserRequestHandler::class
+            'PUT' => UpdateUserRequestHandler::class,
+            'DELETE' => DeleteUserRequestHandler::class
         ]
     ]
 ];

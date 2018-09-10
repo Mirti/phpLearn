@@ -7,6 +7,7 @@ namespace Learn\Http\Message\Request\Handler\Factory;
 use Learn\Database\Factory\PdoConnectionFactory;
 use Learn\Http\Message\Request\Handler\AddUserRequestHandler;
 use Learn\Http\Message\Request\Handler\DefaultHandler;
+use Learn\Http\Message\Request\Handler\DeleteUserRequestHandler;
 use Learn\Http\Message\Request\Handler\FindUserRequestHandler;
 use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
 use Learn\Http\Message\Request\Handler\RequestHandlerInterface;
@@ -36,6 +37,9 @@ class HandlerFactory
 
             case UpdateUserRequestHandler::class:
                 return new UpdateUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
+
+            case DeleteUserRequestHandler::class:
+                return new DeleteUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
 
             default:
                 return new DefaultHandler();

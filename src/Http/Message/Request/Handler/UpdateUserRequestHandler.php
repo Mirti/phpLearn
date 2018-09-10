@@ -27,9 +27,7 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
     }
 
     /**
-     * @param RequestInterface $request
-     *
-     * @return ResponseInterface
+     * @inheritdoc
      */
     public function handle(RequestInterface $request): ResponseInterface
     {

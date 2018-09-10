@@ -81,8 +81,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function update(User $user)
     {
-        $dbUser = $this->find($user->getId());
-        if (empty($dbUser)) {
+        if (empty($this->find($user->getId()))) {
             throw UserNotFoundException::byId($user->getId());
         }
 
@@ -92,10 +91,32 @@ class UserRepository implements UserRepositoryInterface
             $user->getFirstName(),
             $user->getLastName(),
             $user->getId()
-        ]);;
+        ]);
 
         if (!$isUpdated) {
             throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());
         }
     }
+
+    /**
+     * @param string $id
+     *
+     * @return mixed
+     */
+    public function delete(string $id)
+    {
+        if (empty($this->find($id))) {
+            throw UserNotFoundException::byId($id);
+        }
+
+        $sql = "DELETE FROM users WHERE id = ?";
+
+        $isDeleted = $this->connection->prepare($sql)->execute([$id]);
+
+        if (!$isDeleted) {
+            throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());
+        }
+
+    }
+
 }

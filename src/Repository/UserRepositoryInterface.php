@@ -29,4 +29,11 @@ interface UserRepositoryInterface
      * @param User   $user
      */
     public function update(User $user);
+
+    /**
+     * @param string $id
+     *
+     * @return mixed
+     */
+    public function delete(string $id);
 }
