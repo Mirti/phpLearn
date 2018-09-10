@@ -24,4 +24,9 @@ interface UserRepositoryInterface
      * @return User
      */
     public function find(string $id): User;
+
+    /**
+     * @param User   $user
+     */
+    public function update(User $user);
 }

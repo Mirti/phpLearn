@@ -5,6 +5,7 @@ use Learn\Http\Message\Request\Handler\AddUserRequestHandler;
 use Learn\Http\Message\Request\Handler\DefaultHandler;
 use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
 use Learn\Http\Message\Request\Handler\FindUserRequestHandler;
+use Learn\Http\Message\Request\Handler\UpdateUserRequestHandler;
 
 return [
     'database' => [
@@ -29,7 +30,8 @@ return [
             'POST' => AddUserRequestHandler::class,
         ],
         '/users/:id' => [
-            'GET' => FindUserRequestHandler::class
+            'GET' => FindUserRequestHandler::class,
+            'PUT' => UpdateUserRequestHandler::class
         ]
     ]
 ];

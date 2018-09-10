@@ -10,7 +10,8 @@ use Learn\Http\Message\Request\Handler\DefaultHandler;
 use Learn\Http\Message\Request\Handler\FindUserRequestHandler;
 use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
 use Learn\Http\Message\Request\Handler\RequestHandlerInterface;
-use Learn\Repository\UserUserRepository;
+use Learn\Http\Message\Request\Handler\UpdateUserRequestHandler;
+use Learn\Repository\UserRepository;
 
 class HandlerFactory
 {
@@ -23,15 +24,18 @@ class HandlerFactory
     {
         switch ($class) {
             case GetAllUsersRequestHandler::class:
-                return new GetAllUsersRequestHandler(new UserUserRepository(PdoConnectionFactory::create()));
+                return new GetAllUsersRequestHandler(new UserRepository(PdoConnectionFactory::create()));
                 break;
 
             case AddUserRequestHandler::class:
-                return new AddUserRequestHandler(new UserUserRepository(PdoConnectionFactory::create()));
+                return new AddUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
                 break;
 
             case FindUserRequestHandler::class:
-                return new FindUserRequestHandler(new UserUserRepository(PdoConnectionFactory::create()));
+                return new FindUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
+
+            case UpdateUserRequestHandler::class:
+                return new UpdateUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
 
             default:
                 return new DefaultHandler();

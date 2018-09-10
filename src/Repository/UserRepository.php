@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Learn\Repository;
 
 
-use Learn\Repository\Exception\UserNotFoundException;
 use Learn\Model\User;
+use Learn\Repository\Exception\UserNotFoundException;
 
-class UserUserRepository implements UserRepositoryInterface
+class UserRepository implements UserRepositoryInterface
 {
     /** @var \PDO */
     private $connection;
@@ -61,19 +61,41 @@ class UserUserRepository implements UserRepositoryInterface
     {
         $stmt = $this->connection->query("SELECT * FROM users WHERE id =\"$id\"");
 
-        if(!$stmt)
-        {
+        if (!$stmt) {
             throw new \Exception("Can not find user. Database failure: " . $this->connection->errorInfo());
         }
 
         $userData = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        if(empty($userData)){
+        if (empty($userData)) {
             throw UserNotFoundException::byId($id);
         }
 
         $user = new User($id, $userData['firstName'], $userData['lastName']);
 
         return $user;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function update(User $user)
+    {
+        $dbUser = $this->find($user->getId());
+        if (empty($dbUser)) {
+            throw UserNotFoundException::byId($user->getId());
+        }
+
+        $sql = "UPDATE users SET firstName = ?, lastName = ? WHERE id = ?";
+
+        $isUpdated = $this->connection->prepare($sql)->execute([
+            $user->getFirstName(),
+            $user->getLastName(),
+            $user->getId()
+        ]);;
+
+        if (!$isUpdated) {
+            throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());
+        }
     }
 }
