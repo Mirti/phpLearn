@@ -50,6 +50,14 @@ class User
     }
 
     /**
+     * @param FirstName $firstName
+     */
+    public function setFirstName(FirstName $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
      * @return LastName
      */
     public function getLastName(): LastName
@@ -58,15 +66,37 @@ class User
     }
 
     /**
+     * @param LastName $lastName
+     */
+    public function setLastName(LastName $lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function equals(User $user): bool
+    {
+        foreach (get_class_vars(self::class) as $property => $value) {
+            if (!$this->$property === $user->$property) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
+            'id' => $this->id->getId(),
 
-            'first_name' => $this->firstName,
-            'last_name'  => $this->lastName
+            'first_name' => $this->firstName->getFirstName(),
+            'last_name'  => $this->lastName->getLastName()
         ];
     }
 }

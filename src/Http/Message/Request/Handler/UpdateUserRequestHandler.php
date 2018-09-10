@@ -7,6 +7,8 @@ namespace Learn\Http\Message\Request\Handler;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
+use Learn\Model\Value\FirstName;
+use Learn\Model\Value\LastName;
 use Learn\Repository\UserRepositoryInterface;
 
 class UpdateUserRequestHandler implements RequestHandlerInterface
@@ -40,8 +42,8 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
 
         $user = $this->repository->find($id);
 
-        $user->setFirstName($data['firstName']);
-        $user->setLastName($data['lastName']);
+        $user->setFirstName(new FirstName($data['firstName']));
+        $user->setLastName(new LastName($data['lastName']));
 
         $this->repository->update($user);
 

@@ -8,6 +8,9 @@ use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Model\User;
+use Learn\Model\Value\FirstName;
+use Learn\Model\Value\Id;
+use Learn\Model\Value\LastName;
 use Learn\Repository\UserRepositoryInterface;
 use Rhumsaa\Uuid\Uuid;
 
@@ -38,7 +41,7 @@ class AddUserRequestHandler implements RequestHandlerInterface
         }
 
         $id   = Uuid::uuid4()->toString();
-        $user = new User($id, $data['firstName'], $data['lastName']);
+        $user = new User(new Id($id), new FirstName($data['firstName']), new LastName($data['lastName']));
         $this->repository->add($user);
 
         $createdUser = $this->repository->find($id);
