@@ -4,70 +4,57 @@ declare(strict_types=1);
 namespace Learn\Model;
 
 
+use Learn\Model\Value\FirstName;
+use Learn\Model\Value\Id;
+use Learn\Model\Value\LastName;
+
 class User
 {
-    /** @var string */
+    /** @var Id */
     protected $id;
 
-    /** @var string */
+    /** @var FirstName */
     protected $firstName;
 
-    /** @var string */
+    /** @var LastName */
     protected $lastName;
 
     /**
      * User constructor.
-     *
-     * @param string $id
-     *
-     * @param string $firstName
-     * @param string $lastName
+     * @param Id        $id
+     * @param FirstName $firstName
+     * @param LastName  $lastName
      */
-    public function __construct(string $id, string $firstName, string $lastName)
+    public function __construct(Id $id, FirstName $firstName, LastName $lastName)
     {
         $this->id = $id;
 
         $this->firstName = $firstName;
         $this->lastName  = $lastName;
     }
+
     /**
-     * @return string
+     * @return Id
      */
-    public function getId(): string
+    public function getId(): Id
     {
         return $this->id;
     }
 
     /**
-     * @return string
+     * @return FirstName
      */
-    public function getFirstName(): string
+    public function getFirstName(): FirstName
     {
         return $this->firstName;
     }
 
     /**
-     * @param string $firstName
+     * @return LastName
      */
-    public function setFirstName(string $firstName): void
-    {
-        $this->firstName = $firstName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLastName(): string
+    public function getLastName(): LastName
     {
         return $this->lastName;
-    }
-
-    /**
-     * @param string $lastName
-     */
-    public function setLastName(string $lastName): void
-    {
-        $this->lastName = $lastName;
     }
 
     /**
