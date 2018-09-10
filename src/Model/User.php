@@ -11,6 +11,7 @@ class User
 
     /** @var string */
     protected $firstName;
+
     /** @var string */
     protected $lastName;
 
@@ -29,7 +30,6 @@ class User
         $this->firstName = $firstName;
         $this->lastName  = $lastName;
     }
-
     /**
      * @return string
      */
@@ -47,11 +47,27 @@ class User
     }
 
     /**
+     * @param string $firstName
+     */
+    public function setFirstName(string $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
      * @return string
      */
     public function getLastName(): string
     {
         return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     */
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
     }
 
     /**

@@ -81,10 +81,6 @@ class UserRepository implements UserRepositoryInterface
      */
     public function update(User $user)
     {
-        if (empty($this->find($user->getId()))) {
-            throw UserNotFoundException::byId($user->getId());
-        }
-
         $sql = "UPDATE users SET firstName = ?, lastName = ? WHERE id = ?";
 
         $isUpdated = $this->connection->prepare($sql)->execute([
@@ -99,21 +95,18 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param string $id
-     *
-     * @return mixed
+     * @param User $user
      */
-    public function delete(string $id)
+    public function delete(User $user)
     {
-        if (empty($this->find($id))) {
-            throw UserNotFoundException::byId($id);
-        }
-
         $currentDate = date("Y-m-d H:i:s");
 
         $sql = "UPDATE users SET deleted_at = ? WHERE id = ?";
 
-        $isDeleted = $this->connection->prepare($sql)->execute([$currentDate, $id]);
+        $isDeleted = $this->connection->prepare($sql)->execute([
+            $currentDate,
+            $user->getId()
+            ]);
 
         if (!$isDeleted) {
             throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());

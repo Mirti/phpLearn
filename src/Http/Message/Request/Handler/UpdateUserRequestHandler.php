@@ -39,7 +39,11 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
 
         $id = $request->getRouteParams()[':id'];
 
-        $user = new User($id, $data['firstName'], $data['lastName']);
+        $user = $this->repository->find($id);
+
+        $user->setFirstName($data['firstName']);
+        $user->setLastName($data['lastName']);
+
         $this->repository->update($user);
 
         $updatedUser = $this->repository->find($id);

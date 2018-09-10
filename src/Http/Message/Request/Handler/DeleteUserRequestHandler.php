@@ -29,9 +29,9 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $id   = $request->getRouteParams()[':id'];
+        $user = $this->repository->find($request->getRouteParams()[":id"]);
 
-        $this->repository->delete($id);
+        $this->repository->delete($user);
 
         return new HttpResponse(200);
     }
