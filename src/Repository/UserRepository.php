@@ -45,7 +45,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function fetchAll(): array
     {
-        $stmt = $this->connection->query("SELECT * FROM users");
+        $stmt = $this->connection->query("SELECT id, firstName, lastName FROM users WHERE deleted_at IS NULL");
 
         while ($row = $stmt->fetchAll(\PDO::FETCH_ASSOC)) {
             $users[] = $row;
@@ -59,7 +59,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function find(string $id): User
     {
-        $stmt = $this->connection->query("SELECT * FROM users WHERE id =\"$id\"");
+        $stmt = $this->connection->query("SELECT * FROM users WHERE id =\"$id\" AND deleted_at IS NULL");
 
         if (!$stmt) {
             throw new \Exception("Can not find user. Database failure: " . $this->connection->errorInfo());
@@ -109,9 +109,11 @@ class UserRepository implements UserRepositoryInterface
             throw UserNotFoundException::byId($id);
         }
 
-        $sql = "DELETE FROM users WHERE id = ?";
+        $currentDate = date("Y-m-d H:i:s");
 
-        $isDeleted = $this->connection->prepare($sql)->execute([$id]);
+        $sql = "UPDATE users SET deleted_at = ? WHERE id = ?";
+
+        $isDeleted = $this->connection->prepare($sql)->execute([$currentDate, $id]);
 
         if (!$isDeleted) {
             throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());
