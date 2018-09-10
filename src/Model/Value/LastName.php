@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Learn\Model\Value;
 
 
-class LastName
+class LastName implements ValueInterface
 {
 
     /** @var string */
@@ -20,9 +20,9 @@ class LastName
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
-    public function getLastName(): string
+    public function toString(): string
     {
         return $this->lastName;
     }

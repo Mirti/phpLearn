@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Learn\Model\Value;
 
 
-class Id
+class Id implements ValueInterface
 {
 
     /** @var string */
@@ -20,9 +20,9 @@ class Id
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
-    public function getId(): string
+    public function toString(): string
     {
         return $this->id;
     }

@@ -33,9 +33,9 @@ class UserRepository implements UserRepositoryInterface
         $sql = "INSERT INTO users (id, firstName, lastName) VALUES (:id, :firstName, :lastName)";
 
         $isAdded = $this->connection->prepare($sql)->execute(array(
-            ':id'        => $user->getId()->getId(),
-            ':firstName' => $user->getFirstName()->getFirstName(),
-            ':lastName'  => $user->getLastName()->getLastName()
+            ':id'        => $user->getId()->toString(),
+            ':firstName' => $user->getFirstName()->toString(),
+            ':lastName'  => $user->getLastName()->toString()
         ));
 
         if (!$isAdded) {
@@ -93,9 +93,9 @@ class UserRepository implements UserRepositoryInterface
         $sql = "UPDATE users SET firstName = :firstName, lastName = :lastName WHERE id = :id";
 
         $isUpdated = $this->connection->prepare($sql)->execute(array(
-                ':id'        => $user->getId()->getId(),
-                ':firstName' => $user->getFirstName()->getFirstName(),
-                ':lastName'  => $user->getLastName()->getLastName()
+                ':id'        => $user->getId()->toString(),
+                ':firstName' => $user->getFirstName()->toString(),
+                ':lastName'  => $user->getLastName()->toString()
             )
 
         );
@@ -115,7 +115,7 @@ class UserRepository implements UserRepositoryInterface
         $sql = "UPDATE users SET deleted_at = :currentDate WHERE id = :id";
 
         $isDeleted = $this->connection->prepare($sql)->execute(array(
-            ':id'          => $user->getId()->getId(),
+            ':id'          => $user->getId()->toString(),
             ':currentDate' => $currentDate
         ));
 

@@ -93,10 +93,10 @@ class User
     public function toArray(): array
     {
         return [
-            'id' => $this->id->getId(),
+            'id' => $this->id->toString(),
 
-            'first_name' => $this->firstName->getFirstName(),
-            'last_name'  => $this->lastName->getLastName()
+            'first_name' => $this->firstName->toString(),
+            'last_name'  => $this->lastName->toString()
         ];
     }
 }
