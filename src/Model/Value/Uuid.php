@@ -11,10 +11,15 @@ class Uuid implements ValueObjectInterface
 
     /**
      * Uuid constructor.
+     * @param string $uuid
      */
-    public function __construct()
+    public function __construct(string $uuid = null)
     {
-        $this->uuid = self::generate();
+        if ($uuid == null) {
+            $this->uuid = self::generate();
+        } else {
+            $this->uuid = $uuid;
+        }
     }
 
     /**
@@ -31,17 +36,14 @@ class Uuid implements ValueObjectInterface
      */
     public function equals(ValueObjectInterface $valueObject): bool
     {
-        if ((string)$this->uuid == $valueObject->__toString()) {
-            return true;
-        }
-        return false;
+        return $this->uuid == $valueObject->__toString() ? true : false;
     }
 
     /**
-     * @return string
+     * @return \Rhumsaa\Uuid\Uuid
      */
-    public static function generate(): string
+    public static function generate()
     {
-        return Uuid::uuid4()->toString();
+        return (\Rhumsaa\Uuid\Uuid::uuid4());
     }
 }

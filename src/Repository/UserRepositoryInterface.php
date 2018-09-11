@@ -5,6 +5,7 @@ namespace Learn\Repository;
 
 
 use Learn\Model\User;
+use Learn\Model\Value\UserId;
 
 interface UserRepositoryInterface
 {
@@ -19,11 +20,11 @@ interface UserRepositoryInterface
     public function fetchAll(): array;
 
     /**
-     * @param string $id
+     * @param UserId $id
      *
      * @return User
      */
-    public function find(string $id): User;
+    public function find(UserId $id): User;
 
     /**
      * @param User   $user

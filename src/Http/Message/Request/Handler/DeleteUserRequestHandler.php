@@ -7,6 +7,7 @@ namespace Learn\Http\Message\Request\Handler;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
+use Learn\Model\Value\UserId;
 use Learn\Repository\UserRepositoryInterface;
 
 class DeleteUserRequestHandler implements RequestHandlerInterface
@@ -29,9 +30,11 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $user = $this->repository->find($request->getRouteParams()[":id"]);
+        $id   = $request->getRouteParams()[':id'];
+        $user = $this->repository->find(new UserId($id));
 
-        $this->repository->delete($user);
+        var_dump($user);
+        //$this->repository->delete($user);
 
         return new HttpResponse(204);
     }

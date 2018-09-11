@@ -21,10 +21,14 @@ class LastName implements ValueObjectInterface
      */
     public function __construct(string $lastName)
     {
-        if (strlen($lastName) < self::MIN_LAST_NAME_LENGTH
-            || strlen($lastName) > self::MAX_LAST_NAME_LENGTH
-            || ctype_lower(substr($lastName, 0, 1))) {
-            throw new \InvalidArgumentException();
+        if (strlen($lastName) < self::MIN_LAST_NAME_LENGTH) {
+            throw new \InvalidArgumentException("User last name is too short");
+        }
+        if (strlen($lastName) > self::MAX_LAST_NAME_LENGTH) {
+            throw new \InvalidArgumentException("User last name is too long");
+        }
+        if (ctype_lower(substr($lastName, 0, 1))) {
+            throw new \InvalidArgumentException("User last name must start with a capital letter");
         }
 
         $this->lastName = $lastName;
@@ -43,9 +47,6 @@ class LastName implements ValueObjectInterface
      */
     public function equals(ValueObjectInterface $valueObject): bool
     {
-        if ($this->lastName == $valueObject->__toString()) {
-            return true;
-        }
-        return false;
+        return $this->lastName == $valueObject->__toString() ? true : false;
     }
 }

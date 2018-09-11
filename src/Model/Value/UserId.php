@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Learn\Model\Value;
 
 
-class Id extends Uuid implements ValueObjectInterface
+class UserId extends Uuid implements ValueObjectInterface
 {
 
     /** @var string */
@@ -12,9 +12,10 @@ class Id extends Uuid implements ValueObjectInterface
 
     /**
      * Id constructor.
+     * @param string|null $userId
      */
-    public function __construct()
+    public function __construct(string $userId = null)
     {
-        $this->userId = self::generate();
+        parent::__construct($userId);
     }
 }

@@ -6,8 +6,9 @@ namespace Learn\Repository;
 
 use Learn\Model\User;
 use Learn\Model\Value\FirstName;
-use Learn\Model\Value\Id;
 use Learn\Model\Value\LastName;
+use Learn\Model\Value\UserId;
+use Learn\Model\Value\Uuid;
 use Learn\Repository\Exception\UserNotFoundException;
 
 class UserRepository implements UserRepositoryInterface
@@ -33,9 +34,9 @@ class UserRepository implements UserRepositoryInterface
         $sql = "INSERT INTO users (id, firstName, lastName) VALUES (:id, :firstName, :lastName)";
 
         $isAdded = $this->connection->prepare($sql)->execute(array(
-            ':id'        => $user->getId()->toString(),
-            ':firstName' => $user->getFirstName()->toString(),
-            ':lastName'  => $user->getLastName()->toString()
+            ':id'        => $user->getUserId()->__toString(),
+            ':firstName' => $user->getFirstName()->__toString(),
+            ':lastName'  => $user->getLastName()->__toString()
         ));
 
         if (!$isAdded) {
@@ -60,14 +61,14 @@ class UserRepository implements UserRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function find(string $id): User
+    public function find(UserId $id): User
     {
         $sql = "SELECT * FROM users WHERE id =:id AND deleted_at IS NULL";
 
         $stmt = $this->connection->prepare($sql);
 
         $stmt->execute(array(
-            ':id' => $id
+            ':id' => $id->__toString()
         ));
 
         if (!$stmt) {
@@ -80,7 +81,7 @@ class UserRepository implements UserRepositoryInterface
             throw UserNotFoundException::byId($id);
         }
 
-        $user = new User(new Id($id), new FirstName($userData['firstName']), new LastName($userData['lastName']));
+        $user = new User($id, new FirstName($userData['firstName']), new LastName($userData['lastName']));
 
         return $user;
     }
@@ -93,9 +94,9 @@ class UserRepository implements UserRepositoryInterface
         $sql = "UPDATE users SET firstName = :firstName, lastName = :lastName WHERE id = :id";
 
         $isUpdated = $this->connection->prepare($sql)->execute(array(
-                ':id'        => $user->getId()->toString(),
-                ':firstName' => $user->getFirstName()->toString(),
-                ':lastName'  => $user->getLastName()->toString()
+                ':id'        => $user->getUserId()->__toString(),
+                ':firstName' => $user->getFirstName()->__toString(),
+                ':lastName'  => $user->getLastName()->__toString()
             )
 
         );
@@ -115,7 +116,7 @@ class UserRepository implements UserRepositoryInterface
         $sql = "UPDATE users SET deleted_at = :currentDate WHERE id = :id";
 
         $isDeleted = $this->connection->prepare($sql)->execute(array(
-            ':id'          => $user->getId()->toString(),
+            ':id'          => $user->getUserId()->__toString(),
             ':currentDate' => $currentDate
         ));
 

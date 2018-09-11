@@ -5,12 +5,12 @@ namespace Learn\Model;
 
 
 use Learn\Model\Value\FirstName;
-use Learn\Model\Value\Id;
 use Learn\Model\Value\LastName;
+use Learn\Model\Value\UserId;
 
 class User
 {
-    /** @var Id */
+    /** @var UserId */
     protected $id;
 
     /** @var FirstName */
@@ -21,11 +21,11 @@ class User
 
     /**
      * User constructor.
-     * @param Id        $id
+     * @param UserId    $id
      * @param FirstName $firstName
      * @param LastName  $lastName
      */
-    public function __construct(Id $id, FirstName $firstName, LastName $lastName)
+    public function __construct(UserId $id, FirstName $firstName, LastName $lastName)
     {
         $this->id = $id;
 
@@ -34,9 +34,9 @@ class User
     }
 
     /**
-     * @return Id
+     * @return UserId
      */
-    public function getId(): Id
+    public function getUserId(): UserId
     {
         return $this->id;
     }
@@ -93,10 +93,10 @@ class User
     public function toArray(): array
     {
         return [
-            'id' => $this->id->toString(),
+            'id' => $this->id->__toString(),
 
-            'first_name' => $this->firstName->toString(),
-            'last_name'  => $this->lastName->toString()
+            'first_name' => $this->firstName->__toString(),
+            'last_name'  => $this->lastName->__toString()
         ];
     }
 }

@@ -9,6 +9,7 @@ use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
+use Learn\Model\Value\UserId;
 use Learn\Repository\UserRepositoryInterface;
 
 class UpdateUserRequestHandler implements RequestHandlerInterface
@@ -40,14 +41,14 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
 
         $id = $request->getRouteParams()[':id'];
 
-        $user = $this->repository->find($id);
+        $user = $this->repository->find(new UserId($id));
 
         $user->setFirstName(new FirstName($data['firstName']));
         $user->setLastName(new LastName($data['lastName']));
 
         $this->repository->update($user);
 
-        $updatedUser = $this->repository->find($id);
+        $updatedUser = $this->repository->find(new UserId($id));
 
         return new HttpResponse(200, $updatedUser->toArray());
     }
