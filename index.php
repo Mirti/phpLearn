@@ -34,7 +34,7 @@ try {
 
     /** @var ResponseInterface $response */
     $response = $requestHandler->handle($request);
-} catch (\InvalidArgumentException $ex) {
+} catch (InvalidArgumentException $ex) {
     $response = new HttpResponse(400, [$ex->getMessage()]);
 } catch (UserNotFoundException $ex) {
     $response = new HttpResponse(404, [$ex->getMessage()]);
