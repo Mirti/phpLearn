@@ -41,7 +41,7 @@ try {
 }
 
 header('Content-Type: application/json');
+if($response->getCode() !== 204) {
+    echo $response;
+}
 http_response_code($response->getCode());
-
-echo $response;
-
