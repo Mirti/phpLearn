@@ -8,7 +8,6 @@ use Learn\Model\User;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
 use Learn\Model\Value\UserId;
-use Learn\Model\Value\Uuid;
 use Learn\Repository\Exception\UserNotFoundException;
 
 class UserRepository implements UserRepositoryInterface
@@ -126,4 +125,27 @@ class UserRepository implements UserRepositoryInterface
 
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function beginTransaction(): bool
+    {
+        return $this->connection->beginTransaction();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function commitTransaction(): bool
+    {
+        return $this->connection->commit();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rollbackTransaction(): bool
+    {
+        return $this->connection->rollBack();
+    }
 }

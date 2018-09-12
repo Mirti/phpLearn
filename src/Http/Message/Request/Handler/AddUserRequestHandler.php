@@ -9,10 +9,9 @@ use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Model\User;
 use Learn\Model\Value\FirstName;
-use Learn\Model\Value\UserId;
 use Learn\Model\Value\LastName;
+use Learn\Model\Value\UserId;
 use Learn\Repository\UserRepositoryInterface;
-use Rhumsaa\Uuid\Uuid;
 
 class AddUserRequestHandler implements RequestHandlerInterface
 {
@@ -34,18 +33,28 @@ class AddUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $data = $request->getBody();
+        $this->repository->beginTransaction();
 
-        if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
-            throw new \InvalidArgumentException('Missing one of required field.');
+        try {
+            $data = $request->getBody();
+
+            if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
+                throw new \InvalidArgumentException('Missing one of required field.');
+            }
+
+            $id   = new UserId();
+            $user = new User($id, new FirstName($data['firstName']), new LastName($data['lastName']));
+
+            $this->repository->add($user);
+            $createdUser = $this->repository->find($id);
+
+            $this->repository->commitTransaction();
+
+            return new HttpResponse(201, $createdUser->toArray());
+
+        } catch (\Throwable $ex) {
+            $this->repository->rollbackTransaction();
+            throw $ex;
         }
-
-        $id   = new UserId();
-        $user = new User($id, new FirstName($data['firstName']), new LastName($data['lastName']));
-        $this->repository->add($user);
-
-        $createdUser = $this->repository->find($id);
-
-        return new HttpResponse(201, $createdUser->toArray());
     }
 }

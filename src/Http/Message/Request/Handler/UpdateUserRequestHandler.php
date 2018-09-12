@@ -33,23 +33,31 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $data = $request->getBody();
+        $this->repository->beginTransaction();
+        try {
+            $data = $request->getBody();
 
-        if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
-            throw new \InvalidArgumentException('Missing one of required field.');
+            if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
+                throw new \InvalidArgumentException('Missing one of required field.');
+            }
+
+            $id = $request->getRouteParams()[':id'];
+
+            $user = $this->repository->find(new UserId($id));
+
+            $user->setFirstName(new FirstName($data['firstName']));
+            $user->setLastName(new LastName($data['lastName']));
+
+            $this->repository->update($user);
+
+            $updatedUser = $this->repository->find(new UserId($id));
+
+            $this->repository->commitTransaction();
+
+            return new HttpResponse(200, $updatedUser->toArray());
+        } catch(\Throwable $ex){
+            $this->repository->rollbackTransaction();
+            throw $ex;
         }
-
-        $id = $request->getRouteParams()[':id'];
-
-        $user = $this->repository->find(new UserId($id));
-
-        $user->setFirstName(new FirstName($data['firstName']));
-        $user->setLastName(new LastName($data['lastName']));
-
-        $this->repository->update($user);
-
-        $updatedUser = $this->repository->find(new UserId($id));
-
-        return new HttpResponse(200, $updatedUser->toArray());
     }
 }

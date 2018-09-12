@@ -30,11 +30,21 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $id   = $request->getRouteParams()[':id'];
-        $user = $this->repository->find(new UserId($id));
+        $this->repository->beginTransaction();
+        try {
 
-        $this->repository->delete($user);
 
-        return new HttpResponse(204);
+            $id   = $request->getRouteParams()[':id'];
+            $user = $this->repository->find(new UserId($id));
+
+            $this->repository->delete($user);
+
+            $this->repository->commitTransaction();
+
+            return new HttpResponse(204);
+        } catch (\Throwable $ex) {
+            $this->repository->rollbackTransaction();
+            throw $ex;
+        }
     }
 }
