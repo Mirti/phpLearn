@@ -33,8 +33,7 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
         $id   = $request->getRouteParams()[':id'];
         $user = $this->repository->find(new UserId($id));
 
-        var_dump($user);
-        //$this->repository->delete($user);
+        $this->repository->delete($user);
 
         return new HttpResponse(204);
     }
