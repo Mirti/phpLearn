@@ -30,18 +30,9 @@ class FindUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $this->repository->beginTransaction();
+        $id   = $request->getRouteParams()[':id'];
+        $user = $this->repository->find(new UserId($id));
 
-        try {
-            $id   = $request->getRouteParams()[':id'];
-            $user = $this->repository->find(new UserId($id));
-
-            $this->repository->commitTransaction();
-
-            return new HttpResponse(200, $user->toArray());
-        } catch (\Throwable $ex) {
-            $this->repository->rollbackTransaction();
-            throw $ex;
-        }
+        return new HttpResponse(200, $user->toArray());
     }
 }

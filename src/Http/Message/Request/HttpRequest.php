@@ -6,6 +6,8 @@ namespace Learn\Http\Message\Request;
 
 class HttpRequest implements RequestInterface
 {
+    /** @var  */
+    private $remoteAddress;
     /** @var string */
     private $method;
     /** @var string */
@@ -20,6 +22,7 @@ class HttpRequest implements RequestInterface
 
     /**
      * HttpRequest constructor.
+     * @param string $remoteAddress
      *
      * @param string $method
      *
@@ -30,6 +33,8 @@ class HttpRequest implements RequestInterface
      * @param array  $body
      */
     public function __construct(
+        string $remoteAddress,
+
         string $method,
 
         string $url,
@@ -38,6 +43,7 @@ class HttpRequest implements RequestInterface
         array $routeParams,
         array $body
     ) {
+        $this->remoteAddress = $remoteAddress;
         $this->method = $method;
 
         $this->url   = $url;
@@ -45,6 +51,14 @@ class HttpRequest implements RequestInterface
 
         $this->routeParams = $routeParams;
         $this->body        = $body;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRemoteAddress(): string
+    {
+        return $this->remoteAddress;
     }
 
     /**

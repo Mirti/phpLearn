@@ -29,15 +29,10 @@ class GetAllUsersRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $this->repository->beginTransaction();
-        try {
             $users = $this->repository->fetchAll();
 
             $this->repository->commitTransaction();
             return new HttpResponse(200, $users ?? []);
-        } catch(\Throwable $ex){
-            $this->repository->rollbackTransaction();
-            throw $ex;
-        }
+
     }
 }

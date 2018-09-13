@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 use Learn\Http\Message\Request\Handler\AddUserRequestHandler;
 use Learn\Http\Message\Request\Handler\DefaultHandler;
-use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
-use Learn\Http\Message\Request\Handler\FindUserRequestHandler;
-use Learn\Http\Message\Request\Handler\UpdateUserRequestHandler;
 use Learn\Http\Message\Request\Handler\DeleteUserRequestHandler;
+use Learn\Http\Message\Request\Handler\FindUserRequestHandler;
+use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
+use Learn\Http\Message\Request\Handler\UpdateUserRequestHandler;
 
 return [
     'database' => [
@@ -23,17 +23,21 @@ return [
         ]
     ],
     'routes'   => [
-        '/'      => [
+        '/'          => [
             'GET' => DefaultHandler::class
         ],
-        '/users' => [
+        '/users'     => [
             'GET'  => GetAllUsersRequestHandler::class,
             'POST' => AddUserRequestHandler::class,
         ],
         '/users/:id' => [
-            'GET' => FindUserRequestHandler::class,
-            'PUT' => UpdateUserRequestHandler::class,
+            'GET'    => FindUserRequestHandler::class,
+            'PUT'    => UpdateUserRequestHandler::class,
             'DELETE' => DeleteUserRequestHandler::class
         ]
+    ],
+    'logger'   => [
+        'dir'      => dirname(__DIR__),
+        'fileName' => "log.txt"
     ]
 ];
