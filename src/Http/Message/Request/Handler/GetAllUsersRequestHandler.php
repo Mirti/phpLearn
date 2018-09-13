@@ -31,7 +31,6 @@ class GetAllUsersRequestHandler implements RequestHandlerInterface
     {
             $users = $this->repository->fetchAll();
 
-            $this->repository->commitTransaction();
             return new HttpResponse(200, $users ?? []);
 
     }
