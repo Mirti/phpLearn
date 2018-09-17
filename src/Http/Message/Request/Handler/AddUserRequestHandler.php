@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
-use http\Exception\InvalidArgumentException;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
@@ -43,8 +42,15 @@ class AddUserRequestHandler implements RequestHandlerInterface
                 throw new \InvalidArgumentException('Missing one of required field.');
             }
 
-            if(sizeof($data) > 2){
-                throw new \InvalidArgumentException('Given more parameters than required');
+            foreach ($data as $key => $value) {
+                if ($key != 'firstName' && $key != 'lastName') {
+                    $additionalArguments[] = $key;
+                }
+            }
+
+            if (sizeof($additionalArguments) > 0) {
+                $errorMessage = "Too many arguments (" . implode(', ', $additionalArguments) . ")";
+                throw new \InvalidArgumentException($errorMessage);
             }
 
             $id   = UserId::generate();
