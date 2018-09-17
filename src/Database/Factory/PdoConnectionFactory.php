@@ -16,8 +16,7 @@ class PdoConnectionFactory
      */
     public static function create(string $dbName): PdoConnection
     {
-        if (array_key_exists($dbName, self::$connections)) {
-        } else {
+        if (!array_key_exists($dbName, self::$connections)) {
             $config = include($_SERVER['DOCUMENT_ROOT'] . "/config/local.php");
 
             self::$connections[$dbName] = new PdoConnection($config['database'][$dbName]);
