@@ -10,16 +10,18 @@ use Learn\Http\Message\Request\Handler\UpdateUserRequestHandler;
 
 return [
     'database' => [
-        'driver'      => 'mysql',
-        'dsn'         => [
-            'host'    => '127.0.0.1',
-            'port'    => 3306,
-            'dbname'  => 'learn',
-            'charset' => 'utf8'
-        ],
-        'credentials' => [
-            'username' => 'dev',
-            'password' => 'dev',
+        'default' => [
+            'driver'      => 'mysql',
+            'dsn'         => [
+                'host'    => '127.0.0.1',
+                'port'    => 3306,
+                'dbname'  => 'learn',
+                'charset' => 'utf8'
+            ],
+            'credentials' => [
+                'username' => 'dev',
+                'password' => 'dev',
+            ]
         ]
     ],
     'routes'   => [

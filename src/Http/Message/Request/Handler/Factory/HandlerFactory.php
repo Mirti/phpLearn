@@ -16,30 +16,31 @@ use Learn\Repository\UserRepository;
 
 class HandlerFactory
 {
+    private const DB_NAME = 'default';
+
     /**
      * @param string $class
-     *
      * @return RequestHandlerInterface
      */
     public static function create(string $class): RequestHandlerInterface
     {
         switch ($class) {
             case GetAllUsersRequestHandler::class:
-                return new GetAllUsersRequestHandler(new UserRepository(PdoConnectionFactory::create()));
+                return new GetAllUsersRequestHandler(new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
                 break;
 
             case AddUserRequestHandler::class:
-                return new AddUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
+                return new AddUserRequestHandler(new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
                 break;
 
             case FindUserRequestHandler::class:
-                return new FindUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
+                return new FindUserRequestHandler(new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
 
             case UpdateUserRequestHandler::class:
-                return new UpdateUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
+                return new UpdateUserRequestHandler(new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
 
             case DeleteUserRequestHandler::class:
-                return new DeleteUserRequestHandler(new UserRepository(PdoConnectionFactory::create()));
+                return new DeleteUserRequestHandler(new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
 
             default:
                 return new DefaultHandler();

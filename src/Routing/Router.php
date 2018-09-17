@@ -33,7 +33,7 @@ class Router
     public function match(RequestInterface $request): RequestHandlerInterface
     {
         $method = $request->getMethod();
-        $route = $request->getRoute();
+        $route  = $request->getRoute();
 
         if (!isset($this->config[$route][$method])) {
             throw new \Exception("Missing handler for $method $route");
