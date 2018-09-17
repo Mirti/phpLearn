@@ -18,7 +18,8 @@ class PdoConnectionFactory
     {
         if (array_key_exists($dbName, self::$connections)) {
         } else {
-            $config                     = include($_SERVER['DOCUMENT_ROOT'] . "/config/local.php");
+            $config = include($_SERVER['DOCUMENT_ROOT'] . "/config/local.php");
+
             self::$connections[$dbName] = new PdoConnection($config['database'][$dbName]);
         }
 
