@@ -21,9 +21,10 @@ require __DIR__ . '/vendor/autoload.php';
 
 $config = include(__DIR__ . '/config/local.php');
 
-$logger = new Logger($config['logger']);
 
 try {
+    $logger = new Logger($config['logger']);
+
     $url           = $_SERVER['REQUEST_URI'];
     $method        = $_SERVER['REQUEST_METHOD'];
     $remoteAddress = $_SERVER['REMOTE_ADDR'];
@@ -40,12 +41,12 @@ try {
     $requestHandler = $router->match($request);
     /** @var ResponseInterface $response */
     $response = $requestHandler->handle($request);
+} catch (UserNotFoundException $ex) {
+    $response = new HttpResponse(404, [$ex->getMessage()]);
 } catch (AssertionFailedException $ex) {
     $response = new HttpResponse(400, [$ex->getMessage()]);
 } catch (\InvalidArgumentException $ex) {
     $response = new HttpResponse(400, [$ex->getMessage()]);
-} catch (UserNotFoundException $ex) {
-    $response = new HttpResponse(404, [$ex->getMessage()]);
 } catch (\Throwable $ex) {
     $logger->addLog($ex, $request);
     $response = new HttpResponse(500);

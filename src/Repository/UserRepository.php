@@ -51,10 +51,15 @@ class UserRepository implements UserRepositoryInterface
     {
         $stmt = $this->connection->query("SELECT id, firstName, lastName FROM users WHERE deleted_at IS NULL");
 
-        while ($row = $stmt->fetchAll(\PDO::FETCH_ASSOC)) {
-            $users[] = $row;
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($rows as $row)
+        {
+            $users[] = new User(
+                UserId::fromString($row['id']),
+                new FirstName($row['firstName']),
+                new LastName($row['lastName'])
+            );
         }
-
         return $users ?? [];
     }
 

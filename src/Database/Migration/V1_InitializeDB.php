@@ -1,10 +1,14 @@
 <?php
 declare(strict_types=1);
 
-$host     = "127.0.0.1:3306";
-$dbName   = "learn";
-$username = "dev";
-$password = "dev";
+$config =  include(dirname(dirname(dirname(dirname(__FILE__)))) . "/config/local.php");  //Jakiś inny sposób?
+
+$config = $config['database']['default'];
+
+$host     = $config['dsn']['host'] . ':' . $config['dsn']['port'];
+$dbName   = $config['dsn']['dbname'];
+$username = $config['credentials']['username'];
+$password = $config['credentials']['password'];
 
 try {
     $conn = new PDO("mysql:host=$host", $username, $password);

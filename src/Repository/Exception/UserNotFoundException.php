@@ -16,7 +16,6 @@ class UserNotFoundException extends \Exception
      */
     public static function byId(ValueObjectInterface $id, \Throwable $previous = null): self
     {
-        $id = $id->__toString();
         return new static("User with id ($id) could not be found", 404, $previous);
     }
 }
