@@ -12,7 +12,6 @@ use Learn\Repository\UserRepositoryInterface;
 
 class DeleteUserRequestHandler implements RequestHandlerInterface
 {
-
     /** @var */
     private $repository;
 
@@ -32,10 +31,8 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
     {
         $this->repository->beginTransaction();
         try {
-
-
             $id   = $request->getRouteParams()[':id'];
-            $user = $this->repository->find(new UserId($id));
+            $user = $this->repository->find(UserId::fromString($id));
 
             $this->repository->delete($user);
 

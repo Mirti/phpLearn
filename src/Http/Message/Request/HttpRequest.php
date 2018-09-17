@@ -19,7 +19,6 @@ class HttpRequest implements RequestInterface
     /** @var array */
     private $body;
 
-
     /**
      * HttpRequest constructor.
      * @param string $remoteAddress

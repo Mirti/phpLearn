@@ -36,14 +36,14 @@ class Router
         $route = $request->getRoute();
 
         if (!isset($this->config[$route][$method])) {
-            throw new \InvalidArgumentException("Missing handler for $method $route");
+            throw new \Exception("Missing handler for $method $route");
         }
 
         $handlerClass = $this->config[$route][$method];
         $handler      = HandlerFactory::create($handlerClass);
 
         if (!$handler instanceof RequestHandlerInterface) {
-            throw new \InvalidArgumentException('Class must implement ' . RequestHandlerInterface::class);
+            throw new \Exception('Class must implement ' . RequestHandlerInterface::class);
         }
 
         return $handler;

@@ -73,19 +73,6 @@ class User
         $this->lastName = $lastName;
     }
 
-    /**
-     * @param User $user
-     * @return bool
-     */
-    public function equals(User $user): bool
-    {
-        foreach (get_class_vars(self::class) as $property => $value) {
-            if (!$this->$property === $user->$property) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * @return array

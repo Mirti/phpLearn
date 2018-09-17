@@ -15,13 +15,29 @@ class DefaultHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $info = "Zrobione: <br /><br/>
-        /users <br />
-        GET -> lista użyszkodników <br/>
-        POST -> dodawanie użyszkodnika <br />
-        {\"firstName\" : \"imie\", <br />
-        \"lastName\" : \"nazwisko\"}";
+        $info = [
+            'Available routes'    => [
+                '/users'      => [
+                    'GET'  => 'List of all users',
+                    'POST' => 'Create new user',
+                ],
+                '/users/{id}' => [
+                    'PUT'    => 'Update users with {id}',
+                    'DELETE' => 'delete users with {id}',
+                ]
+            ],
+            'Required parameters' => [
+                '/users'      => [
+                    'GET'  => "-",
+                    'POST' => "firstName, lastName",
+                ],
+                '/users/{id}' => [
+                    'PUT'    => 'firstName, lastName',
+                    'DELETE' => '-',
+                ]
+            ]
+        ];
 
-        return new HttpResponse(200, [$info]);
+        return new HttpResponse(200, $info);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
+use http\Exception\InvalidArgumentException;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
@@ -42,15 +43,19 @@ class AddUserRequestHandler implements RequestHandlerInterface
                 throw new \InvalidArgumentException('Missing one of required field.');
             }
 
-            $id   = new UserId();
+            if(sizeof($data) > 2){
+                throw new \InvalidArgumentException('Given more parameters than required');
+            }
+
+            $id   = UserId::generate();
             $user = new User($id, new FirstName($data['firstName']), new LastName($data['lastName']));
 
             $this->repository->add($user);
-            $createdUser = $this->repository->find($id);
+            $createdUser = $this->repository->find($id)->toArray();
 
             $this->repository->commitTransaction();
 
-            return new HttpResponse(201, $createdUser->toArray());
+            return new HttpResponse(201, $createdUser);
 
         } catch (\Throwable $ex) {
             $this->repository->rollbackTransaction();

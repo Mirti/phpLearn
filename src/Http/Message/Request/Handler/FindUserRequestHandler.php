@@ -31,7 +31,7 @@ class FindUserRequestHandler implements RequestHandlerInterface
     public function handle(RequestInterface $request): ResponseInterface
     {
         $id   = $request->getRouteParams()[':id'];
-        $user = $this->repository->find(new UserId($id));
+        $user = $this->repository->find(UserId::fromString($id));
 
         return new HttpResponse(200, $user->toArray());
     }

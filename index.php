@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Learn;
 
 
+use Assert\AssertionFailedException;
 use Learn\Http\Message\Request\HttpRequest;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
@@ -39,6 +40,8 @@ try {
     $requestHandler = $router->match($request);
     /** @var ResponseInterface $response */
     $response = $requestHandler->handle($request);
+} catch (AssertionFailedException $ex) {
+    $response = new HttpResponse(400, [$ex->getMessage()]);
 } catch (\InvalidArgumentException $ex) {
     $response = new HttpResponse(400, [$ex->getMessage()]);
 } catch (UserNotFoundException $ex) {

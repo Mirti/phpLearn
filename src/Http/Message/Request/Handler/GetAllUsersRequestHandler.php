@@ -29,9 +29,8 @@ class GetAllUsersRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-            $users = $this->repository->fetchAll();
+        $users = $this->repository->fetchAll();
 
-            return new HttpResponse(200, $users ?? []);
-
+        return new HttpResponse(200, $users);
     }
 }

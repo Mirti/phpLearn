@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace Learn\Model\Value;
 
 
+use Assert\Assertion;
+
 class FirstName implements ValueObjectInterface
 {
-
     /** @var string */
     protected $firstName;
 
@@ -21,17 +22,10 @@ class FirstName implements ValueObjectInterface
      */
     public function __construct(string $firstName)
     {
-        if (strlen($firstName) < self::MIN_FIRST_NAME_LENGTH) {
-            throw new \InvalidArgumentException("User first name is too short");
-        }
-        if (strlen($firstName) > self::MAX_FIRST_NAME_LENGTH) {
-            throw new \InvalidArgumentException("User first name is too long");
-        }
-        if (ctype_lower(substr($firstName, 0, 1))) {
-            throw new \InvalidArgumentException("User first name must start with a capital letter");
-        }
+        Assertion::minLength($firstName, self::MIN_FIRST_NAME_LENGTH);
+        Assertion::maxLength($firstName, self::MAX_FIRST_NAME_LENGTH);
 
-        $this->firstName = $firstName;
+        $this->firstName = ucfirst($firstName);
     }
 
     /**
@@ -39,7 +33,7 @@ class FirstName implements ValueObjectInterface
      */
     public function __toString()
     {
-        return (string)$this->firstName;
+        return $this->firstName;
     }
 
     /**
@@ -47,6 +41,6 @@ class FirstName implements ValueObjectInterface
      */
     public function equals(ValueObjectInterface $valueObject): bool
     {
-        return $this->firstName == $valueObject->__toString() ? true : false;
+        return $this->firstName === $valueObject->__toString();
     }
 }

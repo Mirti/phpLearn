@@ -14,7 +14,6 @@ use Learn\Repository\UserRepositoryInterface;
 
 class UpdateUserRequestHandler implements RequestHandlerInterface
 {
-
     /** @var */
     private $repository;
 
@@ -43,19 +42,19 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
 
             $id = $request->getRouteParams()[':id'];
 
-            $user = $this->repository->find(new UserId($id));
+            $user = $this->repository->find(UserId::fromString($id));
 
             $user->setFirstName(new FirstName($data['firstName']));
             $user->setLastName(new LastName($data['lastName']));
 
             $this->repository->update($user);
 
-            $updatedUser = $this->repository->find(new UserId($id));
+            $updatedUser = $this->repository->find(UserId::fromString($id));
 
             $this->repository->commitTransaction();
 
             return new HttpResponse(200, $updatedUser->toArray());
-        } catch(\Throwable $ex){
+        } catch (\Throwable $ex) {
             $this->repository->rollbackTransaction();
             throw $ex;
         }
