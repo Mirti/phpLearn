@@ -11,6 +11,7 @@ use Learn\Model\User;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
 use Learn\Model\Value\UserId;
+use Learn\Repository\Exception\ApiException;
 use Learn\Repository\UserRepositoryInterface;
 
 class AddUserRequestHandler implements RequestHandlerInterface
@@ -63,9 +64,9 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
             return new HttpResponse(201, $createdUser);
 
-        } catch (\Throwable $ex) {
+        } catch (\InvalidArgumentException $ex) {
             $this->repository->rollbackTransaction();
-            throw $ex;
+            throw new ApiException($ex->getMessage(), 400, $ex);
         }
     }
 }

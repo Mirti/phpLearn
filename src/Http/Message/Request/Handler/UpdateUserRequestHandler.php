@@ -10,6 +10,7 @@ use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
 use Learn\Model\Value\UserId;
+use Learn\Repository\Exception\ApiException;
 use Learn\Repository\UserRepositoryInterface;
 
 class UpdateUserRequestHandler implements RequestHandlerInterface
@@ -54,9 +55,10 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
             $this->repository->commitTransaction();
 
             return new HttpResponse(200, $updatedUser->toArray());
-        } catch (\Throwable $ex) {
+
+        } catch (\InvalidArgumentException $ex) {
             $this->repository->rollbackTransaction();
-            throw $ex;
+            throw new ApiException($ex->getMessage(), 400, $ex);
         }
     }
 }

@@ -9,6 +9,7 @@ use Learn\Http\Message\Request\HttpRequest;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Log\Logger;
+use Learn\Repository\Exception\ApiException;
 use Learn\Repository\Exception\UserNotFoundException;
 use Learn\Routing\Router;
 use Learn\Routing\UrlMapper;
@@ -41,12 +42,9 @@ try {
     $requestHandler = $router->match($request);
     /** @var ResponseInterface $response */
     $response = $requestHandler->handle($request);
-} catch (UserNotFoundException $ex) {
-    $response = new HttpResponse(404, [$ex->getMessage()]);
-} catch (AssertionFailedException $ex) {
-    $response = new HttpResponse(400, [$ex->getMessage()]);
-} catch (\InvalidArgumentException $ex) {
-    $response = new HttpResponse(400, [$ex->getMessage()]);
+
+} catch (ApiException $ex) {
+    $response = new HttpResponse($ex->getCode(), [$ex->getMessage()]);
 } catch (\Throwable $ex) {
     $logger->addLog($ex, $request);
     $response = new HttpResponse(500);
