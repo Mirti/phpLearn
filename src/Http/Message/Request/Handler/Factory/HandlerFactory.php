@@ -26,21 +26,28 @@ class HandlerFactory
     {
         switch ($class) {
             case GetAllUsersRequestHandler::class:
-                return new GetAllUsersRequestHandler(new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
+                return new GetAllUsersRequestHandler(
+                    new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
                 break;
 
             case AddUserRequestHandler::class:
-                return new AddUserRequestHandler(new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
+                return new AddUserRequestHandler(
+                    PdoConnectionFactory::create(self::DB_NAME),
+                    new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
                 break;
 
             case FindUserRequestHandler::class:
                 return new FindUserRequestHandler(new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
 
             case UpdateUserRequestHandler::class:
-                return new UpdateUserRequestHandler(new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
+                return new UpdateUserRequestHandler(
+                    PdoConnectionFactory::create(self::DB_NAME),
+                    new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
 
             case DeleteUserRequestHandler::class:
-                return new DeleteUserRequestHandler(new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
+                return new DeleteUserRequestHandler(
+                    PdoConnectionFactory::create(self::DB_NAME),
+                    new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
 
             default:
                 return new DefaultHandler();

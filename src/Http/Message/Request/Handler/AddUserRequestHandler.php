@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
+use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
@@ -16,16 +17,21 @@ use Learn\Repository\UserRepositoryInterface;
 
 class AddUserRequestHandler implements RequestHandlerInterface
 {
+    /** @var PdoConnection */
+    private $connection;
+
     /** @var UserRepositoryInterface */
     private $repository;
 
     /**
      * AddUserRequestHandler constructor.
      *
+     * @param PdoConnection
      * @param UserRepositoryInterface $repository
      */
-    public function __construct($repository)
+    public function __construct($connection, $repository)
     {
+        $this->connection = $connection;
         $this->repository = $repository;
     }
 
@@ -34,7 +40,7 @@ class AddUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $this->repository->beginTransaction();
+        $this->connection->beginTransaction();
 
         try {
             $data = $request->getBody();
@@ -60,12 +66,12 @@ class AddUserRequestHandler implements RequestHandlerInterface
             $this->repository->add($user);
             $createdUser = $this->repository->find($id)->toArray();
 
-            $this->repository->commitTransaction();
+            $this->connection->commit();
 
             return new HttpResponse(201, $createdUser);
 
         } catch (\InvalidArgumentException $ex) {
-            $this->repository->rollbackTransaction();
+            $this->connection->rollBack();
             throw new ApiException($ex->getMessage(), 400, $ex);
         }
     }

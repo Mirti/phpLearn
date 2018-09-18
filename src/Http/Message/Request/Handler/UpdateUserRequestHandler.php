@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
+use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
@@ -11,20 +12,25 @@ use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
 use Learn\Model\Value\UserId;
 use Learn\Repository\Exception\ApiException;
+use Learn\Repository\UserRepository;
 use Learn\Repository\UserRepositoryInterface;
 
 class UpdateUserRequestHandler implements RequestHandlerInterface
 {
-    /** @var */
+    /** @var PdoConnection */
+    private $connection;
+    /** @var UserRepository */
     private $repository;
 
     /**
      * UpdateUserRequestHandler constructor.
      *
+     * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
      */
-    public function __construct($repository)
+    public function __construct($connection, $repository)
     {
+        $this->connection = $connection;
         $this->repository = $repository;
     }
 
@@ -33,7 +39,8 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $this->repository->beginTransaction();
+        $this->connection->beginTransaction();
+
         try {
             $data = $request->getBody();
 
@@ -52,12 +59,12 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
 
             $updatedUser = $this->repository->find(UserId::fromString($id));
 
-            $this->repository->commitTransaction();
+            $this->connection->commit();
 
             return new HttpResponse(200, $updatedUser->toArray());
 
         } catch (\InvalidArgumentException $ex) {
-            $this->repository->rollbackTransaction();
+            $this->connection->rollBack();
             throw new ApiException($ex->getMessage(), 400, $ex);
         }
     }

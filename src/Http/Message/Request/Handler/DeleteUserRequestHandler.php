@@ -4,23 +4,30 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
+use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Model\Value\UserId;
+use Learn\Repository\UserRepository;
 use Learn\Repository\UserRepositoryInterface;
 
 class DeleteUserRequestHandler implements RequestHandlerInterface
 {
-    /** @var */
+    /** @var PdoConnection*/
+    private $connection;
+
+    /** @var UserRepository */
     private $repository;
 
     /**
      * DeleteUserRequestHandler constructor.
+     * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
      */
-    public function __construct($repository)
+    public function __construct($connection, $repository)
     {
+        $this->connection = $connection;
         $this->repository = $repository;
     }
 
@@ -29,18 +36,18 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $this->repository->beginTransaction();
+        $this->connection->beginTransaction();
         try {
             $id   = $request->getRouteParams()[':id'];
             $user = $this->repository->find(UserId::fromString($id));
 
             $this->repository->delete($user);
 
-            $this->repository->commitTransaction();
+            $this->connection->commit();
 
             return new HttpResponse(204);
         } catch (\Throwable $ex) {
-            $this->repository->rollbackTransaction();
+            $this->connection->rollBack();
             throw $ex;
         }
     }

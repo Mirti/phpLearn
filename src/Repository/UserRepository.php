@@ -52,9 +52,11 @@ class UserRepository implements UserRepositoryInterface
     {
         $stmt = $this->connection->query("SELECT id, firstName, lastName FROM users WHERE deleted_at IS NULL");
 
+        if (!$stmt) {
+            return [];
+        }
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        foreach ($rows as $row)
-        {
+        foreach ($rows as $row) {
             $users[] = new User(
                 UserId::fromString($row['id']),
                 new FirstName($row['firstName']),
@@ -136,29 +138,5 @@ class UserRepository implements UserRepositoryInterface
         if (!$isDeleted) {
             throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());
         }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function beginTransaction(): bool
-    {
-        return $this->connection->beginTransaction();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function commitTransaction(): bool
-    {
-        return $this->connection->commit();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rollbackTransaction(): bool
-    {
-        return $this->connection->rollBack();
     }
 }

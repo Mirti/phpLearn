@@ -35,19 +35,4 @@ interface UserRepositoryInterface
      * @param User $user
      */
     public function delete(User $user);
-
-    /**
-     * @return bool
-     */
-    public function beginTransaction(): bool;
-
-    /**
-     * @return bool
-     */
-    public function commitTransaction(): bool;
-
-    /**
-     * @return bool
-     */
-    public function rollbackTransaction(): bool;
 }
