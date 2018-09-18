@@ -8,7 +8,6 @@ use Learn\Model\User;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
 use Learn\Model\Value\UserId;
-use Learn\Repository\Exception\ApiException;
 use Learn\Repository\Exception\UserNotFoundException;
 
 class UserRepository implements UserRepositoryInterface
@@ -88,7 +87,7 @@ class UserRepository implements UserRepositoryInterface
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         if (!$result) {
-            throw new ApiException(UserNotFoundException::byId($id)->getMessage(), 404, UserNotFoundException::byId($id));
+            throw UserNotFoundException::byId($id);
         }
 
         $user = new User(

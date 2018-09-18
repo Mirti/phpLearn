@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Learn\Model\Value;
 
 
-use Learn\Repository\Exception\ApiException;
 use Rhumsaa\Uuid\Uuid;
 
 class UserId implements ValueObjectInterface
@@ -35,11 +34,7 @@ class UserId implements ValueObjectInterface
      */
     public static function fromString(string $userId): UserId
     {
-        try {
-            return new self(Uuid::fromString($userId));
-        } catch (\Throwable $ex) {
-            throw new ApiException($ex->getMessage(), 400, $ex);
-        }
+        return new self(Uuid::fromString($userId));
     }
 
     /**

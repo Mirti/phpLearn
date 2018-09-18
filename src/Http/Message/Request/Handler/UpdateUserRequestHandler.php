@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
+use Assert\AssertionFailedException;
 use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
@@ -12,6 +13,7 @@ use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
 use Learn\Model\Value\UserId;
 use Learn\Repository\Exception\ApiException;
+use Learn\Repository\Exception\UserNotFoundException;
 use Learn\Repository\UserRepository;
 use Learn\Repository\UserRepositoryInterface;
 
@@ -36,6 +38,7 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
 
     /**
      * @inheritdoc
+     * @throws ApiException
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
@@ -64,6 +67,12 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
             return new HttpResponse(200, $updatedUser->toArray());
 
         } catch (\InvalidArgumentException $ex) {
+            $this->connection->rollBack();
+            throw new ApiException($ex->getMessage(), 400, $ex);
+        } catch (UserNotFoundException $ex) {
+            $this->connection->rollBack();
+            throw new ApiException($ex->getMessage(), 404, $ex);
+        } catch (AssertionFailedException $ex) {
             $this->connection->rollBack();
             throw new ApiException($ex->getMessage(), 400, $ex);
         }

@@ -5,8 +5,6 @@ namespace Learn\Model\Value;
 
 
 use Assert\Assertion;
-use Assert\AssertionFailedException;
-use Learn\Repository\Exception\ApiException;
 
 class FirstName implements ValueObjectInterface
 {
@@ -21,16 +19,11 @@ class FirstName implements ValueObjectInterface
     /**
      * FirstName constructor.
      * @param string $firstName
-     * @throws ApiException
      */
     public function __construct(string $firstName)
     {
-        try {
-            Assertion::minLength($firstName, self::MIN_FIRST_NAME_LENGTH);
-            Assertion::maxLength($firstName, self::MAX_FIRST_NAME_LENGTH);
-        } catch (AssertionFailedException $ex) {
-            throw new ApiException($ex->getMessage(), 400, $ex);
-        }
+        Assertion::minLength($firstName, self::MIN_FIRST_NAME_LENGTH);
+        Assertion::maxLength($firstName, self::MAX_FIRST_NAME_LENGTH);
 
         $this->firstName = ucfirst($firstName);
     }

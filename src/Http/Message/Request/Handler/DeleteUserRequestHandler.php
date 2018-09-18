@@ -9,12 +9,14 @@ use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Model\Value\UserId;
+use Learn\Repository\Exception\ApiException;
+use Learn\Repository\Exception\UserNotFoundException;
 use Learn\Repository\UserRepository;
 use Learn\Repository\UserRepositoryInterface;
 
 class DeleteUserRequestHandler implements RequestHandlerInterface
 {
-    /** @var PdoConnection*/
+    /** @var PdoConnection */
     private $connection;
 
     /** @var UserRepository */
@@ -33,6 +35,7 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
 
     /**
      * @inheritdoc
+     * @throws ApiException
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
@@ -46,6 +49,9 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
             $this->connection->commit();
 
             return new HttpResponse(204);
+        } catch (UserNotFoundException $ex) {
+            $this->connection->rollBack();
+            throw new ApiException($ex->getMessage(), 404, $ex);
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
             throw $ex;
