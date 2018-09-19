@@ -20,10 +20,9 @@ require __DIR__ . '/vendor/autoload.php';
 
 $config = include(__DIR__ . '/config/local.php');
 
+$logger = new Logger($config['logger']);
 
 try {
-    $logger = new Logger($config['logger']);
-
     $url           = $_SERVER['REQUEST_URI'];
     $method        = $_SERVER['REQUEST_METHOD'];
     $remoteAddress = $_SERVER['REMOTE_ADDR'];

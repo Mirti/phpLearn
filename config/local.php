@@ -39,7 +39,10 @@ return [
         ]
     ],
     'logger'   => [
-        'dir'      => dirname(__DIR__),
-        'fileName' => "log.txt"
+        'txtFileDir'  => dirname(__DIR__),
+        'txtFileName' => 'log.txt',
+        'jsonFileDir' => dirname(__DIR__),
+        'jsonFileName' =>"log.html",
+        'console'     => true
     ]
 ];
