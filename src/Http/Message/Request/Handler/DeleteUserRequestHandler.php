@@ -8,6 +8,8 @@ use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
+use Learn\Log\LoggerAwareTrait;
+use Learn\Log\LoggerInterface;
 use Learn\Model\Value\UserId;
 use Learn\Repository\Exception\ApiException;
 use Learn\Repository\Exception\UserNotFoundException;
@@ -16,6 +18,8 @@ use Learn\Repository\UserRepositoryInterface;
 
 class DeleteUserRequestHandler implements RequestHandlerInterface
 {
+    use LoggerAwareTrait;
+
     /** @var PdoConnection */
     private $connection;
 
@@ -26,11 +30,14 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
      * DeleteUserRequestHandler constructor.
      * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
+     * @param LoggerInterface         $logger
      */
-    public function __construct($connection, $repository)
+    public function __construct($connection, $repository, $logger)
     {
         $this->connection = $connection;
         $this->repository = $repository;
+
+        $this->setLogger($logger);
     }
 
     /**
@@ -49,11 +56,16 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
             $this->connection->commit();
 
             return new HttpResponse(204);
+
         } catch (UserNotFoundException $ex) {
             $this->connection->rollBack();
             throw new ApiException($ex->getMessage(), 404, $ex);
+
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
+
+            $context = $this->createContext($request, $ex);
+            $this->logger->error($ex->getMessage(), $context);
             throw $ex;
         }
     }

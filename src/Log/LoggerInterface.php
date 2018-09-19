@@ -6,13 +6,6 @@ namespace Learn\Log;
 
 interface LoggerInterface
 {
-
-    /**
-     * @param $file
-     * @return mixed
-     */
-    public function setTxtFile($file);
-
     /**
      * System is unusable.
      *

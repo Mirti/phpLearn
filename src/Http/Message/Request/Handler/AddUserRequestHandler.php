@@ -9,8 +9,7 @@ use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Log\Logger;
-use Learn\Log\LoggerAware;
+use Learn\Log\LoggerAwareTrait;
 use Learn\Log\LoggerInterface;
 use Learn\Model\User;
 use Learn\Model\Value\FirstName;
@@ -19,32 +18,29 @@ use Learn\Model\Value\UserId;
 use Learn\Repository\Exception\ApiException;
 use Learn\Repository\UserRepositoryInterface;
 
+
 class AddUserRequestHandler implements RequestHandlerInterface
 {
+    use LoggerAwareTrait;
+
     /** @var PdoConnection */
     private $connection;
 
     /** @var UserRepositoryInterface */
     private $repository;
 
-    /** @var LoggerInterface */
-    private $logger;
-
     /**
      * AddUserRequestHandler constructor.
-     * @param $connection
-     * @param $repository
-     * @param $loggerConfig
+     * @param PdoConnection $connection
+     * @param UserRepositoryInterface $repository
+     * @param LoggerInterface $logger
      */
-    public function __construct($connection, $repository, $loggerConfig)
+    public function __construct($connection, $repository, $logger)
     {
         $this->connection = $connection;
         $this->repository = $repository;
 
-        $this->logger = new Logger();
-
-        $loggerAware = new LoggerAware($loggerConfig);
-        $loggerAware->setLogger($this->logger);
+        $this->setLogger($logger);
     }
 
     /**
@@ -86,20 +82,17 @@ class AddUserRequestHandler implements RequestHandlerInterface
         } catch (\InvalidArgumentException $ex) {
             $this->connection->rollBack();
 
-            $context['id']     = $request->getRemoteAddress();
-            $context['method'] = $request->getMethod();
-            $context['url']    = $request->getUrl();
-            $context['code']   = $ex->getCode();
-            $context['file']   = $ex->getFile();
-            $context['line']   = $ex->getLine();
-
-            $this->logger->warning($ex->getMessage(), $context);
-
             throw new ApiException($ex->getMessage(), 400, $ex);
 
         } catch (AssertionFailedException $ex) {
             $this->connection->rollBack();
             throw new ApiException($ex->getMessage(), 400, $ex);
+
+        } catch (\Throwable $ex) {
+            $this->connection->rollBack();
+
+            $context = $this->createContext($request, $ex);
+            $this->logger->error($ex->getMessage(), $context);
         }
     }
 }

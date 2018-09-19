@@ -7,14 +7,19 @@ namespace Learn\Log;
 class Logger implements LoggerInterface
 {
     /** @var */
+    private $config;
+    /** @var */
     private $txtFile;
 
     /**
-     * @param mixed $txtFile
+     * Logger constructor.
+     * @param $config
+     * @throws \Exception
      */
-    public function setTxtFile($txtFile): void
+    public function __construct($config)
     {
-        $this->txtFile = $txtFile;
+        $this->config  = $config;
+        $this->txtFile = $this->getLogTxtFile();
     }
 
     /**
@@ -26,7 +31,7 @@ class Logger implements LoggerInterface
      */
     public function emergency($message, array $context = array())
     {
-        // TODO: Implement emergency() method.
+        $this->log(LogLevel::EMERGENCY, $message, $context);
     }
 
     /**
@@ -41,7 +46,7 @@ class Logger implements LoggerInterface
      */
     public function alert($message, array $context = array())
     {
-        // TODO: Implement alert() method.
+        $this->log(LogLevel::ALERT, $message, $context);
     }
 
     /**
@@ -55,7 +60,7 @@ class Logger implements LoggerInterface
      */
     public function critical($message, array $context = array())
     {
-        // TODO: Implement critical() method.
+        $this->log(LogLevel::CRITICAL, $message, $context);
     }
 
     /**
@@ -68,7 +73,7 @@ class Logger implements LoggerInterface
      */
     public function error($message, array $context = array())
     {
-        // TODO: Implement error() method.
+        $this->log(LogLevel::ERROR, $message, $context);
     }
 
     /**
@@ -83,16 +88,7 @@ class Logger implements LoggerInterface
      */
     public function warning($message, array $context = array())
     {
-        $logValue = "\n \n";
-        $logValue .= $currentDate = date("Y-m-d H:i:s") . "  ";
-        $logValue .= $context['id'] . "  ";
-        $logValue .= "[" . $context['method'] . "]  ";
-        $logValue .= $context['url'] . "  ";
-        $logValue .= "[" . $context['code'] . "]  ";
-        $logValue .= $message . "  ";
-        $logValue .= "(" . $context['file'] . " " . $context['line'];
-
-        fwrite($this->txtFile, $logValue);
+        $this->log(LogLevel::WARNING, $message, $context);
     }
 
     /**
@@ -104,7 +100,7 @@ class Logger implements LoggerInterface
      */
     public function notice($message, array $context = array())
     {
-        // TODO: Implement notice() method.
+        $this->log(LogLevel::NOTICE, $message, $context);
     }
 
     /**
@@ -118,7 +114,7 @@ class Logger implements LoggerInterface
      */
     public function info($message, array $context = array())
     {
-        // TODO: Implement info() method.
+        $this->log(LogLevel::INFO, $message, $context);
     }
 
     /**
@@ -130,7 +126,7 @@ class Logger implements LoggerInterface
      */
     public function debug($message, array $context = array())
     {
-        // TODO: Implement debug() method.
+        $this->log(LogLevel::DEBUG, $message, $context);
     }
 
     /**
@@ -143,6 +139,27 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
-        // TODO: Implement log() method.
+        $logValue = "\n \n";
+        $logValue .= "Log Level: " . $level . " ";
+        $logValue .= $currentDate = date("Y-m-d H:i:s") . "  ";
+        $logValue .= $context['id'] . "  ";
+        $logValue .= "[" . $context['method'] . "]  ";
+        $logValue .= $context['url'] . "  ";
+        $logValue .= "[" . $context['code'] . "]  ";
+        $logValue .= $message . "  ";
+        $logValue .= "(" . $context['file'] . " " . $context['line'];
+
+        fwrite($this->txtFile, $logValue);
+    }
+
+    private function getLogTxtFile()
+    {
+        $file = fopen($this->config['dir'] . '/' . $this->config['fileName'], 'a+');
+
+        if (!$file) {
+            throw new \Exception("Can not open or create log file");
+        }
+
+        return $file;
     }
 }

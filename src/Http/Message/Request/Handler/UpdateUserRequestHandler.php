@@ -9,6 +9,8 @@ use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
+use Learn\Log\LoggerAwareTrait;
+use Learn\Log\LoggerInterface;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
 use Learn\Model\Value\UserId;
@@ -19,6 +21,8 @@ use Learn\Repository\UserRepositoryInterface;
 
 class UpdateUserRequestHandler implements RequestHandlerInterface
 {
+    use LoggerAwareTrait;
+
     /** @var PdoConnection */
     private $connection;
     /** @var UserRepository */
@@ -29,11 +33,14 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
      *
      * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
+     * @param LoggerInterface         $logger
      */
-    public function __construct($connection, $repository)
+    public function __construct($connection, $repository, $logger)
     {
         $this->connection = $connection;
         $this->repository = $repository;
+
+        $this->setLogger($logger);
     }
 
     /**
@@ -69,12 +76,20 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
         } catch (\InvalidArgumentException $ex) {
             $this->connection->rollBack();
             throw new ApiException($ex->getMessage(), 400, $ex);
+
         } catch (UserNotFoundException $ex) {
             $this->connection->rollBack();
             throw new ApiException($ex->getMessage(), 404, $ex);
+
         } catch (AssertionFailedException $ex) {
             $this->connection->rollBack();
             throw new ApiException($ex->getMessage(), 400, $ex);
+
+        } catch (\Throwable $ex) {
+            $this->connection->rollBack();
+
+            $context = $this->createContext($request, $ex);
+            $this->logger->error($ex->getMessage(), $context);
         }
     }
 }

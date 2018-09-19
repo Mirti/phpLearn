@@ -41,8 +41,8 @@ try {
 } catch (ApiException $ex) {
     $response = new HttpResponse($ex->getCode(), [$ex->getMessage()]);
 } catch (\Throwable $ex) {
-    $response = new HttpResponse(500);
     echo $ex;
+    $response = new HttpResponse(500);
 }
 header('Content-Type: application/json');
 if ($response->getCode() !== 204) {
