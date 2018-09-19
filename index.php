@@ -7,12 +7,13 @@ namespace Learn;
 use Learn\Http\Message\Request\HttpRequest;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
+use Learn\Log\Logger;
 use Learn\Repository\Exception\ApiException;
 use Learn\Routing\Router;
 use Learn\Routing\UrlMapper;
 use function http_response_code;
 
-//error_reporting(0);
+error_reporting(0);
 
 /** Run auto-loading */
 require __DIR__ . '/vendor/autoload.php';
@@ -21,6 +22,8 @@ $config = include(__DIR__ . '/config/local.php');
 
 
 try {
+    $logger = new Logger($config['logger']);
+
     $url           = $_SERVER['REQUEST_URI'];
     $method        = $_SERVER['REQUEST_METHOD'];
     $remoteAddress = $_SERVER['REMOTE_ADDR'];
@@ -40,8 +43,9 @@ try {
 
 } catch (ApiException $ex) {
     $response = new HttpResponse($ex->getCode(), [$ex->getMessage()]);
+
 } catch (\Throwable $ex) {
-    echo $ex;
+    $logger->emergency($ex->getMessage());
     $response = new HttpResponse(500);
 }
 header('Content-Type: application/json');

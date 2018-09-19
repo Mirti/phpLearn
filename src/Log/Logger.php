@@ -31,7 +31,12 @@ class Logger implements LoggerInterface
      */
     public function emergency($message, array $context = array())
     {
-        $this->log(LogLevel::EMERGENCY, $message, $context);
+        $logValue = "\n \n";
+        $logValue .= "Log Level: " . strtoupper(LogLevel::EMERGENCY) . " ";
+        $logValue .= $currentDate = date("Y-m-d H:i:s") . "  ";
+        $logValue .= $message . "  ";
+
+        fwrite($this->txtFile, $logValue);
     }
 
     /**
