@@ -9,6 +9,9 @@ use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
+use Learn\Log\Logger;
+use Learn\Log\LoggerAware;
+use Learn\Log\LoggerInterface;
 use Learn\Model\User;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
@@ -24,15 +27,24 @@ class AddUserRequestHandler implements RequestHandlerInterface
     /** @var UserRepositoryInterface */
     private $repository;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /**
      * AddUserRequestHandler constructor.
      * @param $connection
      * @param $repository
+     * @param $loggerConfig
      */
-    public function __construct($connection, $repository)
+    public function __construct($connection, $repository, $loggerConfig)
     {
         $this->connection = $connection;
         $this->repository = $repository;
+
+        $this->logger = new Logger();
+
+        $loggerAware = new LoggerAware($loggerConfig);
+        $loggerAware->setLogger($this->logger);
     }
 
     /**
@@ -43,7 +55,8 @@ class AddUserRequestHandler implements RequestHandlerInterface
         $this->connection->beginTransaction();
 
         try {
-            $data = $request->getBody();
+            $data                = $request->getBody();
+            $additionalArguments = [];
 
             if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
                 throw new \InvalidArgumentException('Missing one of required field.');
@@ -72,7 +85,18 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
         } catch (\InvalidArgumentException $ex) {
             $this->connection->rollBack();
+
+            $context['id']     = $request->getRemoteAddress();
+            $context['method'] = $request->getMethod();
+            $context['url']    = $request->getUrl();
+            $context['code']   = $ex->getCode();
+            $context['file']   = $ex->getFile();
+            $context['line']   = $ex->getLine();
+
+            $this->logger->warning($ex->getMessage(), $context);
+
             throw new ApiException($ex->getMessage(), 400, $ex);
+
         } catch (AssertionFailedException $ex) {
             $this->connection->rollBack();
             throw new ApiException($ex->getMessage(), 400, $ex);

@@ -4,58 +4,145 @@ declare(strict_types=1);
 namespace Learn\Log;
 
 
-use Learn\Http\Message\Request\RequestInterface;
-
 class Logger implements LoggerInterface
 {
-    /** @var  */
-    private $config;
-    /** @var bool|resource  */
-    private $file;
+    /** @var */
+    private $txtFile;
 
     /**
-     * Logger constructor.
-     * @param $config
-     * @throws \Exception
+     * @param mixed $txtFile
      */
-    public function __construct($config)
+    public function setTxtFile($txtFile): void
     {
-        $this->config = $config;
-        $this->file   = $this->getLogFile();
+        $this->txtFile = $txtFile;
     }
 
     /**
-     * @inheritdoc
+     * System is unusable.
+     *
+     * @param string $message
+     * @param array  $context
+     * @return void
      */
-    public function addLog(\Throwable $ex, RequestInterface $request): bool
+    public function emergency($message, array $context = array())
+    {
+        // TODO: Implement emergency() method.
+    }
+
+    /**
+     * Action must be taken immediately.
+     *
+     * Example: Entire website down, database unavailable, etc. This should
+     * trigger the SMS alerts and wake you up.
+     *
+     * @param string $message
+     * @param array  $context
+     * @return void
+     */
+    public function alert($message, array $context = array())
+    {
+        // TODO: Implement alert() method.
+    }
+
+    /**
+     * Critical conditions.
+     *
+     * Example: Application component unavailable, unexpected exception.
+     *
+     * @param string $message
+     * @param array  $context
+     * @return void
+     */
+    public function critical($message, array $context = array())
+    {
+        // TODO: Implement critical() method.
+    }
+
+    /**
+     * Runtime errors that do not require immediate action but should typically
+     * be logged and monitored.
+     *
+     * @param string $message
+     * @param array  $context
+     * @return void
+     */
+    public function error($message, array $context = array())
+    {
+        // TODO: Implement error() method.
+    }
+
+    /**
+     * Exceptional occurrences that are not errors.
+     *
+     * Example: Use of deprecated APIs, poor use of an API, undesirable things
+     * that are not necessarily wrong.
+     *
+     * @param string $message
+     * @param array  $context
+     * @return void
+     */
+    public function warning($message, array $context = array())
     {
         $logValue = "\n \n";
         $logValue .= $currentDate = date("Y-m-d H:i:s") . "  ";
-        $logValue .= $request->getRemoteAddress() . "  ";
-        $logValue .= "[" . $request->getMethod() . "]  ";
-        $logValue .= $request->getUrl() . "  ";
-        $logValue .= "[" . $ex->getCode() . "]  ";
-        $logValue .= $ex->getMessage() . "  ";
-        $logValue .= "(" . $ex->getFile(). " " .$ex->getLine();
+        $logValue .= $context['id'] . "  ";
+        $logValue .= "[" . $context['method'] . "]  ";
+        $logValue .= $context['url'] . "  ";
+        $logValue .= "[" . $context['code'] . "]  ";
+        $logValue .= $message . "  ";
+        $logValue .= "(" . $context['file'] . " " . $context['line'];
 
-        fwrite($this->file, $logValue);
-        return true;
+        fwrite($this->txtFile, $logValue);
     }
-
 
     /**
-     * @return bool|resource
-     * @throws \Exception
+     * Normal but significant events.
+     *
+     * @param string $message
+     * @param array  $context
+     * @return void
      */
-    private function getLogFile()
+    public function notice($message, array $context = array())
     {
-        $file = fopen($this->config['dir'] . '/' . $this->config['fileName'], 'a+');
-
-        if (!$file) {
-            throw new \Exception("Can not open or create log file");
-        }
-
-        return $file;
+        // TODO: Implement notice() method.
     }
 
+    /**
+     * Interesting events.
+     *
+     * Example: User logs in, SQL logs.
+     *
+     * @param string $message
+     * @param array  $context
+     * @return void
+     */
+    public function info($message, array $context = array())
+    {
+        // TODO: Implement info() method.
+    }
+
+    /**
+     * Detailed debug information.
+     *
+     * @param string $message
+     * @param array  $context
+     * @return void
+     */
+    public function debug($message, array $context = array())
+    {
+        // TODO: Implement debug() method.
+    }
+
+    /**
+     * Logs with an arbitrary level.
+     *
+     * @param mixed  $level
+     * @param string $message
+     * @param array  $context
+     * @return void
+     */
+    public function log($level, $message, array $context = array())
+    {
+        // TODO: Implement log() method.
+    }
 }

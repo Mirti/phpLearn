@@ -24,6 +24,8 @@ class HandlerFactory
      */
     public static function create(string $class): RequestHandlerInterface
     {
+        $config = include($_SERVER['DOCUMENT_ROOT'] . "/config/local.php");
+
         switch ($class) {
             case GetAllUsersRequestHandler::class:
                 return new GetAllUsersRequestHandler(
@@ -33,7 +35,8 @@ class HandlerFactory
             case AddUserRequestHandler::class:
                 return new AddUserRequestHandler(
                     PdoConnectionFactory::create(self::DB_NAME),
-                    new UserRepository(PdoConnectionFactory::create(self::DB_NAME)));
+                    new UserRepository(PdoConnectionFactory::create(self::DB_NAME)),
+                    $config['logger']);
                 break;
 
             case FindUserRequestHandler::class:
