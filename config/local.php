@@ -39,10 +39,12 @@ return [
         ]
     ],
     'logger'   => [
-        'txtFileDir'  => dirname(__DIR__),
-        'txtFileName' => 'log.txt',
-        'jsonFileDir' => dirname(__DIR__),
-        'jsonFileName' =>"log.html",
-        'console'     => true
+        'types' => [
+            'txt' => [
+                'enable'   => true,
+                'class'    => \Learn\Log\LogType\TxtLogType::class,
+                'fileDir'  => dirname(__DIR__),
+                'fileName' => 'log.txt']
+        ]
     ]
 ];

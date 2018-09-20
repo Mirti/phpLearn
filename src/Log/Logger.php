@@ -8,20 +8,9 @@ class Logger implements LoggerInterface
 {
     /** @var */
     private $config;
+
     /** @var */
-    private $txtFileName;
-    /** @var */
-    private $txtFileDir;
-    /** @var */
-    private $txtFile;
-    /** @var */
-    private $jsonFileName;
-    /** @var */
-    private $jsonFileDir;
-    /** @var */
-    private $jsonFile;
-    /** @var */
-    private $consoleEnabled;
+    private $types;
 
     /**
      * Logger constructor.
@@ -31,14 +20,7 @@ class Logger implements LoggerInterface
     public function __construct($config)
     {
         $this->config = $config;
-
-        $this->txtFileDir  = $config['txtFileDir'];
-        $this->txtFileName = $config['txtFileName'];
-
-        $this->jsonFileDir  = $config['jsonFileDir'];
-        $this->jsonFileName = $config['jsonFileName'];
-
-        $this->consoleEnabled = $config['console'];
+        $this->types  = array();
 
         $this->setUp();
     }
@@ -52,21 +34,7 @@ class Logger implements LoggerInterface
      */
     public function emergency($message, array $context = array())
     {
-        $logValue['Log Level'] = strtoupper(LogLevel::EMERGENCY);
-        $logValue['Date']      = date("Y-m-d H:i:s");
-        $logValue['message']   = $message;
-
-        if ($this->consoleEnabled) {
-            error_log(print_r($logValue, TRUE));
-        }
-
-        if (isset($this->txtFile)) {
-            fwrite($this->txtFile, $this->toString($logValue));
-        }
-
-        if (isset($this->jsonFile)) {
-            fwrite($this->jsonFile, json_encode($logValue));
-        }
+        $this->log(LogLevel::EMERGENCY, $message, $context);
     }
 
     /**
@@ -174,26 +142,8 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
-        $logValue['Log Level'] = $level;
-        $logValue['Date']      = date("Y-m-d H:i:s");
-        $logValue['ID']        = $context['id'];
-        $logValue['Method']    = $context['method'];
-        $logValue['URL']       = $context['url'];
-        $logValue['Code']      = $context['code'];
-        $logValue['Message']   = $message;
-        $logValue['File']      = $context['file'];
-        $logValue['Line']      = $context['line'];
-
-        if ($this->consoleEnabled) {
-            error_log(print_r($logValue, TRUE));
-        }
-
-        if (isset($this->txtFile)) {
-            fwrite($this->txtFile, $logValue);
-        }
-
-        if (isset($this->jsonFile)) {
-            fwrite($this->jsonFile, json_encode($logValue));
+        foreach ($this->types as $type) {
+            $type->log($level, $message, $context);
         }
     }
 
@@ -202,39 +152,10 @@ class Logger implements LoggerInterface
      */
     private function setUp()
     {
-        if (!empty($this->txtFileDir) && !empty($this->txtFileName)) {
-            $this->txtFile = $this->getLogTxtFile($this->txtFileDir, $this->txtFileName);
-        }
-
-        if (!empty($this->jsonFileDir) && !empty($this->jsonFileName)) {
-            $this->jsonFile = $this->getLogTxtFile($this->jsonFileDir, $this->jsonFileName);
+        foreach ($this->config['types'] as $typeConfig) {
+            if ($typeConfig['enable']) {
+                $this->types[] = new $typeConfig['class']($typeConfig);
+            }
         }
     }
-
-    /**
-     * @param $fileDir
-     * @param $fileName
-     * @return bool|resource
-     * @throws \Exception
-     */
-    private function getLogTxtFile($fileDir, $fileName)
-    {
-        $file = fopen($fileDir . '/' . $fileName, 'a+');
-
-        if (!$file) {
-            throw new \Exception("Can not open or create log file");
-        }
-
-        return $file;
-    }
-
-    /**
-     * @param array $array
-     * @return string
-     */
-    private function toString(array $array): string
-    {
-        return implode(" | ", $array) . "\n";
-    }
-
 }
