@@ -5,6 +5,7 @@ namespace Learn\Log;
 
 
 use Learn\Log\LogType\FileType;
+use Learn\Repository\Exception\LoggerException;
 
 class Logger implements LoggerInterface
 {
@@ -21,10 +22,10 @@ class Logger implements LoggerInterface
      */
     public function __construct($config)
     {
-        $this->config = $config;
-        $this->types  = array();
+            $this->config = $config;
+            $this->types  = array();
 
-        $this->setUp();
+            $this->setUp();
     }
 
     /**

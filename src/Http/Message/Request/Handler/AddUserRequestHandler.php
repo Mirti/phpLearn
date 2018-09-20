@@ -94,6 +94,8 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
             $context = ContextCreator::createContext($request,$ex);
             $this->logger->error($ex->getMessage(), $context);
+
+            throw $ex;
         }
     }
 }

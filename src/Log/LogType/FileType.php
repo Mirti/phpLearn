@@ -7,6 +7,7 @@ namespace Learn\Log\LogType;
 use Learn\Log\LogLevel;
 use Learn\Log\LogType\Formatter\JsonFormatter;
 use Learn\Log\LogType\Formatter\TextFormatter;
+use Learn\Repository\Exception\LoggerException;
 
 class FileType implements LogTypeInterface
 {
@@ -19,6 +20,8 @@ class FileType implements LogTypeInterface
     /** @var bool|resource */
     private $file;
 
+    private const AVAILABLE_TYPES = array('txt', 'html');
+
     /**
      * TxtLogType constructor.
      * @param $config
@@ -27,7 +30,7 @@ class FileType implements LogTypeInterface
     public function __construct($config)
     {
         if (!self::isConfigValid($config)) {
-            throw new \Exception("Invalid log file configuration");
+            throw new LoggerException("Invalid log file configuration");
         }
 
         $this->fileDir       = $config['fileDir'];
@@ -68,33 +71,47 @@ class FileType implements LogTypeInterface
         $file = fopen($fileDir . '/' . $fileName . '.' . $fileExtension, 'a+');
 
         if (!$file) {
-            throw new \Exception("Can not open or create log file");
+            throw new LoggerException("Can not open or create log file");
         }
 
         return $file;
     }
 
+    /**
+     * @param $array
+     * @param $extension
+     * @return string
+     * @throws \Exception
+     */
     private static function format($array, $extension)
     {
         switch ($extension) {
             case 'txt':
                 return TextFormatter::format($array);
                 break;
+
             case 'html':
                 return JsonFormatter::format($array);
                 break;
 
             default:
-                throw new \Exception("Invalid Logger Configuration");
+                throw new LoggerException("Can not create file with extension: $extension");
         }
     }
 
+    /**
+     * @param $config
+     * @return bool
+     */
     private static function isConfigValid($config): bool
     {
-        if (empty($config['fileDir']) || empty($config['fileName'] || empty($config['fileExtension']))) {
+        if (!in_array($config['fileExtension'], self::AVAILABLE_TYPES)) {
             return false;
         }
-        return true;
-    }
 
+        if (!empty($config['fileDir']) && !empty($config['fileName'])) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -49,6 +49,8 @@ class GetAllUsersRequestHandler implements RequestHandlerInterface
         } catch (\Throwable $ex) {
             $context = ContextCreator::createContext($request, $ex);
             $this->logger->error($ex->getMessage(), $context);
+
+            throw $ex;
         }
     }
 }

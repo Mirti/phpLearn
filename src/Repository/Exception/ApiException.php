@@ -8,12 +8,6 @@ use Throwable;
 
 class ApiException extends \Exception
 {
-    /** @var */
-    protected $message;
-    /** @var */
-    protected $code;
-    /** @var */
-    protected $exception;
 
     /**
      * ApiException constructor.
@@ -21,7 +15,7 @@ class ApiException extends \Exception
      * @param int            $code
      * @param Throwable|null $previous
      */
-    public function __construct(string $message = "", int $code = 0, Throwable $previous = null)
+    public function __construct(string $message = "", int $code = 500, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
