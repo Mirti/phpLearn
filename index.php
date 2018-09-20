@@ -19,7 +19,6 @@ error_reporting(0);
 require __DIR__ . '/vendor/autoload.php';
 
 $config = include(__DIR__ . '/config/local.php');
-
 $logger = new Logger($config['logger']);
 
 try {
@@ -44,7 +43,9 @@ try {
     $response = new HttpResponse($ex->getCode(), [$ex->getMessage()]);
 
 } catch (\Throwable $ex) {
-    $logger->emergency($ex->getMessage());
+    $context['File'] = $ex->getFile();
+    $context['Line'] = $ex->getLine();
+    $logger->emergency($ex->getMessage(), $context);
     $response = new HttpResponse(500);
 }
 header('Content-Type: application/json');

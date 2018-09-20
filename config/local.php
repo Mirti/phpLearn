@@ -40,11 +40,18 @@ return [
     ],
     'logger'   => [
         'types' => [
-            'txt' => [
-                'enable'   => true,
-                'class'    => \Learn\Log\LogType\TxtLogType::class,
-                'fileDir'  => dirname(__DIR__),
-                'fileName' => 'log.txt']
+            'txt'  => [
+                'enable'        => true,
+                'fileDir'       => dirname(__DIR__),
+                'fileName'      => 'log',
+                'fileExtension' => 'txt'
+            ],
+            'html' => [
+                'enable'        => true,
+                'fileDir'       => dirname(__DIR__),
+                'fileName'      => 'log',
+                'fileExtension' => 'html'
+            ]
         ]
     ]
 ];

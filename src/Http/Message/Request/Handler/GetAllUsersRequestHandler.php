@@ -7,6 +7,7 @@ namespace Learn\Http\Message\Request\Handler;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
+use Learn\Log\ContextCreator;
 use Learn\Log\LoggerAwareTrait;
 use Learn\Log\LoggerInterface;
 use Learn\Repository\UserRepositoryInterface;
@@ -46,7 +47,7 @@ class GetAllUsersRequestHandler implements RequestHandlerInterface
             return new HttpResponse(200, $usersArray);
 
         } catch (\Throwable $ex) {
-            $context = $this->createContext($request, $ex);
+            $context = ContextCreator::createContext($request, $ex);
             $this->logger->error($ex->getMessage(), $context);
         }
     }

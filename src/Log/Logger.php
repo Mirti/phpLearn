@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Learn\Log;
 
 
+use Learn\Log\LogType\FileType;
+
 class Logger implements LoggerInterface
 {
     /** @var */
@@ -154,7 +156,7 @@ class Logger implements LoggerInterface
     {
         foreach ($this->config['types'] as $typeConfig) {
             if ($typeConfig['enable']) {
-                $this->types[] = new $typeConfig['class']($typeConfig);
+                $this->types[] = new FileType($typeConfig);
             }
         }
     }

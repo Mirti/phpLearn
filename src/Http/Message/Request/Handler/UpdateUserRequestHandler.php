@@ -9,6 +9,7 @@ use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
+use Learn\Log\ContextCreator;
 use Learn\Log\LoggerAwareTrait;
 use Learn\Log\LoggerInterface;
 use Learn\Model\Value\FirstName;
@@ -88,7 +89,7 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
 
-            $context = $this->createContext($request, $ex);
+            $context = ContextCreator::createContext($request, $ex);
             $this->logger->error($ex->getMessage(), $context);
         }
     }
