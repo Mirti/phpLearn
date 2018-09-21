@@ -27,7 +27,7 @@ interface UserRepositoryInterface
     public function find(UserId $id): User;
 
     /**
-     * @param User   $user
+     * @param User $user
      */
     public function update(User $user);
 

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$config =  include(dirname(dirname(dirname(dirname(__FILE__)))) . "/config/local.php");  //Jakiś inny sposób?
+$config = include(dirname(dirname(dirname(dirname(__FILE__)))) . "/config/local.php");  //Jakiś inny sposób?
 
 $config = $config['database']['default'];
 

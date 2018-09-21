@@ -40,25 +40,26 @@ return [
     ],
     'logger'   => [
         'handler' => [
-            'file'    => [
-                'txt' => [
-                    'fileDir'          => dirname(__DIR__),
-                    'fileName'         => 'log',
-                    'fileExtension'    => 'txt',
-                    'contentFormatter' => \Learn\Log\Formatter\TextFormatter::class],
+            'txt' => [
+                'fileDir'          => dirname(__DIR__),
+                'fileName'         => 'log',
+                'fileExtension'    => 'txt',
+                'handler'          => \Learn\Log\LogHandler\FileHandler::class,
+                'contentFormatter' => \Learn\Log\Formatter\TextFormatter::class
+            ],
 
-                'html' => [
-                    'fileDir'          => dirname(__DIR__),
-                    'fileName'         => 'log',
-                    'fileExtension'    => 'html',
-                    'contentFormatter' => \Learn\Log\Formatter\JsonFormatter::class
-                ]
+            'html'    => [
+                'fileDir'          => dirname(__DIR__),
+                'fileName'         => 'log',
+                'fileExtension'    => 'html',
+                'handler'          => \Learn\Log\LogHandler\FileHandler::class,
+                'contentFormatter' => \Learn\Log\Formatter\JsonFormatter::class
             ],
             'console' => [
-                'default' => [
-                    "contentFormatter" => \Learn\Log\Formatter\TextFormatter::class
-                ]
+                'handler'          => \Learn\Log\LogHandler\ConsoleHandler::class,
+                "contentFormatter" => \Learn\Log\Formatter\TextFormatter::class
             ]
         ]
     ]
+
 ];

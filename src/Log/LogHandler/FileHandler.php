@@ -23,18 +23,19 @@ class FileHandler implements LogHandlerInterface
 
     /**
      * FileHandler constructor.
-     * @param $fileDir
-     * @param $fileName
-     * @param $fileExtension
-     * @param $contentFormatter
+     * @param $config
      * @throws \Exception
      */
-    public function __construct($fileDir, $fileName, $fileExtension, $contentFormatter)
+    public function __construct($config)
     {
-        $this->fileDir          = $fileDir;
-        $this->fileName         = $fileName;
-        $this->fileExtension    = $fileExtension;
-        $this->contentFormatter = $contentFormatter;
+        if (!$this->isConfigValid($config)) {
+            throw new LoggerException("Logger configuration error");
+        }
+
+        $this->fileDir          = $config['fileDir'];
+        $this->fileName         = $config['fileName'];
+        $this->fileExtension    = $config['fileExtension'];
+        $this->contentFormatter = $config['contentFormatter'];
 
         $this->file = self::getFile($this->fileDir, $this->fileName, $this->fileExtension);
     }
@@ -72,7 +73,18 @@ class FileHandler implements LogHandlerInterface
         if (!$file) {
             throw new LoggerException("Can not open or create log file");
         }
-
         return $file;
+    }
+
+    /**
+     * @param $config
+     * @return bool
+     */
+    function isConfigValid($config): bool
+    {
+        if (!empty($config['fileDir']) && !empty($config['fileName']) && !empty(($config)['fileExtension'])) {
+            return true;
+        }
+        return false;
     }
 }

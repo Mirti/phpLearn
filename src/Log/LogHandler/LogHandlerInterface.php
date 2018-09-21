@@ -15,4 +15,10 @@ interface LogHandlerInterface
      * @return void
      */
     function log($level, $message, array $context = array()): void;
+
+    /**
+     * @param $config
+     * @return bool
+     */
+    function isConfigValid($config): bool;
 }

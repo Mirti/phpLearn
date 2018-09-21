@@ -32,9 +32,9 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
     /**
      * AddUserRequestHandler constructor.
-     * @param PdoConnection $connection
+     * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
-     * @param LoggerInterface $logger
+     * @param LoggerInterface         $logger
      */
     public function __construct($connection, $repository, $logger)
     {
@@ -92,7 +92,7 @@ class AddUserRequestHandler implements RequestHandlerInterface
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
 
-            $context = ContextCreator::createContext($request,$ex);
+            $context = ContextCreator::createContext($request, $ex);
             $this->logger->error($ex->getMessage(), $context);
 
             throw $ex;

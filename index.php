@@ -42,7 +42,6 @@ try {
 
 } catch (LoggerException $ex) {
     $response = new HttpResponse($ex->getCode(), [$ex->getMessage()]);
-    die();
 
 } catch (ApiException $ex) {
     $response = new HttpResponse($ex->getCode(), [$ex->getMessage()]);
