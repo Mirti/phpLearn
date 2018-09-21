@@ -39,18 +39,25 @@ return [
         ]
     ],
     'logger'   => [
-        'types' => [
-            'txt'  => [
-                'enable'        => true,
-                'fileDir'       => dirname(__DIR__),
-                'fileName'      => 'log',
-                'fileExtension' => 'txt'
+        'handler' => [
+            'file'    => [
+                'txt' => [
+                    'fileDir'          => dirname(__DIR__),
+                    'fileName'         => 'log',
+                    'fileExtension'    => 'txt',
+                    'contentFormatter' => \Learn\Log\Formatter\TextFormatter::class],
+
+                'html' => [
+                    'fileDir'          => dirname(__DIR__),
+                    'fileName'         => 'log',
+                    'fileExtension'    => 'html',
+                    'contentFormatter' => \Learn\Log\Formatter\JsonFormatter::class
+                ]
             ],
-            'html' => [
-                'enable'        => true,
-                'fileDir'       => dirname(__DIR__),
-                'fileName'      => 'log',
-                'fileExtension' => 'html'
+            'console' => [
+                'default' => [
+                    "contentFormatter" => \Learn\Log\Formatter\TextFormatter::class
+                ]
             ]
         ]
     ]

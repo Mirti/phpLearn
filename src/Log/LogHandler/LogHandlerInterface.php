@@ -1,19 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Learn\Log\LogType;
+namespace Learn\Log\LogHandler;
 
 
 use Learn\Log\LogLevel;
 
-interface LogTypeInterface
+interface LogHandlerInterface
 {
-    /**
-     * LogTypeInterface constructor.
-     * @param $config
-     */
-    function __construct($config);
-
     /**
      * @param LogLevel $level
      * @param string   $message

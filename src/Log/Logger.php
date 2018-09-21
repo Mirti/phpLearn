@@ -4,16 +4,16 @@ declare(strict_types=1);
 namespace Learn\Log;
 
 
-use Learn\Log\LogType\FileType;
-use Learn\Repository\Exception\LoggerException;
+use Learn\Log\LogHandler\Factory\LogHandlerFactory;
+use Learn\Log\LogHandler\LogHandlerInterface;
 
 class Logger implements LoggerInterface
 {
     /** @var */
     private $config;
 
-    /** @var */
-    private $types;
+    /** @var LogHandlerInterface[] */
+    private $handlers;
 
     /**
      * Logger constructor.
@@ -22,10 +22,8 @@ class Logger implements LoggerInterface
      */
     public function __construct($config)
     {
-            $this->config = $config;
-            $this->types  = array();
-
-            $this->setUp();
+        $this->config   = $config;
+        $this->handlers = LogHandlerFactory::create($config['handler']);
     }
 
     /**
@@ -145,20 +143,8 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
-        foreach ($this->types as $type) {
-            $type->log($level, $message, $context);
-        }
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function setUp()
-    {
-        foreach ($this->config['types'] as $typeConfig) {
-            if ($typeConfig['enable']) {
-                $this->types[] = new FileType($typeConfig);
-            }
+        foreach ($this->handlers as $handler) {
+            $handler->log($level, $message, $context);
         }
     }
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Learn\Log\LogType\Formatter;
+namespace Learn\Log\Formatter;
 
 
 class JsonFormatter implements FormatterInterface
