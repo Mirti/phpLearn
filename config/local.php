@@ -39,25 +39,49 @@ return [
         ]
     ],
     'logger'   => [
-        'handler' => [
-            'txt' => [
-                'fileDir'          => dirname(__DIR__),
-                'fileName'         => 'log',
-                'fileExtension'    => 'txt',
-                'handler'          => \Learn\Log\LogHandler\FileHandler::class,
-                'contentFormatter' => \Learn\Log\Formatter\TextFormatter::class
+        'txt' => [
+            'handler'   => [
+                'class'  => \Learn\Log\LogHandler\FileHandler::class,
+                'params' => [
+                    'dir'  => dirname(__DIR__),
+                    'name' => 'log',
+                    'ext'  => 'txt',
+                ]
             ],
+            'formatter' => [
+                'class'  => \Learn\Log\Formatter\TextFormatter::class,
+                'params' => [
+                    'tet1' => 'test',
+                    'test2'=> 'test2'
+                ]
+            ]
+        ],
 
-            'html'    => [
-                'fileDir'          => dirname(__DIR__),
-                'fileName'         => 'log',
-                'fileExtension'    => 'html',
-                'handler'          => \Learn\Log\LogHandler\FileHandler::class,
-                'contentFormatter' => \Learn\Log\Formatter\JsonFormatter::class
+        'html'    => [
+            'handler'   => [
+                'class'  => \Learn\Log\LogHandler\FileHandler::class,
+                'params' => [
+                    'dir'  => dirname(__DIR__),
+                    'name' => 'log',
+                    'ext'  => 'html',
+                ]
             ],
-            'console' => [
-                'handler'          => \Learn\Log\LogHandler\ConsoleHandler::class,
-                "contentFormatter" => \Learn\Log\Formatter\TextFormatter::class
+            'formatter' => [
+                'class'  => \Learn\Log\Formatter\JsonFormatter::class,
+                'params' => [
+                ]
+            ]
+        ],
+        'console' => [
+            'handler'   => [
+                'class'  => \Learn\Log\LogHandler\ConsoleHandler::class,
+                'params' => [
+                ]
+            ],
+            'formatter' => [
+                'class'  => \Learn\Log\Formatter\TextFormatter::class,
+                'params' => [
+                ]
             ]
         ]
     ]

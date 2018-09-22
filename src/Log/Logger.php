@@ -23,7 +23,7 @@ class Logger implements LoggerInterface
     public function __construct($config)
     {
         $this->config   = $config;
-        $this->handlers = LogHandlerFactory::create($config['handler']);
+        $this->handlers = LogHandlerFactory::create($config);
     }
 
     /**

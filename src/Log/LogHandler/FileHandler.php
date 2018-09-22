@@ -11,33 +11,34 @@ use Learn\Repository\Exception\LoggerException;
 class FileHandler implements LogHandlerInterface
 {
     /** @var */
-    private $fileDir;
+    private $dir;
     /** @var */
-    private $fileName;
+    private $name;
     /** @var */
-    private $fileExtension;
+    private $ext;
     /** @var FormatterInterface */
-    private $contentFormatter;
+    private $formatter;
     /** @var bool|resource */
     private $file;
 
     /**
      * FileHandler constructor.
+     * @param $formatter
      * @param $config
-     * @throws \Exception
+     * @throws LoggerException
      */
-    public function __construct($config)
+    public function __construct($formatter, $config)
     {
         if (!$this->isConfigValid($config)) {
             throw new LoggerException("Logger configuration error");
         }
 
-        $this->fileDir          = $config['fileDir'];
-        $this->fileName         = $config['fileName'];
-        $this->fileExtension    = $config['fileExtension'];
-        $this->contentFormatter = $config['contentFormatter'];
+        $this->dir       = $config['dir'];
+        $this->name      = $config['name'];
+        $this->ext       = $config['ext'];
+        $this->formatter = $formatter;
 
-        $this->file = self::getFile($this->fileDir, $this->fileName, $this->fileExtension);
+        $this->file = self::getFile($this->dir, $this->name, $this->ext);
     }
 
     /**
@@ -56,19 +57,19 @@ class FileHandler implements LogHandlerInterface
             $logValue[$key] = $value;
         }
 
-        fwrite($this->file, $this->contentFormatter::format($logValue));
+        fwrite($this->file, $this->formatter->format($logValue));
     }
 
     /**
-     * @param $fileDir
-     * @param $fileName
-     * @param $fileExtension
+     * @param $dir
+     * @param $name
+     * @param $ext
      * @return bool|resource
-     * @throws \Exception
+     * @throws LoggerException
      */
-    private static function getFile($fileDir, $fileName, $fileExtension)
+    private static function getFile($dir, $name, $ext)
     {
-        $file = fopen($fileDir . '/' . $fileName . '.' . $fileExtension, 'a+');
+        $file = fopen($dir . '/' . $name . '.' . $ext, 'a+');
 
         if (!$file) {
             throw new LoggerException("Can not open or create log file");
@@ -82,7 +83,7 @@ class FileHandler implements LogHandlerInterface
      */
     function isConfigValid($config): bool
     {
-        if (!empty($config['fileDir']) && !empty($config['fileName']) && !empty(($config)['fileExtension'])) {
+        if (!empty($config['dir']) && !empty($config['name']) && !empty(($config)['ext'])) {
             return true;
         }
         return false;

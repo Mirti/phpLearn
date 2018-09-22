@@ -7,10 +7,19 @@ namespace Learn\Log\Formatter;
 class TextFormatter implements FormatterInterface
 {
     /**
+     * TextFormatter constructor.
+     * @param array $params
+     */
+    public function __construct(array $params)
+    {
+
+    }
+
+    /**
      * @param array $context
      * @return string
      */
-    public static function format(array $context): string
+    public function format(array $context): string
     {
         return implode(" | ", $context) . "\n";
     }

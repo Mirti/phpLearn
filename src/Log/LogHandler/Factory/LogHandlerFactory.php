@@ -16,10 +16,23 @@ class LogHandlerFactory
     public static function create($handlersConfig)
     {
         $logObjects = array();
+        try {
+            foreach ($handlersConfig as $handler => $config) {
+                $formatterClass  = $config['formatter']['class'];
+                $formatterParams = $config['formatter']['params'];
 
-        foreach ($handlersConfig as $handler => $config) {
-            $logObjects[] = new $config['handler']($config);
+                $formatter = new $formatterClass($formatterParams);
+
+                $handlerClass  = $config['handler']['class'];
+                $handlerParams = $config['handler']['params'];
+
+                $newHandler = new $handlerClass($formatter, $handlerParams);
+
+                $logObjects[] = $newHandler;
+            }
+            return $logObjects;
+        } catch (\Throwable $ex) {
+            throw new LoggerException('Logger Configuration Error');
         }
-        return $logObjects;
     }
 }
