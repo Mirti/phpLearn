@@ -4,147 +4,98 @@ declare(strict_types=1);
 namespace Learn\Log;
 
 
-use Learn\Log\LogHandler\Factory\LogHandlerFactory;
 use Learn\Log\LogHandler\LogHandlerInterface;
 
 class Logger implements LoggerInterface
 {
-    /** @var */
-    private $config;
-
     /** @var LogHandlerInterface[] */
     private $handlers;
 
     /**
      * Logger constructor.
-     * @param $config
-     * @throws \Exception
+     *
+     * @param array $handlers
      */
-    public function __construct(array $config)
+    public function __construct(array $handlers)
     {
-        $this->config   = $config;
-        $this->handlers = LogHandlerFactory::create($config);
+        $this->handlers = $handlers;
     }
 
     /**
-     * System is unusable.
-     *
-     * @param string $message
-     * @param array  $context
-     * @return void
+     * @inheritdoc
      */
-    public function emergency(string $message, array $context = array())
+    public function emergency(string $message, array $context = [])
     {
         $this->log(LogLevel::EMERGENCY, $message, $context);
     }
 
     /**
-     * Action must be taken immediately.
-     *
-     * Example: Entire website down, database unavailable, etc. This should
-     * trigger the SMS alerts and wake you up.
-     *
-     * @param string $message
-     * @param array  $context
-     * @return void
+     * @inheritdoc
      */
-    public function alert(string $message, array $context = array())
+    public function alert(string $message, array $context = [])
     {
         $this->log(LogLevel::ALERT, $message, $context);
     }
 
     /**
-     * Critical conditions.
-     *
-     * Example: Application component unavailable, unexpected exception.
-     *
-     * @param string $message
-     * @param array  $context
-     * @return void
+     * @inheritdoc
      */
-    public function critical(string $message, array $context = array())
+    public function critical(string $message, array $context = [])
     {
         $this->log(LogLevel::CRITICAL, $message, $context);
     }
 
     /**
-     * Runtime errors that do not require immediate action but should typically
-     * be logged and monitored.
-     *
-     * @param string $message
-     * @param array  $context
-     * @return void
+     * @inheritdoc
      */
-    public function error(string $message, array $context = array())
+    public function error(string $message, array $context = [])
     {
         $this->log(LogLevel::ERROR, $message, $context);
     }
 
     /**
-     * Exceptional occurrences that are not errors.
-     *
-     * Example: Use of deprecated APIs, poor use of an API, undesirable things
-     * that are not necessarily wrong.
-     *
-     * @param string $message
-     * @param array  $context
-     * @return void
+     * @inheritdoc
      */
-    public function warning(string $message, array $context = array())
+    public function warning(string $message, array $context = [])
     {
         $this->log(LogLevel::WARNING, $message, $context);
     }
 
     /**
-     * Normal but significant events.
-     *
-     * @param string $message
-     * @param array  $context
-     * @return void
+     * @inheritdoc
      */
-    public function notice(string $message, array $context = array())
+    public function notice(string $message, array $context = [])
     {
         $this->log(LogLevel::NOTICE, $message, $context);
     }
 
     /**
-     * Interesting events.
-     *
-     * Example: User logs in, SQL logs.
-     *
-     * @param string $message
-     * @param array  $context
-     * @return void
+     * @inheritdoc
      */
-    public function info(string $message, array $context = array())
+    public function info(string $message, array $context = [])
     {
         $this->log(LogLevel::INFO, $message, $context);
     }
 
     /**
-     * Detailed debug information.
-     *
-     * @param string $message
-     * @param array  $context
-     * @return void
+     * @inheritdoc
      */
-    public function debug(string $message, array $context = array())
+    public function debug(string $message, array $context = [])
     {
         $this->log(LogLevel::DEBUG, $message, $context);
     }
 
     /**
-     * Logs with an arbitrary level.
-     *
-     * @param mixed  $level
-     * @param string $message
-     * @param array  $context
-     * @return void
+     * @inheritdoc
      */
-    public function log($level, string $message, array $context = array())
+    public function log(string $level, string $message, array $context = [])
     {
+        $context['level']   = $level;
+        $context['message'] = $message;
+        $context['time']    = date("Y-m-d H:i:s");
+
         foreach ($this->handlers as $handler) {
-            $handler->log($level, $message, $context);
+            $handler->handle($context);
         }
     }
 }

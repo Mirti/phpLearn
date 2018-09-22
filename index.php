@@ -8,21 +8,24 @@ use Learn\Http\Message\Request\HttpRequest;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Log\Logger;
+use Learn\Log\LogHandler\Factory\LogHandlerFactory;
 use Learn\Repository\Exception\ApiException;
-use Learn\Repository\Exception\LoggerException;
 use Learn\Routing\Router;
 use Learn\Routing\UrlMapper;
 use function http_response_code;
 
-error_reporting(0);
+error_reporting(1);
+ini_set('display_errors', 'true');
 
 /** Run auto-loading */
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/constants.php';
 
-$config = include(__DIR__ . '/config/local.php');
+$config = require __DIR__ . '/config/local.php';
+
+$logger        = new Logger(LogHandlerFactory::create($config['logger']));
 
 try {
-    $logger        = new Logger($config['logger']);
     $url           = $_SERVER['REQUEST_URI'];
     $method        = $_SERVER['REQUEST_METHOD'];
     $remoteAddress = $_SERVER['REMOTE_ADDR'];
@@ -40,18 +43,14 @@ try {
     /** @var ResponseInterface $response */
     $response = $requestHandler->handle($request);
 
-} catch (LoggerException $ex) {
-    $response = new HttpResponse($ex->getCode(), [$ex->getMessage()]);
-
-} catch (ApiException $ex) {
+}catch (ApiException $ex) {
     $response = new HttpResponse($ex->getCode(), [$ex->getMessage()]);
 
 } catch (\Throwable $ex) {
-    $context['File'] = $ex->getFile();
-    $context['Line'] = $ex->getLine();
-    $logger->emergency($ex->getMessage(), $context);
+    $logger->emergency($ex->getMessage(), [$ex->__toString()]);
     $response = new HttpResponse(500);
 }
+
 header('Content-Type: application/json');
 if ($response->getCode() !== 204) {
     echo $response;

@@ -13,50 +13,40 @@ use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
 use Learn\Http\Message\Request\Handler\RequestHandlerInterface;
 use Learn\Http\Message\Request\Handler\UpdateUserRequestHandler;
 use Learn\Log\Logger;
+use Learn\Log\LogHandler\Factory\LogHandlerFactory;
 use Learn\Repository\UserRepository;
+use const ROOT_DIR;
 
 class HandlerFactory
 {
-    private const DB_NAME = 'default';
-
     /**
      * @param string $class
+     *
      * @return RequestHandlerInterface
      */
     public static function create(string $class): RequestHandlerInterface
     {
-        $config = include($_SERVER['DOCUMENT_ROOT'] . "/config/local.php");
-        $logger = new Logger($config['logger']);
+        $config = require ROOT_DIR . '/config/local.php';
+
+        $pdo        = function () { return PdoConnectionFactory::create(PdoConnectionFactory::DB_DEFAULT); };
+        $repository = function () use ($pdo) { return new UserRepository($pdo()); };
+        $logger     = function () use ($config) { return new Logger(LogHandlerFactory::create($config['logger'])); };
 
         switch ($class) {
             case GetAllUsersRequestHandler::class:
-                return new GetAllUsersRequestHandler(
-                    new UserRepository(PdoConnectionFactory::create(self::DB_NAME)),
-                    $logger);
-                break;
+                return new $class($repository(), $logger());
 
             case AddUserRequestHandler::class:
-                return new AddUserRequestHandler(
-                    PdoConnectionFactory::create(self::DB_NAME),
-                    new UserRepository(PdoConnectionFactory::create(self::DB_NAME)),
-                    $logger);
-                break;
+                return new $class($pdo(), $repository(), $logger());
 
             case FindUserRequestHandler::class:
-                return new FindUserRequestHandler(new UserRepository(PdoConnectionFactory::create(self::DB_NAME)),
-                    $logger);
+                return new $class($repository(), $logger());
 
             case UpdateUserRequestHandler::class:
-                return new UpdateUserRequestHandler(
-                    PdoConnectionFactory::create(self::DB_NAME),
-                    new UserRepository(PdoConnectionFactory::create(self::DB_NAME)),
-                    $logger);
+                return new $class($pdo(), $repository(), $logger());
 
             case DeleteUserRequestHandler::class:
-                return new DeleteUserRequestHandler(
-                    PdoConnectionFactory::create(self::DB_NAME),
-                    new UserRepository(PdoConnectionFactory::create(self::DB_NAME)),
-                    $logger);
+                return new $class($pdo(), $repository(), $logger());
 
             default:
                 return new DefaultHandler();

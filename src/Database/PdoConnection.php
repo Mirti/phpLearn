@@ -19,6 +19,8 @@ final class PdoConnection extends \PDO
             $dsn .= "$key=$value;";
         }
 
-        parent::__construct($dsn, $config['credentials']['username'], $config['credentials']['password'], []);
+        $credentials = $config['credentials'];
+
+        parent::__construct($dsn, $credentials['username'], $credentials['password'], []);
     }
 }

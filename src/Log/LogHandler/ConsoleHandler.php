@@ -1,13 +1,10 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Learn\Log\LogHandler;
 
 
 use Learn\Log\Formatter\FormatterInterface;
-use Learn\Log\LogLevel;
-use Learn\Repository\Exception\LoggerException;
 
 class ConsoleHandler implements LogHandlerInterface
 {
@@ -16,47 +13,21 @@ class ConsoleHandler implements LogHandlerInterface
 
     /**
      * ConsoleHandler constructor.
+     *
      * @param FormatterInterface $formatter
-     * @param                    $config
-     * @throws LoggerException
      */
-    public function __construct(FormatterInterface $formatter, array $config)
+    public function __construct(FormatterInterface $formatter)
     {
         $this->formatter = $formatter;
-
-        if (!$this->isConfigValid($config)) {
-            throw new LoggerException("Logger configuration error");
-        }
-
     }
 
     /**
-     * @param LogLevel $level
-     * @param string   $message
-     * @param array    $context
-     * @return void
+     * @inheritdoc
      */
-    function log($level, string $message, array $context = array()): void
+    function handle(array $log): void
     {
-        $logValue['Log Level'] = $level;
-        $logValue['Date']      = date("Y-m-d H:i:s");
-        $logValue['Message']   = $message;
+        $output = $this->formatter->format($log);
 
-        foreach ($context as $key => $value) {
-            $logValue[$key] = $value;
-        }
-        error_log(print_r($this->formatter->format($logValue), TRUE));
-    }
-
-    /**
-     * @param array $config
-     * @return bool
-     */
-    function isConfigValid(array $config): bool
-    {
-        if (isset($this->formatter)) {
-            return true;
-        }
-        return false;
+        error_log($output);
     }
 }

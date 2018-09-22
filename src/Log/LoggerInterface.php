@@ -11,9 +11,10 @@ interface LoggerInterface
      *
      * @param string $message
      * @param array  $context
+     *
      * @return void
      */
-    public function emergency(string $message, array $context = array());
+    public function emergency(string $message, array $context = []);
 
     /**
      * Action must be taken immediately.
@@ -23,9 +24,10 @@ interface LoggerInterface
      *
      * @param string $message
      * @param array  $context
+     *
      * @return void
      */
-    public function alert(string $message, array $context = array());
+    public function alert(string $message, array $context = []);
 
     /**
      * Critical conditions.
@@ -34,9 +36,10 @@ interface LoggerInterface
      *
      * @param string $message
      * @param array  $context
+     *
      * @return void
      */
-    public function critical(string $message, array $context = array());
+    public function critical(string $message, array $context = []);
 
     /**
      * Runtime errors that do not require immediate action but should typically
@@ -44,9 +47,10 @@ interface LoggerInterface
      *
      * @param string $message
      * @param array  $context
+     *
      * @return void
      */
-    public function error(string $message, array $context = array());
+    public function error(string $message, array $context = []);
 
     /**
      * Exceptional occurrences that are not errors.
@@ -56,18 +60,20 @@ interface LoggerInterface
      *
      * @param string $message
      * @param array  $context
+     *
      * @return void
      */
-    public function warning(string $message, array $context = array());
+    public function warning(string $message, array $context = []);
 
     /**
      * Normal but significant events.
      *
      * @param string $message
      * @param array  $context
+     *
      * @return void
      */
-    public function notice(string $message, array $context = array());
+    public function notice(string $message, array $context = []);
 
     /**
      * Interesting events.
@@ -76,26 +82,29 @@ interface LoggerInterface
      *
      * @param string $message
      * @param array  $context
+     *
      * @return void
      */
-    public function info(string $message, array $context = array());
+    public function info(string $message, array $context = []);
 
     /**
      * Detailed debug information.
      *
      * @param string $message
      * @param array  $context
+     *
      * @return void
      */
-    public function debug(string $message, array $context = array());
+    public function debug(string $message, array $context = []);
 
     /**
      * Logs with an arbitrary level.
      *
-     * @param mixed  $level
+     * @param string $level
      * @param string $message
      * @param array  $context
+     *
      * @return void
      */
-    public function log($level, string $message, array $context = array());
+    public function log(string $level, string $message, array $context = []);
 }
