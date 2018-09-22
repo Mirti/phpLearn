@@ -7,14 +7,9 @@ namespace Learn\Log\Formatter;
 interface FormatterInterface
 {
     /**
-     * FormatterInterface constructor.
-     * @param array $params
-     */
-    function __construct(array $params);
-
-    /**
      * @param array $context
-     * @return mixed
+     *
+     * @return string
      */
-    function format(array $context);
+    function format(array $context): string;
 }

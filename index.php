@@ -48,7 +48,7 @@ try {
 
 } catch (\Throwable $ex) {
     $logger->emergency($ex->getMessage(), [$ex->__toString()]);
-    $response = new HttpResponse(500);
+    $response = new HttpResponse(500, ['message' => 'Internal Server Error']);
 }
 
 header('Content-Type: application/json');

@@ -7,17 +7,7 @@ namespace Learn\Log\Formatter;
 class JsonFormatter implements FormatterInterface
 {
     /**
-     * JsonFormatter constructor.
-     * @param array $params
-     */
-    public function __construct(array $params)
-    {
-
-    }
-
-    /**
-     * @param array $context
-     * @return string
+     * @inheritdoc
      */
     public function format(array $context): string
     {

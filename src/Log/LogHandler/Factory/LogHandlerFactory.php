@@ -21,7 +21,7 @@ class LogHandlerFactory
                 $formatterClass  = $config['formatter']['class'];
                 $formatterParams = $config['formatter']['params'];
 
-                $formatter = new $formatterClass($formatterParams);
+                $formatter = empty($formatterParams) ? new $formatterClass() : new $formatterClass($formatterParams);
 
                 $handlerClass  = $config['handler']['class'];
                 $handlerParams = $config['handler']['params'];

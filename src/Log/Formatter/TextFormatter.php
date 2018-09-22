@@ -4,23 +4,15 @@ declare(strict_types=1);
 namespace Learn\Log\Formatter;
 
 
+use const PHP_EOL;
+
 class TextFormatter implements FormatterInterface
 {
     /**
-     * TextFormatter constructor.
-     * @param array $params
-     */
-    public function __construct(array $params)
-    {
-
-    }
-
-    /**
-     * @param array $context
-     * @return string
+     * @inheritdoc
      */
     public function format(array $context): string
     {
-        return implode(" | ", $context) . "\n";
+        return implode(" | ", $context) . PHP_EOL;
     }
 }
