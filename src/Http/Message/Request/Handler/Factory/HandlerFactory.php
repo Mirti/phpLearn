@@ -12,10 +12,7 @@ use Learn\Http\Message\Request\Handler\FindUserRequestHandler;
 use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
 use Learn\Http\Message\Request\Handler\RequestHandlerInterface;
 use Learn\Http\Message\Request\Handler\UpdateUserRequestHandler;
-use Learn\Log\Logger;
-use Learn\Log\LogHandler\Factory\LogHandlerFactory;
 use Learn\Repository\UserRepository;
-use const ROOT_DIR;
 
 class HandlerFactory
 {
@@ -26,27 +23,28 @@ class HandlerFactory
      */
     public static function create(string $class): RequestHandlerInterface
     {
-        $config = require ROOT_DIR . '/config/local.php';
-
-        $pdo        = function () { return PdoConnectionFactory::create(PdoConnectionFactory::DB_DEFAULT); };
-        $repository = function () use ($pdo) { return new UserRepository($pdo()); };
-        $logger     = function () use ($config) { return new Logger(LogHandlerFactory::create($config['logger'])); };
+        $pdo        = function () {
+            return PdoConnectionFactory::create(PdoConnectionFactory::DB_DEFAULT);
+        };
+        $repository = function () use ($pdo) {
+            return new UserRepository($pdo());
+        };
 
         switch ($class) {
             case GetAllUsersRequestHandler::class:
-                return new $class($repository(), $logger());
+                return new $class($repository());
 
             case AddUserRequestHandler::class:
-                return new $class($pdo(), $repository(), $logger());
+                return new $class($pdo(), $repository());
 
             case FindUserRequestHandler::class:
-                return new $class($repository(), $logger());
+                return new $class($repository());
 
             case UpdateUserRequestHandler::class:
-                return new $class($pdo(), $repository(), $logger());
+                return new $class($pdo(), $repository());
 
             case DeleteUserRequestHandler::class:
-                return new $class($pdo(), $repository(), $logger());
+                return new $class($pdo(), $repository());
 
             default:
                 return new DefaultHandler();

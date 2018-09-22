@@ -43,7 +43,7 @@ class UserRepository implements UserRepositoryInterface
             ':firstName' => $user->getFirstName()->__toString(),
             ':lastName'  => $user->getLastName()->__toString()];
 
-        $stm = $this->connection->query($sql);
+        $stm = $this->connection->prepare($sql);
         $stm->execute($values);
     }
 

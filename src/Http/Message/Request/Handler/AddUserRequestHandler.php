@@ -9,7 +9,6 @@ use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Log\LoggerInterface;
 use Learn\Model\User;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
@@ -25,24 +24,18 @@ class AddUserRequestHandler implements RequestHandlerInterface
     /** @var UserRepositoryInterface */
     private $repository;
 
-    /** @var LoggerInterface */
-    private $logger;
-
     /**
      * AddUserRequestHandler constructor.
      *
      * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
-     * @param LoggerInterface         $logger
      */
     public function __construct(
         PdoConnection $connection,
-        UserRepositoryInterface $repository,
-        LoggerInterface $logger
+        UserRepositoryInterface $repository
     ) {
         $this->connection = $connection;
         $this->repository = $repository;
-        $this->logger     = $logger;
     }
 
     /**
@@ -84,8 +77,6 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
-
-            $this->logger->error('Failed to add new user', ['exception' => $ex->__toString()]);
 
             throw $ex;
         }

@@ -14,8 +14,6 @@ use Learn\Repository\UserRepositoryInterface;
 
 class GetAllUsersRequestHandler implements RequestHandlerInterface
 {
-    use LoggerAwareTrait;
-
     /** @var UserRepositoryInterface */
     private $repository;
 
@@ -23,12 +21,10 @@ class GetAllUsersRequestHandler implements RequestHandlerInterface
      * GetAllUserRequestHandler constructor.
      *
      * @param UserRepositoryInterface $repository
-     * @param LoggerInterface         $logger
      */
-    public function __construct($repository, $logger)
+    public function __construct($repository)
     {
-        $this->repository = $repository;
-        $this->setLogger($logger);
+        $this->repository = $repository;;
     }
 
     /**
@@ -47,9 +43,6 @@ class GetAllUsersRequestHandler implements RequestHandlerInterface
             return new HttpResponse(200, $usersArray);
 
         } catch (\Throwable $ex) {
-            $context = ContextCreator::createContext($request, $ex);
-            $this->logger->error($ex->getMessage(), $context);
-
             throw $ex;
         }
     }

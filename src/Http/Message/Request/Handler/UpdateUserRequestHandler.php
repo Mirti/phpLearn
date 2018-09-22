@@ -22,8 +22,6 @@ use Learn\Repository\UserRepositoryInterface;
 
 class UpdateUserRequestHandler implements RequestHandlerInterface
 {
-    use LoggerAwareTrait;
-
     /** @var PdoConnection */
     private $connection;
     /** @var UserRepository */
@@ -34,14 +32,12 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
      *
      * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
-     * @param LoggerInterface         $logger
+
      */
-    public function __construct($connection, $repository, $logger)
+    public function __construct($connection, $repository)
     {
         $this->connection = $connection;
         $this->repository = $repository;
-
-        $this->setLogger($logger);
     }
 
     /**
@@ -88,9 +84,6 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
 
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
-
-            $context = ContextCreator::createContext($request, $ex);
-            $this->logger->error($ex->getMessage(), $context);
 
             throw $ex;
         }

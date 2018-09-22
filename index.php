@@ -23,7 +23,7 @@ require __DIR__ . '/constants.php';
 
 $config = require __DIR__ . '/config/local.php';
 
-$logger        = new Logger(LogHandlerFactory::create($config['logger']));
+$logger = new Logger(LogHandlerFactory::create($config['logger']));
 
 try {
     $url           = $_SERVER['REQUEST_URI'];
@@ -43,12 +43,13 @@ try {
     /** @var ResponseInterface $response */
     $response = $requestHandler->handle($request);
 
-}catch (ApiException $ex) {
-    $response = new HttpResponse($ex->getCode(), [$ex->getMessage()]);
-
 } catch (\Throwable $ex) {
-    $logger->emergency($ex->getMessage(), [$ex->__toString()]);
-    $response = new HttpResponse(500, ['message' => 'Internal Server Error']);
+    if ($ex instanceof ApiException) {
+        $response = new HttpResponse($ex->getCode(), [$ex->getMessage()]);
+    } else {
+        $logger->emergency($ex->getMessage(), [$ex->__toString()]);
+        $response = new HttpResponse(500, ['message' => 'Internal Server Error']);
+    }
 }
 
 header('Content-Type: application/json');

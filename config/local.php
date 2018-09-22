@@ -53,8 +53,6 @@ return [
             'formatter' => [
                 'class'  => TextFormatter::class,
                 'params' => [
-                    'tet1'  => 'test',
-                    'test2' => 'test2'
                 ]
             ]
         ],
