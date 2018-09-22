@@ -9,11 +9,11 @@ use Learn\Repository\Exception\LoggerException;
 class LogHandlerFactory
 {
     /**
-     * @param $handlersConfig
+     * @param array $handlersConfig
      * @return array
      * @throws LoggerException
      */
-    public static function create($handlersConfig)
+    public static function create(array $handlersConfig): array
     {
         $logObjects = array();
         try {

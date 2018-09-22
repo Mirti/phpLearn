@@ -10,11 +10,11 @@ use Learn\Repository\Exception\LoggerException;
 
 class FileHandler implements LogHandlerInterface
 {
-    /** @var */
+    /** @var string */
     private $dir;
-    /** @var */
+    /** @var string */
     private $name;
-    /** @var */
+    /** @var string */
     private $ext;
     /** @var FormatterInterface */
     private $formatter;
@@ -23,11 +23,11 @@ class FileHandler implements LogHandlerInterface
 
     /**
      * FileHandler constructor.
-     * @param $formatter
-     * @param $config
+     * @param FormatterInterface $formatter
+     * @param array              $config
      * @throws LoggerException
      */
-    public function __construct($formatter, $config)
+    public function __construct(FormatterInterface $formatter, array $config)
     {
         if (!$this->isConfigValid($config)) {
             throw new LoggerException("Logger configuration error");
@@ -47,7 +47,7 @@ class FileHandler implements LogHandlerInterface
      * @param array    $context
      * @return void
      */
-    function log($level, $message, array $context = array()): void
+    function log($level, string $message, array $context = array()): void
     {
         $logValue['Log Level'] = $level;
         $logValue['Date']      = date("Y-m-d H:i:s");
@@ -61,13 +61,13 @@ class FileHandler implements LogHandlerInterface
     }
 
     /**
-     * @param $dir
-     * @param $name
-     * @param $ext
+     * @param string $dir
+     * @param string $name
+     * @param string $ext
      * @return bool|resource
      * @throws LoggerException
      */
-    private static function getFile($dir, $name, $ext)
+    private static function getFile(string $dir, string $name, string $ext)
     {
         $file = fopen($dir . '/' . $name . '.' . $ext, 'a+');
 
@@ -78,10 +78,10 @@ class FileHandler implements LogHandlerInterface
     }
 
     /**
-     * @param $config
+     * @param array $config
      * @return bool
      */
-    function isConfigValid($config): bool
+    function isConfigValid(array $config): bool
     {
         if (!empty($config['dir']) && !empty($config['name']) && !empty(($config)['ext'])) {
             return true;

@@ -16,11 +16,11 @@ class ConsoleHandler implements LogHandlerInterface
 
     /**
      * ConsoleHandler constructor.
-     * @param $formatter
-     * @param $config
+     * @param FormatterInterface $formatter
+     * @param                    $config
      * @throws LoggerException
      */
-    public function __construct($formatter, $config)
+    public function __construct(FormatterInterface $formatter, array $config)
     {
         $this->formatter = $formatter;
 
@@ -36,7 +36,7 @@ class ConsoleHandler implements LogHandlerInterface
      * @param array    $context
      * @return void
      */
-    function log($level, $message, array $context = array()): void
+    function log($level, string $message, array $context = array()): void
     {
         $logValue['Log Level'] = $level;
         $logValue['Date']      = date("Y-m-d H:i:s");
@@ -49,10 +49,10 @@ class ConsoleHandler implements LogHandlerInterface
     }
 
     /**
-     * @param $config
+     * @param array $config
      * @return bool
      */
-    function isConfigValid($config): bool
+    function isConfigValid(array $config): bool
     {
         if (isset($this->formatter)) {
             return true;
