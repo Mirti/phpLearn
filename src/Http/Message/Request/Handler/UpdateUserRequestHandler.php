@@ -4,14 +4,10 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
-use Assert\AssertionFailedException;
 use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Log\ContextCreator;
-use Learn\Log\LoggerAwareTrait;
-use Learn\Log\LoggerInterface;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
 use Learn\Model\Value\UserId;
@@ -32,7 +28,6 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
      *
      * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
-
      */
     public function __construct($connection, $repository)
     {
@@ -46,17 +41,21 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
+
+        $data = $request->getBody();
+
+        if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
+            throw new ApiException('Missing one of required field.', 400);
+        }
+
+        $id = $request->getRouteParams()[':id'];
+
+        if (!isset($id)) {
+            throw new ApiException("Can not access User ID", 404);
+        }
+
         $this->connection->beginTransaction();
-
         try {
-            $data = $request->getBody();
-
-            if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
-                throw new \InvalidArgumentException('Missing one of required field.');
-            }
-
-            $id = $request->getRouteParams()[':id'];
-
             $user = $this->repository->find(UserId::fromString($id));
 
             $user->setFirstName(new FirstName($data['firstName']));
@@ -66,9 +65,10 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
 
             $updatedUser = $this->repository->find(UserId::fromString($id));
 
+            $response = new HttpResponse(200, $updatedUser->toArray());
             $this->connection->commit();
 
-            return new HttpResponse(200, $updatedUser->toArray());
+            return $response;
 
         } catch (\InvalidArgumentException $ex) {
             $this->connection->rollBack();
@@ -78,13 +78,8 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
             $this->connection->rollBack();
             throw new ApiException($ex->getMessage(), 404, $ex);
 
-        } catch (AssertionFailedException $ex) {
-            $this->connection->rollBack();
-            throw new ApiException($ex->getMessage(), 400, $ex);
-
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
-
             throw $ex;
         }
     }

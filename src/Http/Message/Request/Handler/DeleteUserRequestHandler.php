@@ -36,28 +36,38 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
     /**
      * @inheritdoc
      * @throws ApiException
+     * @throws \Throwable
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
+        $id = $request->getRouteParams()[':id'];
+        if (!isset($id)) {
+            throw new ApiException("Can not access User ID", 404);
+        }
+
         $this->connection->beginTransaction();
+
         try {
-            $id   = $request->getRouteParams()[':id'];
             $user = $this->repository->find(UserId::fromString($id));
 
             $this->repository->delete($user);
-
+            $response = new HttpResponse(204);
             $this->connection->commit();
-
-            return new HttpResponse(204);
+            return $response;
 
         } catch (UserNotFoundException $ex) {
             $this->connection->rollBack();
-            throw new ApiException($ex->getMessage(), 404, $ex);
+            throw new ApiException($ex->getMessage(), 404);
+
+        } catch (\InvalidArgumentException $ex) {
+            $this->connection->rollBack();
+            throw new ApiException($ex->getMessage(), 400);
 
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
-
             throw $ex;
         }
     }
 }
+
+

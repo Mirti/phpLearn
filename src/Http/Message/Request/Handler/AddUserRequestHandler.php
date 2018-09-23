@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
-use Assert\AssertionFailedException;
 use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
@@ -55,7 +54,7 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
         try {
             $user = new User($id, new FirstName($data['firstName']), new LastName($data['lastName']));
-        } catch (AssertionFailedException $ex) {
+        } catch (\InvalidArgumentException $ex) {
             throw new ApiException($ex->getMessage(), 400, $ex);
         }
 
@@ -64,13 +63,13 @@ class AddUserRequestHandler implements RequestHandlerInterface
         try {
             $this->repository->add($user);
             $createdUser = $this->repository->find($id)->toArray();
+            $response    = new HttpResponse(201, $createdUser);
             $this->connection->commit();
+            return $response;
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
             throw $ex;
         }
-
-        return new HttpResponse(201, $createdUser);
 
     }
 }

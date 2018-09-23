@@ -7,9 +7,6 @@ namespace Learn\Http\Message\Request\Handler;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Log\ContextCreator;
-use Learn\Log\LoggerAwareTrait;
-use Learn\Log\LoggerInterface;
 use Learn\Repository\UserRepositoryInterface;
 
 class GetAllUsersRequestHandler implements RequestHandlerInterface
@@ -32,18 +29,13 @@ class GetAllUsersRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        try {
-            $users      = $this->repository->fetchAll();
-            $usersArray = array();
+        $users      = $this->repository->fetchAll();
+        $usersArray = array();
 
-            foreach ($users as $user) {
-                $usersArray[] = $user->toArray();
-            }
-
-            return new HttpResponse(200, $usersArray);
-
-        } catch (\Throwable $ex) {
-            throw $ex;
+        foreach ($users as $user) {
+            $usersArray[] = $user->toArray();
         }
+
+        return new HttpResponse(200, $usersArray);
     }
 }

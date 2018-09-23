@@ -33,19 +33,21 @@ class FindUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        try {
-            $id   = $request->getRouteParams()[':id'];
-            $user = $this->repository->find(UserId::fromString($id));
+        $id = $request->getRouteParams()[':id'];
 
+        if (!isset($id)) {
+            throw new ApiException("Can not access User ID", 404);
+        }
+
+        try {
+            $user = $this->repository->find(UserId::fromString($id));
             return new HttpResponse(200, $user->toArray());
+
+        } catch (\InvalidArgumentException $ex) {
+            throw new ApiException(($ex->getMessage()), 400, $ex);
 
         } catch (UserNotFoundException $ex) {
             throw new ApiException($ex->getMessage(), 404, $ex);
-        } catch (\InvalidArgumentException $ex) {
-            throw new ApiException($ex->getMessage(), 400, $ex);
-
-        } catch (\Throwable $ex) {
-            throw $ex;
         }
     }
 }
