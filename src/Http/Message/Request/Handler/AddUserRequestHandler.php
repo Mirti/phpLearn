@@ -30,10 +30,8 @@ class AddUserRequestHandler implements RequestHandlerInterface
      * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
      */
-    public function __construct(
-        PdoConnection $connection,
-        UserRepositoryInterface $repository
-    ) {
+    public function __construct(PdoConnection $connection, UserRepositoryInterface $repository)
+    {
         $this->connection = $connection;
         $this->repository = $repository;
     }
@@ -43,42 +41,36 @@ class AddUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
+        $data = $request->getBody();
+
+        if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
+            throw new ApiException('Missing one of required field.', 400);
+        }
+
+        if ($params = array_diff(array_keys($data), ['firstName', 'lastName'])) {
+            throw new ApiException('Too many arguments: ' . implode(',', $params), 400);
+        }
+
+        $id = UserId::generate();
+
+        try {
+            $user = new User($id, new FirstName($data['firstName']), new LastName($data['lastName']));
+        } catch (AssertionFailedException $ex) {
+            throw new ApiException($ex->getMessage(), 400, $ex);
+        }
+
         $this->connection->beginTransaction();
 
         try {
-            $data = $request->getBody();
-
-            if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
-                throw new \InvalidArgumentException('Missing one of required field.');
-            }
-
-            if ($params = array_diff(array_keys($data), ['firstName', 'lastName'])) {
-                throw new \InvalidArgumentException('Too many arguments: ' . implode(',', $params), 400);
-            }
-
-            $id   = UserId::generate();
-            $user = new User($id, new FirstName($data['firstName']), new LastName($data['lastName']));
-
             $this->repository->add($user);
             $createdUser = $this->repository->find($id)->toArray();
-
             $this->connection->commit();
-
-            return new HttpResponse(201, $createdUser);
-
-        } catch (\InvalidArgumentException $ex) {
-            $this->connection->rollBack();
-
-            throw new ApiException($ex->getMessage(), 400, $ex);
-
-        } catch (AssertionFailedException $ex) {
-            $this->connection->rollBack();
-            throw new ApiException($ex->getMessage(), 400, $ex);
-
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
-
             throw $ex;
         }
+
+        return new HttpResponse(201, $createdUser);
+
     }
 }
