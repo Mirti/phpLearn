@@ -7,6 +7,10 @@ use Learn\Http\Message\Request\Handler\DeleteUserRequestHandler;
 use Learn\Http\Message\Request\Handler\FindUserRequestHandler;
 use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
 use Learn\Http\Message\Request\Handler\UpdateUserRequestHandler;
+use Learn\Log\Formatter\JsonFormatter;
+use Learn\Log\Formatter\TextFormatter;
+use Learn\Log\LogHandler\ConsoleHandler;
+use Learn\Log\LogHandler\FileHandler;
 
 return [
     'database' => [
@@ -39,10 +43,40 @@ return [
         ]
     ],
     'logger'   => [
-        'txtFileDir'  => dirname(__DIR__),
-        'txtFileName' => 'log.txt',
-        'jsonFileDir' => dirname(__DIR__),
-        'jsonFileName' =>"log.html",
-        'console'     => true
+        [
+            'handler'   => [
+                'class'  => FileHandler::class,
+                'params' => [
+                    'file' => ROOT_DIR . '/logs/txt_logs.txt'
+                ]
+            ],
+            'formatter' => [
+                'class'  => TextFormatter::class,
+                'params' => [
+                ]
+            ]
+        ],
+        [
+            'handler'   => [
+                'class'  => FileHandler::class,
+                'params' => [
+                    'file' => ROOT_DIR . '/logs/json_logs.log'
+                ]
+            ],
+            'formatter' => [
+                'class'  => JsonFormatter::class,
+                'params' => []
+            ]
+        ],
+        [
+            'handler'   => [
+                'class'  => ConsoleHandler::class,
+                'params' => []
+            ],
+            'formatter' => [
+                'class'  => TextFormatter::class,
+                'params' => []
+            ]
+        ]
     ]
 ];

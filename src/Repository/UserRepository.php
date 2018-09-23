@@ -9,6 +9,7 @@ use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
 use Learn\Model\Value\UserId;
 use Learn\Repository\Exception\UserNotFoundException;
+use PDO;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -30,6 +31,11 @@ class UserRepository implements UserRepositoryInterface
      */
     public function add(User $user): void
     {
+        /**
+         * TODO: make it global
+         */
+        $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
         $sql = "INSERT INTO users (id, firstName, lastName) VALUES (:id, :firstName, :lastName)";
 
         $values = [
@@ -37,11 +43,8 @@ class UserRepository implements UserRepositoryInterface
             ':firstName' => $user->getFirstName()->__toString(),
             ':lastName'  => $user->getLastName()->__toString()];
 
-        $isAdded = $this->connection->prepare($sql)->execute($values);
-
-        if (!$isAdded) {
-            throw new \Exception("Can not add user. Database failure: " . $this->connection->errorInfo());
-        }
+        $stm = $this->connection->prepare($sql);
+        $stm->execute($values);
     }
 
     /**
