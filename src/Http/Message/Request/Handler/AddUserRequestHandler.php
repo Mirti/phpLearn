@@ -65,11 +65,13 @@ class AddUserRequestHandler implements RequestHandlerInterface
             $createdUser = $this->repository->find($id)->toArray();
             $response    = new HttpResponse(201, $createdUser);
             $this->connection->commit();
-            return $response;
+
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
             throw $ex;
         }
+
+        return $response;
 
     }
 }

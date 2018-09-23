@@ -40,14 +40,21 @@ class FindUserRequestHandler implements RequestHandlerInterface
         }
 
         try {
-            $user = $this->repository->find(UserId::fromString($id));
-            return new HttpResponse(200, $user->toArray());
+            $userId = UserId::fromString($id);
 
         } catch (\InvalidArgumentException $ex) {
-            throw new ApiException(($ex->getMessage()), 400, $ex);
+            throw new ApiException($ex->getMessage(), 400);
+        }
+
+        try {
+            $user = $this->repository->find($userId);
 
         } catch (UserNotFoundException $ex) {
-            throw new ApiException($ex->getMessage(), 404, $ex);
+            throw new ApiException($ex->getMessage(), 404);
         }
+
+        $response = new HttpResponse(200, $user->toArray());
+
+        return $response;
     }
 }

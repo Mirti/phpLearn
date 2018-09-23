@@ -54,33 +54,37 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
             throw new ApiException("Can not access User ID", 404);
         }
 
+
+        try {
+            $userId = UserId::fromString($id);
+
+        } catch (\InvalidArgumentException $ex) {
+            throw new ApiException($ex->getMessage(), 400);
+        }
+
+        try {
+            $user = $this->repository->find($userId);
+
+        } catch (UserNotFoundException $ex) {
+            throw new ApiException($ex->getMessage(), 404);
+        }
+
+        $user->setFirstName(new FirstName($data['firstName']));
+        $user->setLastName(new LastName($data['lastName']));
+
         $this->connection->beginTransaction();
         try {
-            $user = $this->repository->find(UserId::fromString($id));
-
-            $user->setFirstName(new FirstName($data['firstName']));
-            $user->setLastName(new LastName($data['lastName']));
-
             $this->repository->update($user);
-
             $updatedUser = $this->repository->find(UserId::fromString($id));
 
             $response = new HttpResponse(200, $updatedUser->toArray());
             $this->connection->commit();
 
-            return $response;
-
-        } catch (\InvalidArgumentException $ex) {
-            $this->connection->rollBack();
-            throw new ApiException($ex->getMessage(), 400, $ex);
-
-        } catch (UserNotFoundException $ex) {
-            $this->connection->rollBack();
-            throw new ApiException($ex->getMessage(), 404, $ex);
-
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
             throw $ex;
         }
+
+        return $response;
     }
 }
