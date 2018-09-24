@@ -6,7 +6,7 @@ namespace Learn\Http\Message\Request;
 
 class HttpRequest implements RequestInterface
 {
-    /** @var  */
+    /** @var */
     private $remoteAddress;
     /** @var string */
     private $method;
@@ -41,9 +41,10 @@ class HttpRequest implements RequestInterface
 
         array $routeParams,
         array $body
-    ) {
+    )
+    {
         $this->remoteAddress = $remoteAddress;
-        $this->method = $method;
+        $this->method        = $method;
 
         $this->url   = $url;
         $this->route = $route;

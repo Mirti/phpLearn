@@ -4,13 +4,10 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
-use Assert\AssertionFailedException;
 use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Log\LoggerAwareTrait;
-use Learn\Log\LoggerInterface;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
 use Learn\Model\Value\UserId;
@@ -21,8 +18,6 @@ use Learn\Repository\UserRepositoryInterface;
 
 class UpdateUserRequestHandler implements RequestHandlerInterface
 {
-    use LoggerAwareTrait;
-
     /** @var PdoConnection */
     private $connection;
     /** @var UserRepository */
@@ -33,14 +28,11 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
      *
      * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
-     * @param LoggerInterface         $logger
      */
-    public function __construct($connection, $repository, $logger)
+    public function __construct($connection, $repository)
     {
         $this->connection = $connection;
         $this->repository = $repository;
-
-        $this->setLogger($logger);
     }
 
     /**
@@ -49,47 +41,50 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $this->connection->beginTransaction();
+
+        $data = $request->getBody();
+
+        if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
+            throw new ApiException('Missing one of required field.', 400);
+        }
+
+        $id = $request->getRouteParams()[':id'];
+
+        if (!isset($id)) {
+            throw new ApiException("Can not access User ID", 404);
+        }
+
 
         try {
-            $data = $request->getBody();
-
-            if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
-                throw new \InvalidArgumentException('Missing one of required field.');
-            }
-
-            $id = $request->getRouteParams()[':id'];
-
-            $user = $this->repository->find(UserId::fromString($id));
-
-            $user->setFirstName(new FirstName($data['firstName']));
-            $user->setLastName(new LastName($data['lastName']));
-
-            $this->repository->update($user);
-
-            $updatedUser = $this->repository->find(UserId::fromString($id));
-
-            $this->connection->commit();
-
-            return new HttpResponse(200, $updatedUser->toArray());
+            $userId = UserId::fromString($id);
 
         } catch (\InvalidArgumentException $ex) {
-            $this->connection->rollBack();
-            throw new ApiException($ex->getMessage(), 400, $ex);
+            throw new ApiException($ex->getMessage(), 400);
+        }
+
+        try {
+            $user = $this->repository->find($userId);
 
         } catch (UserNotFoundException $ex) {
-            $this->connection->rollBack();
-            throw new ApiException($ex->getMessage(), 404, $ex);
+            throw new ApiException($ex->getMessage(), 404);
+        }
 
-        } catch (AssertionFailedException $ex) {
-            $this->connection->rollBack();
-            throw new ApiException($ex->getMessage(), 400, $ex);
+        $user->setFirstName(new FirstName($data['firstName']));
+        $user->setLastName(new LastName($data['lastName']));
+
+        $this->connection->beginTransaction();
+        try {
+            $this->repository->update($user);
+            $updatedUser = $this->repository->find(UserId::fromString($id));
+
+            $response = new HttpResponse(200, $updatedUser->toArray());
+            $this->connection->commit();
 
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
-
-            $context = $this->createContext($request, $ex);
-            $this->logger->error($ex->getMessage(), $context);
+            throw $ex;
         }
+
+        return $response;
     }
 }

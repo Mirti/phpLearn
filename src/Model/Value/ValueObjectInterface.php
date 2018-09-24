@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Learn\Model\Value;
 
-interface ValueObjectInterface{
+
+interface ValueObjectInterface
+{
 
     /**
      * @return string

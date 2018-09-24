@@ -8,8 +8,6 @@ use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Log\LoggerAwareTrait;
-use Learn\Log\LoggerInterface;
 use Learn\Model\Value\UserId;
 use Learn\Repository\Exception\ApiException;
 use Learn\Repository\Exception\UserNotFoundException;
@@ -18,8 +16,6 @@ use Learn\Repository\UserRepositoryInterface;
 
 class DeleteUserRequestHandler implements RequestHandlerInterface
 {
-    use LoggerAwareTrait;
-
     /** @var PdoConnection */
     private $connection;
 
@@ -30,43 +26,54 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
      * DeleteUserRequestHandler constructor.
      * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
-     * @param LoggerInterface         $logger
      */
-    public function __construct($connection, $repository, $logger)
+    public function __construct($connection, $repository)
     {
         $this->connection = $connection;
         $this->repository = $repository;
-
-        $this->setLogger($logger);
     }
 
     /**
      * @inheritdoc
      * @throws ApiException
+     * @throws \Throwable
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $this->connection->beginTransaction();
+        $id = $request->getRouteParams()[':id'];
+
+        if (!isset($id)) {
+            throw new ApiException("Can not access User ID", 404);
+        }
+
         try {
-            $id   = $request->getRouteParams()[':id'];
-            $user = $this->repository->find(UserId::fromString($id));
+            $userId = UserId::fromString($id);
 
-            $this->repository->delete($user);
+        } catch (\InvalidArgumentException $ex) {
+            throw new ApiException($ex->getMessage(), 400);
+        }
 
-            $this->connection->commit();
-
-            return new HttpResponse(204);
+        try {
+            $user = $this->repository->find($userId);
 
         } catch (UserNotFoundException $ex) {
-            $this->connection->rollBack();
-            throw new ApiException($ex->getMessage(), 404, $ex);
+            throw new ApiException($ex->getMessage(), 404);
+        }
+
+        $this->connection->beginTransaction();
+
+        try {
+            $this->repository->delete($user);
+            $response = new HttpResponse(204);
+            $this->connection->commit();
 
         } catch (\Throwable $ex) {
             $this->connection->rollBack();
-
-            $context = $this->createContext($request, $ex);
-            $this->logger->error($ex->getMessage(), $context);
             throw $ex;
         }
+
+        return $response;
     }
 }
+
+

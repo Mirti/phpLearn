@@ -7,8 +7,6 @@ namespace Learn\Http\Message\Request\Handler;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Log\LoggerAwareTrait;
-use Learn\Log\LoggerInterface;
 use Learn\Model\Value\UserId;
 use Learn\Repository\Exception\ApiException;
 use Learn\Repository\Exception\UserNotFoundException;
@@ -16,8 +14,6 @@ use Learn\Repository\UserRepositoryInterface;
 
 class FindUserRequestHandler implements RequestHandlerInterface
 {
-    use LoggerAwareTrait;
-
     /** @var UserRepositoryInterface */
     private $repository;
 
@@ -25,13 +21,10 @@ class FindUserRequestHandler implements RequestHandlerInterface
      * FindUserRequestHandler constructor.
      *
      * @param UserRepositoryInterface $repository
-     * @param LoggerInterface         $logger
      */
-    public function __construct(UserRepositoryInterface $repository, $logger)
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
-
-        $this->setLogger($logger);
     }
 
     /**
@@ -40,18 +33,28 @@ class FindUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        try {
-            $id   = $request->getRouteParams()[':id'];
-            $user = $this->repository->find(UserId::fromString($id));
+        $id = $request->getRouteParams()[':id'];
 
-            return new HttpResponse(200, $user->toArray());
+        if (!isset($id)) {
+            throw new ApiException("Can not access User ID", 404);
+        }
+
+        try {
+            $userId = UserId::fromString($id);
+
+        } catch (\InvalidArgumentException $ex) {
+            throw new ApiException($ex->getMessage(), 400);
+        }
+
+        try {
+            $user = $this->repository->find($userId);
 
         } catch (UserNotFoundException $ex) {
-            throw new ApiException($ex->getMessage(), 404, $ex);
-
-        } catch (\Throwable $ex) {
-            $context = $this->createContext($request, $ex);
-            $this->logger->error($ex->getMessage(), $context);
+            throw new ApiException($ex->getMessage(), 404);
         }
+
+        $response = new HttpResponse(200, $user->toArray());
+
+        return $response;
     }
 }
