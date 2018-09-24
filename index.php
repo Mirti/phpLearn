@@ -10,6 +10,7 @@ use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Log\Logger;
 use Learn\Log\LogHandler\Factory\LogHandlerFactory;
 use Learn\Repository\Exception\ApiException;
+use Learn\Routing\MiddlewareMatcher;
 use Learn\Routing\Router;
 use Learn\Routing\UrlMapper;
 use function http_response_code;
@@ -37,11 +38,15 @@ try {
 
     $request = new HttpRequest($remoteAddress, $method, $url, $route, $routeParams, $body);
 
-    $router = new Router($config['routes']);
-
+    $router         = new Router($config['routes']);
     $requestHandler = $router->match($request);
+
+    $middlewareMatcher = new MiddlewareMatcher($config['routes']);
+    $middleware        = $middlewareMatcher->match($request);
+
     /** @var ResponseInterface $response */
-    $response = $requestHandler->handle($request);
+    $response = $middleware->process($request, $requestHandler);
+
 
 } catch (\Throwable $ex) {
     if ($ex instanceof ApiException) {
