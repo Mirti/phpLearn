@@ -7,6 +7,8 @@ namespace Learn\Routing;
 use Learn\Http\Message\Request\Handler\Factory\HandlerFactory;
 use Learn\Http\Message\Request\Handler\RequestHandlerInterface;
 use Learn\Http\Message\Request\RequestInterface;
+use Learn\Http\Middleware\DefaultMiddleware;
+use Learn\Http\Middleware\MiddlewareInterface;
 
 class Router
 {
@@ -28,9 +30,9 @@ class Router
      *
      * @param RequestInterface $request
      *
-     * @return RequestHandlerInterface
+     * @return MiddlewareInterface
      */
-    public function match(RequestInterface $request): RequestHandlerInterface
+    public function match(RequestInterface $request): MiddlewareInterface
     {
         $method = $request->getMethod();
         $route  = $request->getRoute();
@@ -46,6 +48,13 @@ class Router
             throw new \Exception('Class must implement ' . RequestHandlerInterface::class);
         }
 
-        return $handler;
+        $middlewareClass = $this->config[$route][$method]['middleware'];
+        if(isset($middlewareClass)){
+            $middleware = new $middlewareClass();
+        } else{
+            $middleware = new DefaultMiddleware();
+        }
+
+        return new $middlewareClass();
     }
 }

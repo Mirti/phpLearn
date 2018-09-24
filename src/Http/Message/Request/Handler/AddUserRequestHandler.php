@@ -12,7 +12,6 @@ use Learn\Model\User;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
 use Learn\Model\Value\UserId;
-use Learn\Repository\Exception\ApiException;
 use Learn\Repository\UserRepositoryInterface;
 
 class AddUserRequestHandler implements RequestHandlerInterface
@@ -42,36 +41,16 @@ class AddUserRequestHandler implements RequestHandlerInterface
     {
         $data = $request->getBody();
 
-        if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
-            throw new ApiException('Missing one of required field.', 400);
-        }
+        $user = new User(
+            $id = UserId::generate(),
+            new FirstName($data['firstName']),
+            new LastName($data['lastName'])
+        );
 
-        if ($params = array_diff(array_keys($data), ['firstName', 'lastName'])) {
-            throw new ApiException('Too many arguments: ' . implode(',', $params), 400);
-        }
+        $this->repository->add($user);
 
-        $id = UserId::generate();
+        $createdUser = $this->repository->find($id);
 
-        try {
-            $user = new User($id, new FirstName($data['firstName']), new LastName($data['lastName']));
-        } catch (\InvalidArgumentException $ex) {
-            throw new ApiException($ex->getMessage(), 400, $ex);
-        }
-
-        $this->connection->beginTransaction();
-
-        try {
-            $this->repository->add($user);
-            $createdUser = $this->repository->find($id)->toArray();
-            $response    = new HttpResponse(201, $createdUser);
-            $this->connection->commit();
-
-        } catch (\Throwable $ex) {
-            $this->connection->rollBack();
-            throw $ex;
-        }
-
-        return $response;
-
+        return new HttpResponse(201, $createdUser->toArray());
     }
 }
