@@ -33,52 +33,66 @@ return [
             'GET' => DefaultHandler::class
         ],
         '/users' => [
-            'GET'        => GetAllUsersRequestHandler::class,
-            'POST'       => [AddUserRequestHandler::class,
-                             'middleware' => \Learn\Http\Middleware\AddUserMiddleware::class
+            'GET' => [
+                'handler'    => GetAllUsersRequestHandler::class,
+                'middleware' => "",
             ],
-            '/users/:id' => [
-                'GET'    => FindUserRequestHandler::class,
-                'PUT'    => UpdateUserRequestHandler::class,
-                'DELETE' => DeleteUserRequestHandler::class
+
+            'POST' => [
+                'handler'    => AddUserRequestHandler::class,
+                'middleware' => \Learn\Http\Middleware\AddUserMiddleware::class
+            ]],
+
+        '/users/:id' => [
+            'GET'    => [
+                'handler'    => FindUserRequestHandler::class,
+                'middleware' => "",
+            ],
+            'PUT'    => [
+                'handler'    => UpdateUserRequestHandler::class,
+                'middleware' => "",],
+            'DELETE' => [
+                'handler'    => DeleteUserRequestHandler::class,
+                'middleware' => "",
+            ],
+        ]
+    ],
+    'logger'   => [
+        [
+            'handler'   => [
+                'class'  => FileHandler::class,
+                'params' => [
+                    'file' => ROOT_DIR . '/logs/txt_logs.txt'
+                ]
+            ],
+            'formatter' => [
+                'class'  => TextFormatter::class,
+                'params' => [
+                ]
             ]
         ],
-        'logger' => [
-            [
-                'handler'   => [
-                    'class'  => FileHandler::class,
-                    'params' => [
-                        'file' => ROOT_DIR . '/logs/txt_logs.txt'
-                    ]
-                ],
-                'formatter' => [
-                    'class'  => TextFormatter::class,
-                    'params' => [
-                    ]
+        [
+            'handler'   => [
+                'class'  => FileHandler::class,
+                'params' => [
+                    'file' => ROOT_DIR . '/logs/json_logs.log'
                 ]
             ],
-            [
-                'handler'   => [
-                    'class'  => FileHandler::class,
-                    'params' => [
-                        'file' => ROOT_DIR . '/logs/json_logs.log'
-                    ]
-                ],
-                'formatter' => [
-                    'class'  => JsonFormatter::class,
-                    'params' => []
-                ]
+            'formatter' => [
+                'class'  => JsonFormatter::class,
+                'params' => []
+            ]
+        ],
+        [
+            'handler'   => [
+                'class'  => ConsoleHandler::class,
+                'params' => []
             ],
-            [
-                'handler'   => [
-                    'class'  => ConsoleHandler::class,
-                    'params' => []
-                ],
-                'formatter' => [
-                    'class'  => TextFormatter::class,
-                    'params' => []
-                ]
+            'formatter' => [
+                'class'  => TextFormatter::class,
+                'params' => []
             ]
         ]
+
     ]
 ];

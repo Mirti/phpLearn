@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
-use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
@@ -16,21 +15,16 @@ use Learn\Repository\UserRepositoryInterface;
 
 class AddUserRequestHandler implements RequestHandlerInterface
 {
-    /** @var PdoConnection */
-    private $connection;
-
     /** @var UserRepositoryInterface */
     private $repository;
 
     /**
      * AddUserRequestHandler constructor.
      *
-     * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
      */
-    public function __construct(PdoConnection $connection, UserRepositoryInterface $repository)
+    public function __construct(UserRepositoryInterface $repository)
     {
-        $this->connection = $connection;
         $this->repository = $repository;
     }
 

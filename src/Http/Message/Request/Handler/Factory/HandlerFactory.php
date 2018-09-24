@@ -35,16 +35,16 @@ class HandlerFactory
                 return new $class($repository());
 
             case AddUserRequestHandler::class:
-                return new $class($pdo(), $repository());
+                return new $class($repository());
 
             case FindUserRequestHandler::class:
                 return new $class($repository());
 
             case UpdateUserRequestHandler::class:
-                return new $class($pdo(), $repository());
+                return new $class($repository());
 
             case DeleteUserRequestHandler::class:
-                return new $class($pdo(), $repository());
+                return new $class($repository());
 
             default:
                 return new DefaultHandler();

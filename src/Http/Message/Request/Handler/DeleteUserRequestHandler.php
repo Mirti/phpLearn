@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
-use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
@@ -16,20 +15,16 @@ use Learn\Repository\UserRepositoryInterface;
 
 class DeleteUserRequestHandler implements RequestHandlerInterface
 {
-    /** @var PdoConnection */
-    private $connection;
-
     /** @var UserRepository */
     private $repository;
 
     /**
      * DeleteUserRequestHandler constructor.
-     * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
      */
-    public function __construct($connection, $repository)
+    public function __construct($repository)
     {
-        $this->connection = $connection;
+
         $this->repository = $repository;
     }
 
@@ -60,15 +55,11 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
             throw new ApiException($ex->getMessage(), 404);
         }
 
-        $this->connection->beginTransaction();
-
         try {
             $this->repository->delete($user);
             $response = new HttpResponse(204);
-            $this->connection->commit();
 
         } catch (\Throwable $ex) {
-            $this->connection->rollBack();
             throw $ex;
         }
 

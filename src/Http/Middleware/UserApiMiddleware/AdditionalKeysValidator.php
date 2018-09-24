@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Learn\Http\Middleware;
+namespace Learn\Http\Middleware\UserApiMiddleware;
 
 
 class AdditionalKeysValidator

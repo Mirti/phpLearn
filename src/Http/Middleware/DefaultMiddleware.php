@@ -17,6 +17,6 @@ class DefaultMiddleware implements MiddlewareInterface
      */
     public function process(RequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $handler->handle($request);
+        return $handler->handle($request);
     }
 }

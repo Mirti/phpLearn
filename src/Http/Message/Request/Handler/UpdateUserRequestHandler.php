@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Learn\Http\Message\Request\Handler;
 
 
-use Learn\Database\PdoConnection;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
@@ -18,20 +17,16 @@ use Learn\Repository\UserRepositoryInterface;
 
 class UpdateUserRequestHandler implements RequestHandlerInterface
 {
-    /** @var PdoConnection */
-    private $connection;
     /** @var UserRepository */
     private $repository;
 
     /**
      * UpdateUserRequestHandler constructor.
      *
-     * @param PdoConnection           $connection
      * @param UserRepositoryInterface $repository
      */
-    public function __construct($connection, $repository)
+    public function __construct($repository)
     {
-        $this->connection = $connection;
         $this->repository = $repository;
     }
 
@@ -72,16 +67,13 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
         $user->setFirstName(new FirstName($data['firstName']));
         $user->setLastName(new LastName($data['lastName']));
 
-        $this->connection->beginTransaction();
         try {
             $this->repository->update($user);
             $updatedUser = $this->repository->find(UserId::fromString($id));
 
             $response = new HttpResponse(200, $updatedUser->toArray());
-            $this->connection->commit();
 
         } catch (\Throwable $ex) {
-            $this->connection->rollBack();
             throw $ex;
         }
 

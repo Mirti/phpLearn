@@ -8,39 +8,30 @@ use Learn\Database\PdoConnection;
 
 class TransactionMiddleware
 {
-    /** @var PdoConnection */
-    private $connection;
-
-    /**
-     * TransactionMiddleware constructor.
-     * @param PdoConnection $connection
-     */
-    public function __construct(PdoConnection $connection)
-    {
-        $this->connection = $connection;
-    }
-
     /**
      * Begin database transactions
+     * @param PdoConnection $connection
      */
-    public function beginTransaction()
+    public static function beginTransaction(PdoConnection $connection): void
     {
-        $this->connection->beginTransaction();
+        $connection->beginTransaction();
     }
 
     /**
      * Commit database transaction
+     * @param PdoConnection $connection
      */
-    public function commitTransaction()
+    public static function commitTransaction(PdoConnection $connection)
     {
-        $this->connection->commit();
+        $connection->commit();
     }
 
     /**
      * RollBack database transaction
+     * @param PdoConnection $connection
      */
-    public function rollBackTransaction()
+    public static function rollBackTransaction(PdoConnection $connection): void
     {
-        $this->connection->rollBack();
+        $connection->rollBack();
     }
 }

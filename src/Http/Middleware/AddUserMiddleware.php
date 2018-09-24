@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace Learn\Http\Middleware;
 
 
+use Learn\Database\Factory\PdoConnectionFactory;
 use Learn\Http\Message\Request\Handler\RequestHandlerInterface;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\ResponseInterface;
+use Learn\Http\Middleware\DbMiddleware\TransactionMiddleware;
+use Learn\Http\Middleware\UserApiMiddleware\AdditionalKeysValidator;
 use Learn\Http\Middleware\UserApiMiddleware\BodyKeysValidator;
 use Learn\Repository\Exception\ApiException;
 
@@ -32,6 +35,18 @@ class AddUserMiddleware implements MiddlewareInterface
             throw new ApiException('Too many arguments: ' . implode(',', $additionalKeys), 400);
         }
 
-        $handler->handle($request);
+        $pdo = PdoConnectionFactory::create(PdoConnectionFactory::DB_DEFAULT);
+
+        TransactionMiddleware::beginTransaction($pdo);
+
+        try {
+            $response = $handler->handle($request);
+
+        } catch (\Throwable $ex) {
+            TransactionMiddleware::rollBackTransaction($pdo);
+        }
+
+        TransactionMiddleware::commitTransaction($pdo);
+        return $response;
     }
 }
