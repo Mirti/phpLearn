@@ -11,6 +11,8 @@ use Learn\Log\Formatter\JsonFormatter;
 use Learn\Log\Formatter\TextFormatter;
 use Learn\Log\LogHandler\ConsoleHandler;
 use Learn\Log\LogHandler\FileHandler;
+use Learn\Http\Middleware\UserApiMiddleware\AdditionalKeysValidator;
+use Learn\Http\Middleware\UserApiMiddleware\BodyKeysValidator;
 
 return [
     'database' => [
@@ -40,8 +42,9 @@ return [
 
             'POST' => [
                 'handler'    => AddUserRequestHandler::class,
-                'middleware' => [\Learn\Http\Middleware\UserApiMiddleware\BodyKeysValidator::class,
-                                 \Learn\Http\Middleware\UserApiMiddleware\AdditionalKeysValidator::class
+                'middleware' => [
+                                 AdditionalKeysValidator::class,
+                                 BodyKeysValidator::class
                                  ]
             ]],
 

@@ -11,21 +11,24 @@ use Learn\Model\Value\UserId;
 use Learn\Repository\Exception\ApiException;
 use Learn\Repository\Exception\UserNotFoundException;
 use Learn\Repository\UserRepository;
-use Learn\Repository\UserRepositoryInterface;
 
 class DeleteUserRequestHandler implements RequestHandlerInterface
 {
     /** @var UserRepository */
     private $repository;
+    /** @var */
+    private $middleware;
 
     /**
      * DeleteUserRequestHandler constructor.
-     * @param UserRepositoryInterface $repository
+     * @param $repository
+     * @param $middleware
      */
-    public function __construct($repository)
+    public function __construct($repository, $middleware)
     {
 
         $this->repository = $repository;
+        $this->middleware = $middleware;
     }
 
     /**

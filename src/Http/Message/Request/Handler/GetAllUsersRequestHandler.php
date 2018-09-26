@@ -14,14 +14,18 @@ class GetAllUsersRequestHandler implements RequestHandlerInterface
     /** @var UserRepositoryInterface */
     private $repository;
 
+    /** @var  */
+    private $middleware;
+
     /**
-     * GetAllUserRequestHandler constructor.
-     *
-     * @param UserRepositoryInterface $repository
+     * GetAllUsersRequestHandler constructor.
+     * @param $repository
+     * @param $middleware
      */
-    public function __construct($repository)
+    public function __construct($repository, $middleware)
     {
-        $this->repository = $repository;;
+        $this->repository = $repository;
+        $this->middleware = $middleware;
     }
 
     /**

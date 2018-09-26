@@ -17,14 +17,18 @@ class FindUserRequestHandler implements RequestHandlerInterface
     /** @var UserRepositoryInterface */
     private $repository;
 
+    /** @var  */
+    private $middleware;
+
     /**
      * FindUserRequestHandler constructor.
-     *
      * @param UserRepositoryInterface $repository
+     * @param                         $middleware
      */
-    public function __construct(UserRepositoryInterface $repository)
+    public function __construct(UserRepositoryInterface $repository, $middleware)
     {
         $this->repository = $repository;
+        $this->middleware = $middleware;
     }
 
     /**

@@ -41,9 +41,6 @@ try {
     $router         = new Router($config['routes']);
     $requestHandler = $router->match($request);
 
-    $middlewareMatcher = new MiddlewareMatcher($config['routes']);
-    $middleware        = $middlewareMatcher->match($request);
-
     /** @var ResponseInterface $response */
     $response = $requestHandler->handle($request);
 

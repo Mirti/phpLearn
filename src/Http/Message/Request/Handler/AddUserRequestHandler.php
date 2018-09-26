@@ -5,12 +5,9 @@ namespace Learn\Http\Message\Request\Handler;
 
 
 use Learn\Http\Message\Request\RequestInterface;
-use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Model\User;
-use Learn\Model\Value\FirstName;
-use Learn\Model\Value\LastName;
-use Learn\Model\Value\UserId;
+use Learn\Http\Middleware\MiddlewarePipeline;
+use Learn\Http\Middleware\UserModelMiddleware\AddUserMiddleware;
 use Learn\Repository\UserRepositoryInterface;
 
 class AddUserRequestHandler implements RequestHandlerInterface
@@ -18,15 +15,15 @@ class AddUserRequestHandler implements RequestHandlerInterface
     /** @var UserRepositoryInterface */
     private $repository;
 
-    /** @var  */
+    /** @var */
     private $middleware;
 
     /**
      * AddUserRequestHandler constructor.
-     *
      * @param UserRepositoryInterface $repository
+     * @param                         $middleware
      */
-    public function __construct(UserRepositoryInterface $repository, $middleware)
+    public function __construct(UserRepositoryInterface $repository, array $middleware)
     {
         $this->repository = $repository;
         $this->middleware = $middleware;
@@ -37,22 +34,15 @@ class AddUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-//        $data = $request->getBody();
-//
-//        $user = new User(
-//            $id = UserId::generate(),
-//            new FirstName($data['firstName']),
-//            new LastName($data['lastName'])
-//        );
-//
-//        $this->repository->add($user);
-//
-//        $createdUser = $this->repository->find($id);
-//
-//        return new HttpResponse(201, $createdUser->toArray());
+        $middlewarePipeline = new MiddlewarePipeline();
 
+        foreach ($this->middleware as $middlewareClass) {
+            $middleware = new $middlewareClass();
+            $middlewarePipeline->pipe($middleware);
+        }
 
+        $middlewarePipeline->pipe(new AddUserMiddleware($this->repository));
 
-
+        return $middlewarePipeline->handle($request);
     }
 }

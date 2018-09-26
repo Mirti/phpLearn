@@ -18,10 +18,10 @@ class HandlerFactory
 {
     /**
      * @param string $class
-     *
+     * @param array  $middleware
      * @return RequestHandlerInterface
      */
-    public static function create(string $class): RequestHandlerInterface
+    public static function create(string $class, array $middleware): RequestHandlerInterface
     {
         $pdo        = function () {
             return PdoConnectionFactory::create(PdoConnectionFactory::DB_DEFAULT);
@@ -35,16 +35,16 @@ class HandlerFactory
                 return new $class($repository());
 
             case AddUserRequestHandler::class:
-                return new $class($repository());
+                return new $class($repository(), $middleware);
 
             case FindUserRequestHandler::class:
-                return new $class($repository());
+                return new $class($repository(), $middleware);
 
             case UpdateUserRequestHandler::class:
-                return new $class($repository());
+                return new $class($repository(), $middleware);
 
             case DeleteUserRequestHandler::class:
-                return new $class($repository());
+                return new $class($repository(), $middleware);
 
             default:
                 return new DefaultHandler();

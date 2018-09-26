@@ -7,35 +7,60 @@ namespace Learn\Http\Middleware;
 use Learn\Http\Message\Request\Handler\RequestHandlerInterface;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\ResponseInterface;
+use SplQueue;
 
-class MiddlewarePipeline implements RequestHandlerInterface{
-    /** @var array  */
+class MiddlewarePipeline implements RequestHandlerInterface
+{
+    /** @var SplQueue */
     private $pipeline;
 
     /**
      * MiddlewarePipeline constructor.
-     * @param array $pipeline
      */
-    public function __construct(array $pipeline)
+    public function __construct()
     {
-        $this->pipeline = $pipeline;
+        $this->pipeline = new SplQueue();
     }
 
-    public function handle(RequestInterface $request) : ResponseInterface
+
+    public function __clone()
     {
-        if (!$this->pipeline) {
+        $this->pipeline = clone $this->pipeline;
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @return ResponseInterface
+     * @throws \Exception
+     */
+    public function handle(RequestInterface $request): ResponseInterface
+    {
+        if ($this->pipeline->isEmpty()) {
             throw new \Exception("Not defined middleware", 500);
         }
 
         $nextHandler = clone $this;
-        $middleware = array_pop($this->pipeline);
+        $middleware  = $nextHandler->pipeline->dequeue();
 
         return $middleware->process($request, $nextHandler);
     }
 
-    public function process(RequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    /**
+     * @param RequestInterface        $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     */
+    public function process(RequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $next = new Next($this->pipeline, $handler);
         return $next->handle($request);
+    }
+
+    /**
+     * @param MiddlewareInterface $middleware
+     */
+    public function pipe(MiddlewareInterface $middleware): void
+    {
+        $this->pipeline->enqueue($middleware);
     }
 }
