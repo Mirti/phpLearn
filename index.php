@@ -45,7 +45,7 @@ try {
     $middleware        = $middlewareMatcher->match($request);
 
     /** @var ResponseInterface $response */
-    $response = $middleware->process($request, $requestHandler);
+    $response = $requestHandler->handle($request);
 
 
 } catch (\Throwable $ex) {

@@ -18,14 +18,18 @@ class AddUserRequestHandler implements RequestHandlerInterface
     /** @var UserRepositoryInterface */
     private $repository;
 
+    /** @var  */
+    private $middleware;
+
     /**
      * AddUserRequestHandler constructor.
      *
      * @param UserRepositoryInterface $repository
      */
-    public function __construct(UserRepositoryInterface $repository)
+    public function __construct(UserRepositoryInterface $repository, $middleware)
     {
         $this->repository = $repository;
+        $this->middleware = $middleware;
     }
 
     /**
@@ -33,18 +37,22 @@ class AddUserRequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestInterface $request): ResponseInterface
     {
-        $data = $request->getBody();
+//        $data = $request->getBody();
+//
+//        $user = new User(
+//            $id = UserId::generate(),
+//            new FirstName($data['firstName']),
+//            new LastName($data['lastName'])
+//        );
+//
+//        $this->repository->add($user);
+//
+//        $createdUser = $this->repository->find($id);
+//
+//        return new HttpResponse(201, $createdUser->toArray());
 
-        $user = new User(
-            $id = UserId::generate(),
-            new FirstName($data['firstName']),
-            new LastName($data['lastName'])
-        );
 
-        $this->repository->add($user);
 
-        $createdUser = $this->repository->find($id);
 
-        return new HttpResponse(201, $createdUser->toArray());
     }
 }

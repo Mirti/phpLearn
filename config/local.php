@@ -40,7 +40,9 @@ return [
 
             'POST' => [
                 'handler'    => AddUserRequestHandler::class,
-                'middleware' => \Learn\Http\Middleware\AddUserMiddleware::class
+                'middleware' => [\Learn\Http\Middleware\UserApiMiddleware\BodyKeysValidator::class,
+                                 \Learn\Http\Middleware\UserApiMiddleware\AdditionalKeysValidator::class
+                                 ]
             ]],
 
         '/users/:id' => [
