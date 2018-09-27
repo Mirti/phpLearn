@@ -39,9 +39,8 @@ class Router
         }
 
         $handlerClass = $this->config[$route][$method]['handler'];
-        $middleware   = $this->config[$route][$method]['middleware'];
 
-        $handler = HandlerFactory::create($handlerClass, $middleware);
+        $handler = HandlerFactory::create($handlerClass);
         if (!$handler instanceof RequestHandlerInterface) {
             throw new \Exception('Class must implement ' . RequestHandlerInterface::class);
         }

@@ -20,16 +20,13 @@ class MiddlewareRunner implements RequestHandlerInterface
     /**
      * RequestRunner constructor.
      *
-     * @param array                   $middlewares
-     * @param RequestHandlerInterface $parentHandler
+     * @param array $middlewares
      */
-    public function __construct(array $middlewares, RequestHandlerInterface $parentHandler)
+    public function __construct(array $middlewares)
     {
         foreach ($middlewares as $middlewareClass) {
             $this->middlewareObjects[] = MiddlewareFactory::create($middlewareClass);
         };
-
-        $this->parentHandler = $parentHandler;
     }
 
     /**
@@ -39,10 +36,6 @@ class MiddlewareRunner implements RequestHandlerInterface
     public function handle(RequestInterface $request): ResponseInterface
     {
         $middleware = array_pop($this->middlewareObjects);
-
-        if(!$middleware){
-            return $this->parentHandler->process($request);
-        }
 
         return $middleware->process($request, $this);
     }

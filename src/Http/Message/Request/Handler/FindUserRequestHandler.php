@@ -17,18 +17,16 @@ class FindUserRequestHandler implements RequestHandlerInterface
     /** @var UserRepositoryInterface */
     private $repository;
 
-    /** @var  */
+    /** @var */
     private $middleware;
 
     /**
      * FindUserRequestHandler constructor.
      * @param UserRepositoryInterface $repository
-     * @param                         $middleware
      */
-    public function __construct(UserRepositoryInterface $repository, $middleware)
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
-        $this->middleware = $middleware;
     }
 
     /**
@@ -39,16 +37,7 @@ class FindUserRequestHandler implements RequestHandlerInterface
     {
         $id = $request->getRouteParams()[':id'];
 
-        if (!isset($id)) {
-            throw new ApiException("Can not access User ID", 404);
-        }
-
-        try {
-            $userId = UserId::fromString($id);
-
-        } catch (\InvalidArgumentException $ex) {
-            throw new ApiException($ex->getMessage(), 400);
-        }
+        $userId = UserId::fromString($id);
 
         try {
             $user = $this->repository->find($userId);

@@ -19,18 +19,13 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
     /** @var UserRepository */
     private $repository;
 
-    /** @var  */
-    private $middleware;
-
     /**
      * UpdateUserRequestHandler constructor.
      * @param $repository
-     * @param $middleware
      */
-    public function __construct($repository, $middleware)
+    public function __construct($repository)
     {
         $this->repository = $repository;
-        $this->middleware = $middleware;
     }
 
     /**
@@ -42,23 +37,9 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
 
         $data = $request->getBody();
 
-        if (!array_key_exists('firstName', $data) || !array_key_exists('lastName', $data)) {
-            throw new ApiException('Missing one of required field.', 400);
-        }
-
         $id = $request->getRouteParams()[':id'];
 
-        if (!isset($id)) {
-            throw new ApiException("Can not access User ID", 404);
-        }
-
-
-        try {
-            $userId = UserId::fromString($id);
-
-        } catch (\InvalidArgumentException $ex) {
-            throw new ApiException($ex->getMessage(), 400);
-        }
+        $userId = UserId::fromString($id);
 
         try {
             $user = $this->repository->find($userId);
@@ -70,15 +51,10 @@ class UpdateUserRequestHandler implements RequestHandlerInterface
         $user->setFirstName(new FirstName($data['firstName']));
         $user->setLastName(new LastName($data['lastName']));
 
-        try {
-            $this->repository->update($user);
-            $updatedUser = $this->repository->find(UserId::fromString($id));
+        $this->repository->update($user);
+        $updatedUser = $this->repository->find(UserId::fromString($id));
 
-            $response = new HttpResponse(200, $updatedUser->toArray());
-
-        } catch (\Throwable $ex) {
-            throw $ex;
-        }
+        $response = new HttpResponse(200, $updatedUser->toArray());
 
         return $response;
     }

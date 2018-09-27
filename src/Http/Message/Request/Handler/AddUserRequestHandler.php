@@ -7,7 +7,6 @@ namespace Learn\Http\Message\Request\Handler;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
-use Learn\Http\Middleware\MiddlewareRunner;
 use Learn\Model\User;
 use Learn\Model\Value\FirstName;
 use Learn\Model\Value\LastName;
@@ -19,31 +18,19 @@ class AddUserRequestHandler implements RequestHandlerInterface
     /** @var UserRepositoryInterface */
     private $repository;
 
-    /** @var */
-    private $middleware;
-
     /**
      * AddUserRequestHandler constructor.
      * @param UserRepositoryInterface $repository
-     * @param                         $middleware
      */
-    public function __construct(UserRepositoryInterface $repository, array $middleware)
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
-        $this->middleware = $middleware;
     }
 
     /**
      * @inheritdoc
      */
     public function handle(RequestInterface $request): ResponseInterface
-    {
-        $middlewareRunner = new MiddlewareRunner($this->middleware, $this);
-
-        return $middlewareRunner->handle($request);
-    }
-
-    public function process(RequestInterface $request): ResponseInterface
     {
         $data = $request->getBody();
 
@@ -57,5 +44,4 @@ class AddUserRequestHandler implements RequestHandlerInterface
 
         return new HttpResponse(201, $this->repository->find($id)->toArray());
     }
-
 }

@@ -16,19 +16,15 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
 {
     /** @var UserRepository */
     private $repository;
-    /** @var */
-    private $middleware;
 
     /**
      * DeleteUserRequestHandler constructor.
      * @param $repository
-     * @param $middleware
      */
-    public function __construct($repository, $middleware)
+    public function __construct($repository)
     {
 
         $this->repository = $repository;
-        $this->middleware = $middleware;
     }
 
     /**
@@ -40,16 +36,7 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
     {
         $id = $request->getRouteParams()[':id'];
 
-        if (!isset($id)) {
-            throw new ApiException("Can not access User ID", 404);
-        }
-
-        try {
-            $userId = UserId::fromString($id);
-
-        } catch (\InvalidArgumentException $ex) {
-            throw new ApiException($ex->getMessage(), 400);
-        }
+        $userId = UserId::fromString($id);
 
         try {
             $user = $this->repository->find($userId);
@@ -58,13 +45,8 @@ class DeleteUserRequestHandler implements RequestHandlerInterface
             throw new ApiException($ex->getMessage(), 404);
         }
 
-        try {
-            $this->repository->delete($user);
-            $response = new HttpResponse(204);
-
-        } catch (\Throwable $ex) {
-            throw $ex;
-        }
+        $this->repository->delete($user);
+        $response = new HttpResponse(204);
 
         return $response;
     }

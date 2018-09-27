@@ -7,6 +7,8 @@ namespace Learn;
 use Learn\Http\Message\Request\HttpRequest;
 use Learn\Http\Message\Response\HttpResponse;
 use Learn\Http\Message\Response\ResponseInterface;
+use Learn\Http\Middleware\DefaultMiddleware;
+use Learn\Http\Middleware\MiddlewareRunner;
 use Learn\Log\Logger;
 use Learn\Log\LogHandler\Factory\LogHandlerFactory;
 use Learn\Repository\Exception\ApiException;
@@ -38,11 +40,7 @@ try {
 
     $request = new HttpRequest($remoteAddress, $method, $url, $route, $routeParams, $body);
 
-    $router         = new Router($config['routes']);
-    $requestHandler = $router->match($request);
-
-    /** @var ResponseInterface $response */
-    $response = $requestHandler->handle($request);
+    $middlewareRunner = new MiddlewareRunner()
 
 
 } catch (\Throwable $ex) {
