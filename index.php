@@ -6,7 +6,6 @@ namespace Learn;
 
 use Learn\Http\Message\Request\HttpRequest;
 use Learn\Http\Message\Response\HttpResponse;
-use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Http\Middleware\DefaultMiddleware;
 use Learn\Http\Middleware\MiddlewareRunner;
 use Learn\Log\Logger;
@@ -40,7 +39,14 @@ try {
 
     $request = new HttpRequest($remoteAddress, $method, $url, $route, $routeParams, $body);
 
-    $middlewareRunner = new MiddlewareRunner()
+
+    $defaultMiddleware = DefaultMiddleware::class;
+
+    $middlewares[] = $defaultMiddleware;
+
+    $middlewareRunner = new MiddlewareRunner($middlewares);
+
+    $response = $middlewareRunner->handle($request);
 
 
 } catch (\Throwable $ex) {

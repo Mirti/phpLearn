@@ -14,9 +14,6 @@ class MiddlewareRunner implements RequestHandlerInterface
     /** @var */
     private $middlewareObjects;
 
-    /** @var */
-    private $parentHandler;
-
     /**
      * RequestRunner constructor.
      *
@@ -26,7 +23,7 @@ class MiddlewareRunner implements RequestHandlerInterface
     {
         foreach ($middlewares as $middlewareClass) {
             $this->middlewareObjects[] = MiddlewareFactory::create($middlewareClass);
-        };
+        }
     }
 
     /**
