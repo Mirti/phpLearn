@@ -1,0 +1,20 @@
+{
+  "name": "mirti/learn",
+  "authors": [
+    {
+      "name": "Mirti",
+      "email": "avalith@o2.pl"
+    }
+  ],
+  "require": {
+    "phpunit/phpunit": "^7.3",
+    "ramsey/uuid": "^2.9",
+    "beberlei/assert": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Learn\\": "src",
+      "Test\\": "tests"
+    }
+  }
+}
