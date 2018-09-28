@@ -11,13 +11,13 @@ use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Http\Middleware\Validator\ValidatorInterface;
 use Learn\Repository\Exception\ApiException;
 
-class RequestBodyValidationMiddleware implements MiddlewareInterface
+class RequestValidationMiddleware implements MiddlewareInterface
 {
     /** @var */
     private $config;
 
     /**
-     * RequestBodyValidationMiddleware constructor.
+     * RequestValidationMiddleware constructor.
      * @param array $config
      */
     public function __construct(array $config)

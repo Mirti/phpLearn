@@ -7,7 +7,7 @@ namespace Learn\Http\Middleware\Validator;
 use Learn\Http\Message\Request\RequestInterface;
 use Learn\Repository\Exception\ApiException;
 
-class CorrectUserDataValidator implements ValidatorInterface
+class AddUserValidator implements ValidatorInterface
 {
 
     /**

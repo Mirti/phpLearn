@@ -7,8 +7,11 @@ use Learn\Http\Message\Request\Handler\DeleteUserRequestHandler;
 use Learn\Http\Message\Request\Handler\FindUserRequestHandler;
 use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
 use Learn\Http\Message\Request\Handler\UpdateUserRequestHandler;
-use Learn\Http\Middleware\RequestBodyValidationMiddleware;
-use Learn\Http\Middleware\Validator\CorrectUserDataValidator;
+use Learn\Http\Middleware\RequestValidationMiddleware;
+use Learn\Http\Middleware\Validator\AddUserValidator;
+use Learn\Http\Middleware\Validator\DeleteUserValidator;
+use Learn\Http\Middleware\Validator\FindUserValidator;
+use Learn\Http\Middleware\Validator\UpdateUserValidator;
 use Learn\Log\Formatter\JsonFormatter;
 use Learn\Log\Formatter\TextFormatter;
 use Learn\Log\LogHandler\ConsoleHandler;
@@ -43,23 +46,26 @@ return [
             'POST' => [
                 'handler'    => AddUserRequestHandler::class,
                 'middleware' => [
-                    RequestBodyValidationMiddleware::class
+                    RequestValidationMiddleware::class
                 ],
-                'validator'  => CorrectUserDataValidator::class
+                'validator'  => AddUserValidator::class
             ]],
 
         '/users/:id' => [
             'GET'    => [
                 'handler'    => FindUserRequestHandler::class,
-                'middleware' => [],
+                'middleware' => [RequestValidationMiddleware::class],
+                'validator'  => FindUserValidator::class
             ],
             'PUT'    => [
                 'handler'    => UpdateUserRequestHandler::class,
-                'middleware' => [],
+                'middleware' => [RequestValidationMiddleware::class],
+                'validator'  => UpdateUserValidator::class
             ],
             'DELETE' => [
                 'handler'    => DeleteUserRequestHandler::class,
-                'middleware' => [],
+                'middleware' => [RequestValidationMiddleware::class],
+                'validator'  => DeleteUserValidator::class
             ],
         ]
     ],
