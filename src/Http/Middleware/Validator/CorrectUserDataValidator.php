@@ -18,14 +18,15 @@ class CorrectUserDataValidator implements ValidatorInterface
     {
         $body = $request->getBody();
 
+        if (!array_key_exists('firstName', $body) || !array_key_exists('lastName', $body)) {
+            throw new ApiException("Missing one of required field", 400);
+        }
+
         $additionalKeys = array_diff(array_keys($body), ['firstName', 'lastName']);
         if ($additionalKeys) {
             throw new ApiException('Too many arguments: ' . implode(',', $additionalKeys), 400);
         }
 
-        if (!array_key_exists('firstName', $body) || !array_key_exists('lastName', $body)) {
-            throw new ApiException("Missing one of required field", 400);
-        }
     }
 }
 

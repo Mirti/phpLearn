@@ -6,6 +6,7 @@ namespace Learn\Http\Middleware\Factory;
 
 use Learn\Http\Middleware\DefaultMiddleware;
 use Learn\Http\Middleware\MiddlewareInterface;
+use Learn\Http\Middleware\RequestBodyValidationMiddleware;
 use Learn\Routing\Router;
 
 class MiddlewareFactory
@@ -16,13 +17,21 @@ class MiddlewareFactory
      */
     public static function create($class): MiddlewareInterface
     {
-        if ($class == DefaultMiddleware::class) {
-            $config = require ROOT_DIR . '/config/local.php';
-            $router = new Router($config['routes']);
+        $config = require ROOT_DIR . '/config/local.php';
 
-            return new DefaultMiddleware($router);
+        switch ($class) {
+            case DefaultMiddleware::class:
+                $router = new Router($config['routes']);
+
+                return new DefaultMiddleware($router);
+                break;
+
+            case RequestBodyValidationMiddleware::class:
+                return new RequestBodyValidationMiddleware($config['routes']);
+                break;
+
+            default:
+                return new $class();
         }
-
-        return new $class();
     }
 }

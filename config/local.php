@@ -7,12 +7,12 @@ use Learn\Http\Message\Request\Handler\DeleteUserRequestHandler;
 use Learn\Http\Message\Request\Handler\FindUserRequestHandler;
 use Learn\Http\Message\Request\Handler\GetAllUsersRequestHandler;
 use Learn\Http\Message\Request\Handler\UpdateUserRequestHandler;
+use Learn\Http\Middleware\RequestBodyValidationMiddleware;
+use Learn\Http\Middleware\Validator\CorrectUserDataValidator;
 use Learn\Log\Formatter\JsonFormatter;
 use Learn\Log\Formatter\TextFormatter;
 use Learn\Log\LogHandler\ConsoleHandler;
 use Learn\Log\LogHandler\FileHandler;
-use Learn\Http\Middleware\UserApiMiddleware\AdditionalKeysValidator;
-use Learn\Http\Middleware\UserApiMiddleware\BodyKeysValidator;
 
 return [
     'database' => [
@@ -37,28 +37,29 @@ return [
         '/users' => [
             'GET' => [
                 'handler'    => GetAllUsersRequestHandler::class,
-                'middleware' => "",
+                'middleware' => [],
             ],
 
             'POST' => [
                 'handler'    => AddUserRequestHandler::class,
                 'middleware' => [
-                                 AdditionalKeysValidator::class,
-                                 BodyKeysValidator::class
-                                 ]
+                    RequestBodyValidationMiddleware::class
+                ],
+                'validator'  => CorrectUserDataValidator::class
             ]],
 
         '/users/:id' => [
             'GET'    => [
                 'handler'    => FindUserRequestHandler::class,
-                'middleware' => "",
+                'middleware' => [],
             ],
             'PUT'    => [
                 'handler'    => UpdateUserRequestHandler::class,
-                'middleware' => "",],
+                'middleware' => [],
+            ],
             'DELETE' => [
                 'handler'    => DeleteUserRequestHandler::class,
-                'middleware' => "",
+                'middleware' => [],
             ],
         ]
     ],

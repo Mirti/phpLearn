@@ -11,17 +11,18 @@ use Learn\Http\Message\Response\ResponseInterface;
 use Learn\Http\Middleware\Validator\ValidatorInterface;
 use Learn\Repository\Exception\ApiException;
 
-class RequestBodyValidationMiddleware
+class RequestBodyValidationMiddleware implements MiddlewareInterface
 {
     /** @var */
-    private $validators;
+    private $config;
 
     /**
-     * @param array $validators
+     * RequestBodyValidationMiddleware constructor.
+     * @param array $config
      */
-    public function __constructor(array $validators)
+    public function __construct(array $config)
     {
-        $this->validators = $validators;
+        $this->config = $config;
     }
 
     /**
@@ -31,18 +32,18 @@ class RequestBodyValidationMiddleware
      */
     public function process(RequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $route = $request->getRoute();
+        $route  = $request->getRoute();
+        $method = $request->getMethod();
 
         /** @var ValidatorInterface $validator */
-        $validator = $this->validators[$route];
+        $validatorClass = $this->config[$route][$method]['validator'];
+        $validator      = new $validatorClass();
 
         if (!$validator) {
-
             return $handler->handle($request);
         }
 
         try {
-
             $validator->validate($request);
         } catch (ApiException $ex) {
             return new HttpResponse(400, [$ex->getMessage()]);

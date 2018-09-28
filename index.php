@@ -6,13 +6,11 @@ namespace Learn;
 
 use Learn\Http\Message\Request\HttpRequest;
 use Learn\Http\Message\Response\HttpResponse;
-use Learn\Http\Middleware\DefaultMiddleware;
+use Learn\Http\Middleware\Matcher\MiddlewareMatcher;
 use Learn\Http\Middleware\MiddlewareRunner;
 use Learn\Log\Logger;
 use Learn\Log\LogHandler\Factory\LogHandlerFactory;
 use Learn\Repository\Exception\ApiException;
-use Learn\Routing\MiddlewareMatcher;
-use Learn\Routing\Router;
 use Learn\Routing\UrlMapper;
 use function http_response_code;
 
@@ -39,12 +37,8 @@ try {
 
     $request = new HttpRequest($remoteAddress, $method, $url, $route, $routeParams, $body);
 
-
-    $defaultMiddleware = DefaultMiddleware::class;
-
-    $middlewares[] = $defaultMiddleware;
-
-    $middlewareRunner = new MiddlewareRunner($middlewares);
+    $middlewareMatcher = new MiddlewareMatcher($config['routes']);
+    $middlewareRunner = new MiddlewareRunner($middlewareMatcher->match($request));
 
     $response = $middlewareRunner->handle($request);
 
